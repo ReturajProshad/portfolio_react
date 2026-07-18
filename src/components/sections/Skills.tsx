@@ -6,20 +6,20 @@ import { skills } from "@/data/portfolio";
 
 const categoryColors: Record<string, string> = {
   Languages: "tag-accent",
-  "Flutter & Mobile": "tag-emerald",
-  Backend: "tag-amber",
+  "Backend & APIs": "tag-emerald",
+  "Frontend & Mobile": "tag-amber",
   Databases: "tag",
-  Tools: "tag",
-  Architecture: "tag",
+  "Architecture & Systems": "tag",
+  "Tools & Workflow": "tag",
 };
 
 const categoryIcons: Record<string, string> = {
   Languages: "{ }",
-  "Flutter & Mobile": "📱",
-  Backend: "⚙️",
+  "Backend & APIs": "☁️",
+  "Frontend & Mobile": "📱",
   Databases: "🗄️",
-  Tools: "🛠️",
-  Architecture: "🏗️",
+  "Architecture & Systems": "🏗️",
+  "Tools & Workflow": "🛠️",
 };
 
 export default function Skills() {
@@ -29,7 +29,7 @@ export default function Skills() {
         <SectionLabel>Skills</SectionLabel>
         <SectionHeading>Tools of the trade</SectionHeading>
         <p className="text-subtle text-sm mt-2 max-w-md mx-auto">
-          The stack I use to build scalable, production-grade Flutter applications.
+          The stack I use to build scalable, production-grade systems — mobile, backend, and web.
         </p>
       </div>
 

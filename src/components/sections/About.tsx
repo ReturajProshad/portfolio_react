@@ -1,45 +1,36 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import SectionWrapper, { SectionLabel, SectionHeading } from "@/components/SectionWrapper";
-
-const bullets = [
-  { emoji: "⚡", text: "Clean Architecture advocate — I build for maintainability, not just deadlines." },
-  { emoji: "🔩", text: "Systems thinker — from form engines to cross-platform POS, I build reusable abstractions." },
-  { emoji: "📦", text: "Open-source contributor — rj form engine ships to production, not just GitHub." },
-  { emoji: "🏆", text: "1100+ DSA problems, ICPC regional — algorithmic thinking applied to real engineering." },
-];
+import { summary, focusAreas } from "@/data/portfolio";
 
 export default function About() {
   return (
     <SectionWrapper id="about">
-      <div className="grid md:grid-cols-2 gap-16 items-center">
+      <div className="grid md:grid-cols-2 gap-16 items-start">
         {/* Left: Text */}
         <div>
           <SectionLabel>About</SectionLabel>
           <SectionHeading>
-            Engineering depth,<br />
-            <span className="text-gradient-accent">not just code output.</span>
+            A generalist engineer,<br />
+            <span className="text-gradient-accent">not a one-stack specialist.</span>
           </SectionHeading>
-          <p className="text-subtle text-base leading-relaxed mt-4 mb-8">
-            I'm a Flutter engineer based in Bangladesh with experience building enterprise-grade production systems.
-            My focus is on architecture that <span className="text-text">scales beyond the feature</span> — reusable
-            systems, type-safe APIs, and UI that performs.
-          </p>
+          <p className="text-subtle text-base leading-relaxed mt-4 mb-8">{summary}</p>
 
           <ul className="flex flex-col gap-4">
-            {bullets.map((b, i) => (
+            {focusAreas.map((f, i) => (
               <motion.li
-                key={i}
+                key={f.title}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
                 className="flex items-start gap-3"
               >
-                <span className="text-lg mt-0.5">{b.emoji}</span>
-                <p className="text-subtle text-sm leading-relaxed">{b.text}</p>
+                <span className="text-accent text-lg mt-0.5 font-mono shrink-0">{f.icon}</span>
+                <p className="text-subtle text-sm leading-relaxed">
+                  <span className="text-text font-medium">{f.title}.</span> {f.detail}
+                </p>
               </motion.li>
             ))}
           </ul>
@@ -57,10 +48,12 @@ export default function About() {
                 <span className="text-subtle">= {"{"}</span>
               </div>
               <div className="pl-4 space-y-2 text-subtle">
-                <div><span className="text-amber-400">role</span>: <span className="text-emerald-400">"Flutter & Mobile"</span>,</div>
+                <div><span className="text-amber-400">role</span>: <span className="text-emerald-400">"Software Engineer"</span>,</div>
+                <div><span className="text-amber-400">stacks</span>: [<span className="text-emerald-400">"Flutter"</span>, <span className="text-emerald-400">"Spring Boot"</span>, <span className="text-emerald-400">"Next.js"</span>],</div>
                 <div><span className="text-amber-400">location</span>: <span className="text-emerald-400">"Dhaka, BD"</span>,</div>
                 <div><span className="text-amber-400">focus</span>: <span className="text-emerald-400">"Systems & Architecture"</span>,</div>
                 <div><span className="text-amber-400">openSource</span>: <span className="text-accent">true</span>,</div>
+                <div><span className="text-amber-400">aiAssisted</span>: <span className="text-accent">true</span>,</div>
                 <div><span className="text-amber-400">available</span>: <span className="text-accent">true</span>,</div>
                 <div>
                   <span className="text-amber-400">thesis</span>:{" "}
@@ -72,8 +65,8 @@ export default function About() {
 
             <div className="mt-8 pt-6 border-t border-border/60 grid grid-cols-3 gap-4 text-center">
               {[
-                { label: "Experience", value: "1+ yr" },
-                { label: "Projects", value: "10+" },
+                { label: "Since", value: "2024" },
+                { label: "Systems Shipped", value: "6+" },
                 { label: "CGPA", value: "3.63" },
               ].map((s) => (
                 <div key={s.label}>

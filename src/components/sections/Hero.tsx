@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Github, Linkedin, Mail, Download } from "lucide-react";
+import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
 import { personal } from "@/data/portfolio";
 
 const container = {
@@ -38,7 +38,7 @@ export default function Hero() {
           <motion.div variants={item} className="flex justify-center mb-8">
             <span className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-border/80 bg-surface/60 text-xs font-mono text-subtle backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Open to new opportunities · Bangladesh
+              Open to new opportunities · Dhaka, Bangladesh
             </span>
           </motion.div>
 
@@ -57,7 +57,7 @@ export default function Hero() {
             variants={item}
             className="font-mono text-sm text-accent tracking-widest uppercase mb-6"
           >
-            Flutter &amp; Mobile Engineer
+            {personal.role} · {personal.roleSub}
           </motion.p>
 
           {/* Tagline */}
@@ -66,8 +66,9 @@ export default function Hero() {
             className="text-subtle text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
           >
             I build systems that scale — from{" "}
-            <span className="text-text">schema-driven form engines</span> to{" "}
-            <span className="text-text">enterprise apps with 50K+ users</span>.
+            <span className="text-text">offline-first mobile apps</span> to{" "}
+            <span className="text-text">Spring Boot services</span> and{" "}
+            <span className="text-text">schema-driven form engines</span> used in production.
           </motion.p>
 
           {/* Stats strip */}
@@ -77,8 +78,8 @@ export default function Hero() {
           >
             {[
               { value: "50K+", label: "App Downloads" },
-              { value: "3", label: "Enterprise Systems" },
-              { value: "90%", label: "Dev Effort Saved" },
+              { value: "3", label: "Concurrent Systems" },
+              { value: "6+", label: "Stacks & Languages" },
               { value: "1100+", label: "DSA Problems" },
             ].map((stat) => (
               <div key={stat.label} className="flex flex-col">

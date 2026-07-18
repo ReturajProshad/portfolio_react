@@ -1,8 +1,10 @@
 export const personal = {
   name: "Returaj Proshad",
   fullName: "Returaj Proshad Shornocar",
-  role: "Flutter & Mobile Engineer",
-  tagline: "I build systems that scale — from schema-driven form engines to enterprise apps with 50K+ users.",
+  role: "Software Engineer",
+  roleSub: "Full-Stack · Mobile · Systems",
+  tagline:
+    "I build systems that scale — from offline-first mobile apps to Spring Boot services and schema-driven form engines used in production.",
   location: "Dhaka, Bangladesh",
   email: "returajsumon0808@gmail.com",
   phone: "+8801608517866",
@@ -10,37 +12,72 @@ export const personal = {
   linkedin: "https://linkedin.com/in/returaj-proshad",
   pubdev: "https://pub.dev",
   available: true,
+  languages: ["English", "Bangla"],
 };
 
+export const summary =
+  "Software engineer with production experience since September 2024, having shipped three concurrent enterprise systems using Clean Architecture and Riverpod-based state management. A generalist by interest — comfortable moving across Java/Spring Boot, Node.js, Flutter, and Next.js, and learning new stacks directly from source code and official docs. Track record spans a metadata-driven form engine (90+ dynamic forms, published to pub.dev), offline-first sync with conflict resolution (LWW, OT, CRDTs), native platform integration via Method Channels, and a solo-built Play Store app with 50K+ downloads. Uses AI coding assistants (Claude Code, GitHub Copilot) to accelerate delivery while independently validating every line for correctness, security, and maintainability.";
+
+export const focusAreas = [
+  {
+    title: "Full-Stack Systems",
+    detail: "Spring Boot + JPA/Hibernate, Node.js/Express, and Next.js — designing APIs and the clients that consume them.",
+    icon: "◆",
+  },
+  {
+    title: "Mobile Engineering",
+    detail: "Flutter apps in production since 2024 — Riverpod, offline-first sync, native platform channels, 50K+ downloads shipped.",
+    icon: "▲",
+  },
+  {
+    title: "Systems & Architecture",
+    detail: "Clean Architecture, SOLID, RBAC, caching strategies (SWR/TTL/LRU), and conflict resolution (LWW, OT, CRDTs).",
+    icon: "●",
+  },
+  {
+    title: "AI-Accelerated Delivery",
+    detail: "Claude Code & GitHub Copilot in the daily workflow — always paired with independent review, testing, and debugging.",
+    icon: "✦",
+  },
+];
+
 export const skills = {
-  Languages: ["Dart", "Java", "C", "C++"],
-  "Flutter & Mobile": [
-    "Flutter", "Riverpod", "Provider", "GetX", "GoRouter",
-    "Deep Linking", "Animations", "Widget Testing",
+  Languages: ["Java", "Dart", "TypeScript", "JavaScript", "C / C++", "SQL", "Python (basic)"],
+  "Backend & APIs": ["Spring Boot", "JPA / Hibernate", "Node.js", "Express", "REST APIs", "JWT Auth", "Firebase Functions"],
+  "Frontend & Mobile": ["Flutter", "React", "Next.js", "Riverpod", "Provider", "GetX", "GoRouter"],
+  Databases: ["PostgreSQL", "Oracle", "Firebase Firestore", "SQLite", "Hive"],
+  "Architecture & Systems": [
+    "Clean Architecture",
+    "SOLID Principles",
+    "RBAC",
+    "Offline-First Sync",
+    "Caching (SWR/TTL/LRU)",
+    "Conflict Resolution (LWW, OT, CRDTs)",
   ],
-  Backend: ["Spring Boot", "REST APIs", "Firebase Functions", "Node.js"],
-  Databases: ["PostgreSQL", "Firebase Firestore", "Hive", "SQLite"],
-  Tools: ["Git", "GitHub Actions", "GitLab", "Postman", "VS Code", "Android Studio", "Figma"],
-  Architecture: ["Clean Architecture", "SOLID Principles", "RBAC", "Modular Design", "Performance Optimization"],
+  "Tools & Workflow": ["Git", "GitHub Actions (CI/CD)", "GitLab", "Postman", "Figma", "Claude Code", "GitHub Copilot"],
 };
 
 export const experiences = [
   {
     company: "One Direction Companies Limited (ODCL)",
-    role: "Flutter & Mobile Developer",
-    period: "Apr 2025 – Present",
+    role: "Software Engineer — Flutter & Mobile",
+    period: "Apr 2025 – Jun 2026",
     location: "Dhaka, Bangladesh",
     type: "Full-time",
     current: true,
     highlights: [
-      "Primary Flutter developer for 3 enterprise systems: Smart Gowala, FoodExpo Kiosk, and Shimana",
-      "Built metadata-driven form engine rendering 90+ complex forms from JSON — cut UI dev effort by ~90%",
-      "Designed centralized navigation framework with GoRouter across 30+ feature modules",
-      "Implemented JWT auth with dynamic RBAC for multi-role enterprise builds",
-      "Built cross-platform POS kiosk (Windows & Android) with native Win32 & ESC/POS thermal printing",
-      "Improved UI performance 30% via Sliver lazy loading, Hive caching, and optimized Riverpod subscriptions",
+      "Owned Flutter development end-to-end across 3 concurrent enterprise systems — Smart Gowala, FoodExpo Kiosk, and Shimana — spanning livestock management, self-service F&B POS kiosks, and border compliance workflows",
+      "Built a metadata-driven form engine rendering 90+ complex forms from JSON, cutting UI dev effort by ~90% — later extracted into the open-source rj form engine package",
+      "Designed a centralized, type-safe routing and pagination framework with GoRouter across 30+ feature modules, eliminating navigation boilerplate",
+      "Implemented JWT auth with dynamic RBAC, letting a single build serve multiple roles with granular, module-level permissions",
+      "Engineered an offline-first data layer with Hive-based caching (SWR/TTL) and conflict resolution (LWW, CRDTs) to keep workflows reliable under intermittent connectivity",
+      "Built a cross-platform POS kiosk (Windows & Android) integrating native Win32 APIs and ESC/POS thermal printers via Flutter Method Channels",
+      "Improved UI performance 30% (Flutter DevTools) via Sliver lazy loading and optimized Riverpod subscriptions",
+      "Set up GitHub Actions CI/CD for automatic Windows kiosk builds and releases",
+      "Partnered with backend engineers on Spring Boot REST contracts and contributed directly to Node.js endpoints and Firestore integration",
+      "Mentored junior developers on Clean Architecture and SOLID through structured code reviews",
     ],
-    tags: ["Flutter", "Riverpod", "GoRouter", "Clean Architecture", "RBAC", "Spring Boot"],
+    tags: ["Flutter", "Riverpod", "Spring Boot", "Node.js", "GoRouter", "Clean Architecture", "RBAC", "CI/CD"],
   },
   {
     company: "Kensink Labs",
@@ -50,8 +87,8 @@ export const experiences = [
     type: "Contract",
     current: false,
     highlights: [
-      "Built AI-driven itinerary timeline feature for the Sootcase travel app",
-      "Translated Figma designs to production Flutter UI under strict deadlines",
+      "Delivered an AI-driven itinerary timeline feature for the Sootcase travel app",
+      "Translated Figma designs to production Flutter UI under a strict deadline",
       "Integrated REST APIs for real-time travel planning data",
     ],
     tags: ["Flutter", "REST APIs", "Figma", "AI Integration"],
@@ -64,15 +101,40 @@ export const experiences = [
     type: "Internship",
     current: false,
     highlights: [
-      "Built a responsive Flutter news application with REST APIs",
+      "Built a responsive Flutter news application consuming REST APIs",
       "Implemented Provider-based state management architecture",
-      "Completed full project within internship timeline",
+      "Delivered the full project within the internship timeline",
     ],
     tags: ["Flutter", "Provider", "REST APIs"],
   },
 ];
 
 export const projects = [
+  {
+    id: "eztrainz",
+    title: "EZTrainz",
+    subtitle: "Offline-First Language Learning Platform — Full-Stack",
+    description:
+      "A Duolingo-style app built solo in a 24-hour technical assessment: a Spring Boot modular-monolith backend paired with a Clean Architecture Flutter mobile app, built with AI coding assistants and independently verified line by line.",
+    achievement: "Ambiguous brief → fully specified 6-module system, shipped across 19+ incremental commits",
+    tags: ["Spring Boot", "Flutter", "Isar", "Offline-First", "System Design"],
+    links: {
+      github: "https://github.com/ReturajProshad",
+    },
+    featured: true,
+    type: "fullstack",
+    stats: [
+      { label: "Modules", value: "6" },
+      { label: "Commits", value: "19+" },
+      { label: "Build Time", value: "24h" },
+    ],
+    details: [
+      "Auth, Course, Quiz, Progress, Leaderboard, and Sync modules designed from an ambiguous brief",
+      "Offline-first conflict resolution engine — Last-Write-Wins with UTC-normalized timestamps",
+      "Isar-backed local sync queue for reliable background synchronization",
+      "Spring Boot modular monolith backend paired with a Clean Architecture Flutter client",
+    ],
+  },
   {
     id: "rj-form-engine",
     title: "rj form engine",
@@ -88,7 +150,7 @@ export const projects = [
     featured: true,
     type: "opensource",
     stats: [
-      { label: "Field Types", value: "13" },
+      { label: "Field Types", value: "13+" },
       { label: "Validation Rules", value: "25+" },
       { label: "State Managers", value: "4" },
       { label: "Forms Rendered", value: "90+" },
@@ -97,7 +159,7 @@ export const projects = [
       "Metadata-driven pipeline with parent-child dependency tracking",
       "Async data loading for multi-step workflows",
       "State-management-agnostic FormController (Provider, Riverpod, Bloc, GetX)",
-      "Comprehensive Widget & Unit test suite",
+      "Comprehensive Widget & Unit test suite covering conditional visibility and dependency resolution",
     ],
   },
   {
@@ -105,9 +167,9 @@ export const projects = [
     title: "CodeHorse",
     subtitle: "Educational App — 50K+ Downloads",
     description:
-      "A published educational app with 50K+ active installs, AdMob monetization, and FCM push notifications. Built solo from scratch to production.",
-    achievement: "50K+ installs · 4.2+ Play Store rating · Sole developer",
-    tags: ["Flutter", "Firebase", "AdMob", "FCM", "Node.js"],
+      "A published educational app with 50K+ active installs, Firebase Firestore, AdMob monetization, and FCM push notifications, backed by a Node.js service. Built solo from scratch to production.",
+    achievement: "50K+ installs · 4.3+ Play Store rating · Sole developer",
+    tags: ["Flutter", "Firebase", "Node.js", "AdMob", "FCM"],
     links: {
       playstore: "https://play.google.com/store",
     },
@@ -115,17 +177,45 @@ export const projects = [
     type: "production",
     stats: [
       { label: "Downloads", value: "50K+" },
-      { label: "Rating", value: "4.2★" },
+      { label: "Rating", value: "4.3★" },
       { label: "Solo Build", value: "✓" },
     ],
+  },
+  {
+    id: "todo-springboot-nextjs",
+    title: "Spring Boot + Next.js ToDo",
+    subtitle: "Full-Stack Web Application",
+    description:
+      "A full-stack task manager with a Spring Boot REST backend (CRUD, structured exception handling) and a Next.js + TypeScript frontend — the frontend stack learned independently from official docs while building.",
+    achievement: "Self-taught the Next.js/TypeScript frontend while shipping the full stack solo",
+    tags: ["Spring Boot", "Next.js", "TypeScript", "REST APIs"],
+    links: {
+      github: "https://github.com/ReturajProshad",
+    },
+    featured: false,
+    type: "fullstack",
+  },
+  {
+    id: "virtual-bookshelf",
+    title: "Virtual Bookshelf",
+    subtitle: "Full-Stack Oracle DB Project",
+    description:
+      "A bookstore application on Node.js REST APIs backed by Oracle Database — schema normalization, triggers, and stored procedures, with PL/SQL learned independently for the build.",
+    achievement: "Independently learned Oracle PL/SQL to design triggers and stored procedures",
+    tags: ["Node.js", "Oracle DB", "PL/SQL", "REST APIs"],
+    links: {
+      github: "https://github.com/ReturajProshad",
+    },
+    featured: false,
+    type: "backend",
   },
   {
     id: "zavimart",
     title: "ZaviMart",
     subtitle: "E-Commerce App — Technical Assessment",
     description:
-      "Daraz-style product listing app with Clean Architecture, JWT authentication, and complex scroll architecture using NestedScrollView.",
-    achievement: "Solved complex scroll-state problem with NestedScrollView + SliverOverlapAbsorber",
+      "Daraz-style product listing app with Clean Architecture, Riverpod AsyncNotifierProvider.family, JWT-authenticated persistent sessions, and complex scroll architecture using NestedScrollView.",
+    achievement: "Solved a complex scroll-state problem with NestedScrollView + SliverOverlapAbsorber/Injector",
     tags: ["Flutter", "Riverpod", "Clean Architecture", "JWT", "Flutter Secure Storage"],
     links: {
       github: "https://github.com/ReturajProshad",
@@ -169,8 +259,14 @@ export const achievements = [
   {
     icon: "📱",
     title: "50K+ App Downloads",
-    detail: "CodeHorse on Google Play Store — 4.2+ star rating, sole developer",
+    detail: "CodeHorse on Google Play Store — 4.3+ star rating, sole developer",
     tag: "Production",
+  },
+  {
+    icon: "🤖",
+    title: "AI-Accelerated Delivery",
+    detail: "Claude Code & GitHub Copilot in daily workflow, paired with independent code review and testing",
+    tag: "Workflow",
   },
   {
     icon: "🎓",
@@ -181,7 +277,7 @@ export const achievements = [
   {
     icon: "🎓",
     title: "B.Sc. CSE — CGPA 3.63/4.00",
-    detail: "Islamic University, Bangladesh · Thesis on NeuroTransMir (miRNA-gene prediction)",
+    detail: "Islamic University, Bangladesh · First Class Honors · Thesis on NeuroTransMir (miRNA-gene prediction)",
     tag: "Academic",
   },
 ];

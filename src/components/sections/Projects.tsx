@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, Github, Package, Smartphone, Building2, ShoppingBag } from "lucide-react";
+import { ExternalLink, Github, Package, Smartphone, Building2, ShoppingBag, Layers, Database } from "lucide-react";
 import SectionWrapper, { SectionLabel, SectionHeading } from "@/components/SectionWrapper";
 import { projects } from "@/data/portfolio";
 
@@ -10,6 +10,8 @@ const typeIcon: Record<string, React.ReactNode> = {
   production: <Smartphone size={14} />,
   enterprise: <Building2 size={14} />,
   project: <ShoppingBag size={14} />,
+  fullstack: <Layers size={14} />,
+  backend: <Database size={14} />,
 };
 
 const typeColor: Record<string, string> = {
@@ -17,6 +19,8 @@ const typeColor: Record<string, string> = {
   production: "text-emerald-400 border-emerald-400/30 bg-emerald-400/10",
   enterprise: "text-amber-400 border-amber-400/30 bg-amber-400/10",
   project: "text-subtle border-border bg-surface",
+  fullstack: "text-purple-400 border-purple-400/30 bg-purple-400/10",
+  backend: "text-sky-400 border-sky-400/30 bg-sky-400/10",
 };
 
 export default function Projects() {

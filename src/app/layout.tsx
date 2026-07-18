@@ -2,31 +2,37 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Returaj Proshad — Flutter Engineer",
+  title: "Returaj Proshad — Software Engineer",
   description:
-    "Flutter & Mobile Engineer. Building enterprise systems, open-source tools, and scalable architectures. Creator of rj form engine (pub.dev).",
+    "Software Engineer building full-stack, mobile, and systems-level products. Spring Boot, Node.js, Flutter, Next.js. Creator of rj form engine (pub.dev), 50K+ downloads shipped.",
   keywords: [
+    "Software Engineer",
+    "Full-Stack Developer",
     "Flutter Developer",
     "Mobile Engineer",
+    "Spring Boot",
+    "Node.js",
+    "Next.js",
     "Dart",
+    "Java",
+    "TypeScript",
     "Bangladesh",
     "rj form engine",
     "Clean Architecture",
-    "React",
     "Open Source",
   ],
   authors: [{ name: "Returaj Proshad Shornocar" }],
   openGraph: {
-    title: "Returaj Proshad — Flutter Engineer",
+    title: "Returaj Proshad — Software Engineer",
     description:
-      "Flutter & Mobile Engineer. Building enterprise systems, open-source tools, and scalable architectures.",
+      "Software Engineer building full-stack, mobile, and systems-level products. Spring Boot, Node.js, Flutter, Next.js.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Returaj Proshad — Flutter Engineer",
-    description: "Flutter & Mobile Engineer. Creator of rj form engine.",
+    title: "Returaj Proshad — Software Engineer",
+    description: "Full-stack & mobile engineer. Creator of rj form engine. 50K+ downloads shipped.",
   },
   robots: {
     index: true,
