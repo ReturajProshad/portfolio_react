@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import SectionWrapper, { SectionLabel, SectionHeading } from "@/components/SectionWrapper";
+import SpotlightCard from "@/components/SpotlightCard";
 import { skills } from "@/data/portfolio";
 
 const categoryColors: Record<string, string> = {
@@ -41,20 +42,21 @@ export default function Skills() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: catIndex * 0.08, duration: 0.5 }}
-            className="glass rounded-2xl p-5 hover:border-accent/20 transition-colors group"
           >
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-sm">{categoryIcons[category]}</span>
-              <span className="font-display font-semibold text-sm text-text">{category}</span>
-              <span className="ml-auto font-mono text-xs text-muted">{items.length}</span>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {items.map((skill) => (
-                <span key={skill} className={categoryColors[category] || "tag"}>
-                  {skill}
-                </span>
-              ))}
-            </div>
+            <SpotlightCard className="glass rounded-2xl p-5 hover:border-accent/20 transition-colors group h-full">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-sm">{categoryIcons[category]}</span>
+                <span className="font-display font-semibold text-sm text-text">{category}</span>
+                <span className="ml-auto font-mono text-xs text-muted">{items.length}</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {items.map((skill) => (
+                  <span key={skill} className={categoryColors[category] || "tag"}>
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </SpotlightCard>
           </motion.div>
         ))}
       </div>

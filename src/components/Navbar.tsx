@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { personal } from "@/data/portfolio";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -97,20 +98,24 @@ export default function Navbar() {
           >
             Hire me
           </a>
+          <ThemeToggle />
         </div>
 
-        {/* Mobile menu button */}
-        <button
-          className="md:hidden text-subtle hover:text-text p-2"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          <div className="w-5 flex flex-col gap-1">
-            <span className={`block h-px bg-current transition-all ${menuOpen ? "rotate-45 translate-y-1.5" : ""}`} />
-            <span className={`block h-px bg-current transition-all ${menuOpen ? "opacity-0" : ""}`} />
-            <span className={`block h-px bg-current transition-all ${menuOpen ? "-rotate-45 -translate-y-1.5" : ""}`} />
-          </div>
-        </button>
+        {/* Mobile controls */}
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
+          <button
+            className="text-subtle hover:text-text p-2"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            <div className="w-5 flex flex-col gap-1">
+              <span className={`block h-px bg-current transition-all ${menuOpen ? "rotate-45 translate-y-1.5" : ""}`} />
+              <span className={`block h-px bg-current transition-all ${menuOpen ? "opacity-0" : ""}`} />
+              <span className={`block h-px bg-current transition-all ${menuOpen ? "-rotate-45 -translate-y-1.5" : ""}`} />
+            </div>
+          </button>
+        </div>
       </nav>
 
       {/* Mobile Menu */}

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import SectionWrapper, { SectionLabel, SectionHeading } from "@/components/SectionWrapper";
+import SpotlightCard from "@/components/SpotlightCard";
 import { achievements } from "@/data/portfolio";
 
 export default function Achievements() {
@@ -20,15 +21,15 @@ export default function Achievements() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.08, duration: 0.5 }}
-            whileHover={{ y: -4 }}
-            className="glass rounded-2xl p-6 hover:border-accent/20 transition-all cursor-default"
           >
-            <div className="flex items-start justify-between mb-3">
-              <span className="text-2xl">{a.icon}</span>
-              <span className="tag text-[10px]">{a.tag}</span>
-            </div>
-            <h3 className="font-display font-semibold text-base text-text mb-1">{a.title}</h3>
-            <p className="text-xs text-subtle leading-relaxed">{a.detail}</p>
+            <SpotlightCard className="glass rounded-2xl p-6 hover:border-accent/20 transition-all cursor-default h-full">
+              <div className="flex items-start justify-between mb-3">
+                <span className="text-2xl">{a.icon}</span>
+                <span className="tag text-[10px]">{a.tag}</span>
+              </div>
+              <h3 className="font-display font-semibold text-base text-text mb-1">{a.title}</h3>
+              <p className="text-xs text-subtle leading-relaxed">{a.detail}</p>
+            </SpotlightCard>
           </motion.div>
         ))}
       </div>
@@ -47,7 +48,6 @@ export default function Achievements() {
         </h3>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="rounded-xl overflow-hidden bg-surface/60 border border-border/60 flex items-center justify-center p-4 min-h-[140px]">
-            {/* Replace with actual GitHub stats image */}
             <img
               src="https://github-readme-stats.vercel.app/api?username=ReturajProshad&show_icons=true&theme=transparent&hide_border=true&title_color=4F8EF7&text_color=8A9BB8&icon_color=34D399"
               alt="GitHub Stats"

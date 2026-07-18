@@ -1,13 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Package, Github, ExternalLink, CheckCircle2 } from "lucide-react";
+import { Github, CheckCircle2, PackageSearch } from "lucide-react";
 import SectionWrapper, { SectionLabel, SectionHeading } from "@/components/SectionWrapper";
+import SpotlightCard from "@/components/SpotlightCard";
 import { personal } from "@/data/portfolio";
 
 const features = [
   {
-    title: "13 Field Types",
+    title: "13+ Field Types",
     desc: "Text, select, multi-select, date, file, checkbox, radio, and more — all rendered from JSON.",
   },
   {
@@ -37,7 +38,7 @@ export default function OpenSource() {
     <SectionWrapper id="opensource">
       <div className="mb-12">
         <SectionLabel>Open Source</SectionLabel>
-        <SectionHeading>rj form engine</SectionHeading>
+        <SectionHeading>rj_form_engine</SectionHeading>
         <p className="text-subtle text-sm mt-2 max-w-lg">
           A schema-driven Flutter form library. Born from enterprise pain, shipped to the community.
         </p>
@@ -58,7 +59,7 @@ export default function OpenSource() {
           <div className="glass rounded-2xl p-6 mb-4 border-l-2 border-l-emerald-400">
             <h4 className="font-display font-semibold text-sm text-emerald-400 mb-2 uppercase tracking-wider">The Solution</h4>
             <p className="text-subtle text-sm leading-relaxed">
-              Define your entire form in JSON. rj form engine handles rendering, validation, state, and dependencies automatically.
+              Define your entire form in JSON. rj_form_engine handles rendering, validation, state, and dependencies automatically.
               One JSON config → fully functional, validated, accessible form widget.
             </p>
           </div>
@@ -66,38 +67,33 @@ export default function OpenSource() {
           <div className="glass rounded-2xl p-6 border-l-2 border-l-amber-400">
             <h4 className="font-display font-semibold text-sm text-amber-400 mb-2 uppercase tracking-wider">The Impact</h4>
             <p className="text-subtle text-sm leading-relaxed">
-              ~90% reduction in UI development effort across 3 enterprise production systems. Later extracted
-              from internal use and published to pub.dev for the Flutter community.
+              ~90% reduction in UI development effort across 3 enterprise production systems, later extracted
+              from internal use into a standalone, framework-agnostic package.
             </p>
           </div>
 
           {/* Links */}
-          <div className="flex gap-3 mt-6">
-            <a
-              href={personal.pubdev}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent/90 transition-all"
-            >
-              <Package size={14} />
-              View on pub.dev
-            </a>
+          <div className="flex flex-wrap gap-3 mt-6">
             <a
               href={personal.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border/80 text-subtle hover:text-text text-sm font-medium transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent/90 transition-all"
             >
               <Github size={14} />
-              GitHub
+              View on GitHub
             </a>
+            <span className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border/80 text-muted text-sm font-medium">
+              <PackageSearch size={14} />
+              pub.dev listing pending
+            </span>
           </div>
         </div>
 
         {/* Right: Features grid */}
         <div>
           {/* Sample JSON snippet */}
-          <div className="glass rounded-2xl p-5 mb-4 font-mono text-xs overflow-auto">
+          <SpotlightCard className="glass rounded-2xl p-5 mb-4 font-mono text-xs overflow-auto" tilt={false}>
             <p className="text-muted mb-3">// Define a form in JSON</p>
             <pre className="text-subtle leading-relaxed whitespace-pre-wrap">{`{
   "fields": [
@@ -117,7 +113,7 @@ export default function OpenSource() {
     }
   ]
 }`}</pre>
-          </div>
+          </SpotlightCard>
 
           <div className="grid grid-cols-2 gap-3">
             {features.map((f, i) => (
@@ -127,11 +123,12 @@ export default function OpenSource() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
-                className="glass rounded-xl p-4 hover:border-accent/20 transition-colors"
               >
-                <CheckCircle2 size={14} className="text-accent mb-2" />
-                <h5 className="font-display font-semibold text-sm text-text mb-1">{f.title}</h5>
-                <p className="text-xs text-muted leading-relaxed">{f.desc}</p>
+                <SpotlightCard className="glass rounded-xl p-4 hover:border-accent/20 transition-colors h-full">
+                  <CheckCircle2 size={14} className="text-accent mb-2" />
+                  <h5 className="font-display font-semibold text-sm text-text mb-1">{f.title}</h5>
+                  <p className="text-xs text-muted leading-relaxed">{f.desc}</p>
+                </SpotlightCard>
               </motion.div>
             ))}
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Github, Linkedin, ArrowRight, MapPin, Phone } from "lucide-react";
+import { Mail, Github, Linkedin, ArrowRight, MapPin, Phone, Code2, Trophy } from "lucide-react";
 import SectionWrapper, { SectionLabel, SectionHeading } from "@/components/SectionWrapper";
 import { personal } from "@/data/portfolio";
 
@@ -26,6 +26,20 @@ const links = [
     value: "linkedin.com/in/returaj-proshad",
     href: personal.linkedin,
     color: "text-accent",
+  },
+  {
+    icon: Trophy,
+    label: "Codeforces",
+    value: "returaj0808 · Max 1235",
+    href: personal.codeforces,
+    color: "text-amber-400",
+  },
+  {
+    icon: Code2,
+    label: "LeetCode",
+    value: "60+ problems solved",
+    href: personal.leetcode,
+    color: "text-emerald-400",
   },
 ];
 
@@ -54,7 +68,7 @@ export default function Contact() {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
+              transition={{ delay: i * 0.08 }}
               whileHover={{ x: 6 }}
               className="group glass rounded-xl px-5 py-4 flex items-center gap-4 hover:border-accent/30 transition-all text-left"
             >

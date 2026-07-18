@@ -9,8 +9,9 @@ export const personal = {
   email: "returajsumon0808@gmail.com",
   phone: "+8801608517866",
   github: "https://github.com/ReturajProshad",
-  linkedin: "https://linkedin.com/in/returaj-proshad",
-  pubdev: "https://pub.dev",
+  linkedin: "https://www.linkedin.com/in/returaj-proshad",
+  codeforces: "https://codeforces.com/profile/returaj0808",
+  leetcode: "https://leetcode.com/u/returajsumon0808/",
   available: true,
   languages: ["English", "Bangla"],
 };
@@ -119,7 +120,7 @@ export const projects = [
     achievement: "Ambiguous brief → fully specified 6-module system, shipped across 19+ incremental commits",
     tags: ["Spring Boot", "Flutter", "Isar", "Offline-First", "System Design"],
     links: {
-      github: "https://github.com/ReturajProshad",
+      github: "https://github.com/ReturajProshad/EZTrainz-Task",
     },
     featured: true,
     type: "fullstack",
@@ -144,7 +145,6 @@ export const projects = [
     achievement: "90% reduction in UI development effort across 3 enterprise systems",
     tags: ["Dart", "Flutter", "Open Source", "pub.dev"],
     links: {
-      pubdev: "https://pub.dev",
       github: "https://github.com/ReturajProshad",
     },
     featured: true,
@@ -171,7 +171,7 @@ export const projects = [
     achievement: "50K+ installs · 4.3+ Play Store rating · Sole developer",
     tags: ["Flutter", "Firebase", "Node.js", "AdMob", "FCM"],
     links: {
-      playstore: "https://play.google.com/store",
+      playstore: "https://play.google.com/store/apps/details?id=com.rayhans.codehorse&hl=en",
     },
     featured: true,
     type: "production",
@@ -190,7 +190,7 @@ export const projects = [
     achievement: "Self-taught the Next.js/TypeScript frontend while shipping the full stack solo",
     tags: ["Spring Boot", "Next.js", "TypeScript", "REST APIs"],
     links: {
-      github: "https://github.com/ReturajProshad",
+      github: "https://github.com/ReturajProshad/Spring-boot-Next-ts-todo",
     },
     featured: false,
     type: "fullstack",
@@ -204,7 +204,7 @@ export const projects = [
     achievement: "Independently learned Oracle PL/SQL to design triggers and stored procedures",
     tags: ["Node.js", "Oracle DB", "PL/SQL", "REST APIs"],
     links: {
-      github: "https://github.com/ReturajProshad",
+      github: "https://github.com/ReturajProshad/virtual-bookshelf-management--Returaj-Proshad-Shornocar--DB-Batch-11",
     },
     featured: false,
     type: "backend",
@@ -218,7 +218,7 @@ export const projects = [
     achievement: "Solved a complex scroll-state problem with NestedScrollView + SliverOverlapAbsorber/Injector",
     tags: ["Flutter", "Riverpod", "Clean Architecture", "JWT", "Flutter Secure Storage"],
     links: {
-      github: "https://github.com/ReturajProshad",
+      github: "https://github.com/ReturajProshad/zaviMart",
     },
     featured: false,
     type: "project",
@@ -231,7 +231,9 @@ export const projects = [
       "Three production enterprise apps: livestock management, self-service F&B POS kiosks, and border compliance workflows.",
     achievement: "Cross-platform POS with native Win32 APIs + ESC/POS thermal printers",
     tags: ["Flutter", "Windows", "Android", "Win32", "GoRouter", "RBAC"],
-    links: {},
+    links: {
+      github: "https://github.com/ReturajProshad/professional-summary",
+    },
     featured: false,
     type: "enterprise",
   },
