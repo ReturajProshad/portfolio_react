@@ -206,6 +206,23 @@ html[data-os="linux"] .desktop-icon-image {
   max-width: 72px;
 }
 
+/* ── Desktop area (between taskbar/topbar/dock) ── */
+
+.desktop-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+html[data-os="windows"] .desktop-area {
+  margin-bottom: 36px;
+}
+
+html[data-os="linux"] .desktop-area {
+  margin-top: 32px;
+  margin-left: 64px;
+}
+
 /* ── Window chrome ── */
 
 .window {
@@ -218,6 +235,33 @@ html[data-os="linux"] .desktop-icon-image {
   background: rgb(var(--surface));
   border: 1px solid rgb(var(--border));
   animation: windowOpen 0.2s ease-out;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+html[data-os="linux"] .window {
+  border-radius: 10px;
+}
+
+.window.window-blurred {
+  box-shadow: 0 4px 20px rgb(0 0 0 / 0.25);
+  border-color: rgb(var(--border) / 0.6);
+}
+
+.window.window-maximized {
+  border-radius: 0;
+  border: none;
+}
+
+html[data-os="windows"] .window.window-maximized {
+  inset: 0 0 36px 0 !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+html[data-os="linux"] .window.window-maximized {
+  inset: 32px 0 0 64px !important;
+  width: auto !important;
+  height: auto !important;
 }
 
 @keyframes windowOpen {
@@ -225,31 +269,52 @@ html[data-os="linux"] .desktop-icon-image {
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-html[data-os="linux"] .window {
-  border-radius: 10px;
-}
-
 /* ── Title bar ── */
 
 .window-titlebar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 10px;
-  height: 36px;
-  min-height: 36px;
+  padding: 0 4px;
+  height: 32px;
+  min-height: 32px;
   user-select: none;
   cursor: default;
+  touch-action: none;
 }
 
 html[data-os="windows"] .window-titlebar {
   background: rgb(var(--surface));
   border-bottom: 1px solid rgb(var(--border));
+  cursor: grab;
+}
+
+html[data-os="windows"] .window-titlebar:active {
+  cursor: grabbing;
 }
 
 html[data-os="linux"] .window-titlebar {
   background: rgb(var(--surface) / 0.95);
   border-bottom: 1px solid rgb(var(--border));
+  cursor: grab;
+}
+
+html[data-os="linux"] .window-titlebar:active {
+  cursor: grabbing;
+}
+
+.window-titlebar-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 72px;
+}
+
+.window-titlebar-controls-right {
+  min-width: 72px;
+}
+
+html[data-os="linux"] .window-titlebar-controls-left {
+  order: 0;
 }
 
 .window-title {
@@ -260,32 +325,36 @@ html[data-os="linux"] .window-titlebar {
   text-overflow: ellipsis;
   white-space: nowrap;
   flex: 1;
+  text-align: center;
+  pointer-events: none;
 }
 
 html[data-os="windows"] .window-title {
   font-family: 'Segoe UI', 'Inter', sans-serif;
-  text-align: center;
-  margin-right: 36px;
 }
 
 html[data-os="linux"] .window-title {
   font-family: 'Ubuntu', 'Inter', sans-serif;
-  text-align: center;
-  margin-left: 36px;
 }
 
-.window-btn-close {
-  width: 30px;
-  height: 30px;
+/* ── Window control buttons ── */
+
+.window-btn {
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
   border: none;
   background: transparent;
   color: rgb(var(--text));
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  border-radius: 4px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.window-btn:hover {
+  background: rgb(var(--accent) / 0.15);
 }
 
 html[data-os="windows"] .window-btn-close:hover {
@@ -293,13 +362,14 @@ html[data-os="windows"] .window-btn-close:hover {
   color: #fff;
 }
 
-html[data-os="linux"] .window-btn-close {
-  order: -1;
+html[data-os="linux"] .window-btn-close:hover {
+  background: #e81123;
+  color: #fff;
 }
 
-html[data-os="linux"] .window-btn-close:hover {
-  background: rgb(var(--accent) / 0.2);
-  color: rgb(var(--accent));
+html[data-os="windows"] .window-blurred .window-btn-close:hover {
+  background: #e81123;
+  color: #fff;
 }
 
 /* ── Window content area ── */
@@ -310,27 +380,109 @@ html[data-os="linux"] .window-btn-close:hover {
   background: rgb(var(--bg));
 }
 
-/* ── System tray ── */
+/* ── Taskbar (Windows) ── */
 
-.system-tray {
+.taskbar {
   position: fixed;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 12px;
-  z-index: 9999;
-}
-
-html[data-os="windows"] .system-tray {
-  bottom: 0;
-  right: 0;
+  gap: 2px;
   height: 36px;
+  padding: 0 4px;
+  z-index: 10000;
+  user-select: none;
 }
 
-html[data-os="linux"] .system-tray {
-  top: 0;
+.taskbar-windows {
+  bottom: 0;
+  left: 0;
   right: 0;
+  background: rgb(var(--surface) / 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgb(var(--border));
+  font-family: 'Segoe UI', 'Inter', sans-serif;
+}
+
+.taskbar-start {
+  width: 40px;
   height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: rgb(var(--text));
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.taskbar-start:hover {
+  background: rgb(var(--accent) / 0.15);
+}
+
+.taskbar-start-icon {
+  font-size: 18px;
+}
+
+.taskbar-apps {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  flex: 1;
+  justify-content: center;
+}
+
+.taskbar-app {
+  width: 40px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: rgb(var(--muted));
+  cursor: pointer;
+  border-radius: 4px;
+  position: relative;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.taskbar-app:hover {
+  background: rgb(var(--accent) / 0.1);
+  color: rgb(var(--text));
+}
+
+.taskbar-app.active {
+  color: rgb(var(--accent));
+}
+
+.taskbar-app.running::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgb(var(--accent));
+  transition: width 0.15s ease;
+}
+
+.taskbar-app.active.running::after {
+  width: 12px;
+  border-radius: 2px;
+}
+
+/* ── System tray (inside taskbar / top bar) ── */
+
+.system-tray {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+  height: 100%;
 }
 
 .system-tray-btn {
@@ -355,18 +507,209 @@ html[data-os="linux"] .system-tray {
   font-size: 11px;
   font-family: 'JetBrains Mono', monospace;
   color: rgb(var(--text));
+  padding: 0 4px;
+}
+
+/* ── Top bar (Linux) ── */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  z-index: 10000;
+  user-select: none;
+}
+
+.topbar-linux {
+  background: rgb(var(--surface) / 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgb(var(--border));
+  font-family: 'Ubuntu', 'Inter', sans-serif;
+}
+
+.topbar-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.topbar-activities {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgb(var(--text));
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.topbar-activities:hover {
+  background: rgb(var(--accent) / 0.1);
+}
+
+.topbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.topbar-clock {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: rgb(var(--text));
+}
+
+.topbar-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.topbar-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: rgb(var(--text));
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.topbar-btn:hover {
+  background: rgb(var(--accent) / 0.15);
+}
+
+/* ── Dock (Linux) ── */
+
+.dock {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  z-index: 10000;
+  user-select: none;
+}
+
+.dock-linux {
+  left: 0;
+  top: 32px;
+  bottom: 0;
+  width: 64px;
+  background: rgb(var(--surface) / 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-right: 1px solid rgb(var(--border));
+}
+
+.dock-app {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: rgb(var(--muted));
+  cursor: pointer;
+  border-radius: 10px;
+  position: relative;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.dock-app:hover {
+  background: rgb(var(--accent) / 0.1);
+  color: rgb(var(--text));
+}
+
+.dock-app.active {
+  color: rgb(var(--accent));
+}
+
+.dock-app.running::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgb(var(--accent));
+  transition: height 0.15s ease;
+}
+
+.dock-app.active.running::before {
+  height: 16px;
+  border-radius: 2px;
 }
 
 /* ── OS-specific font overrides ── */
 
-html[data-os="windows"] .window-titlebar,
-html[data-os="windows"] .system-tray {
+html[data-os="windows"] .window-titlebar {
   font-family: 'Segoe UI', 'Inter', sans-serif;
 }
 
-html[data-os="linux"] .window-titlebar,
-html[data-os="linux"] .system-tray {
+html[data-os="linux"] .window-titlebar {
   font-family: 'Ubuntu', 'Inter', sans-serif;
+}
+
+/* ── Context menu ── */
+
+.ctx-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50000;
+}
+
+.ctx-menu {
+  position: fixed;
+  z-index: 50001;
+  min-width: 160px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--border));
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 8px 32px rgb(0 0 0 / 0.4);
+  animation: ctxMenuOpen 0.12s ease-out;
+  overflow: hidden;
+}
+
+@keyframes ctxMenuOpen {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.ctx-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: rgb(var(--text));
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: left;
+  transition: background 0.1s ease;
+}
+
+.ctx-menu-item:hover {
+  background: rgb(var(--accent) / 0.15);
+  color: rgb(var(--accent));
 }
 
 /* ── Grid pattern background */

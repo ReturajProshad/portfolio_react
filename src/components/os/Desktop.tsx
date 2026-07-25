@@ -1,11 +1,13 @@
 "use client";
 
-import { OsThemeProvider } from "./OsThemeProvider";
+import { OsThemeProvider, useOsTheme } from "./OsThemeProvider";
 import { WindowManagerProvider, useWindowManager } from "@/lib/windowManager";
 import { appDefinitions } from "@/config/apps";
 import DesktopIcon from "./DesktopIcon";
 import Window from "./Window";
-import SystemTray from "./SystemTray";
+import WindowsTaskbar from "./WindowsTaskbar";
+import LinuxTopBar from "./LinuxTopBar";
+import LinuxDock from "./LinuxDock";
 import AboutApp from "@/components/apps/AboutApp";
 import ExperienceApp from "@/components/apps/ExperienceApp";
 import SkillsApp from "@/components/apps/SkillsApp";
@@ -26,23 +28,29 @@ const appComponentMap: Record<string, React.ComponentType> = {
 
 function DesktopInner() {
   const { windows } = useWindowManager();
+  const { osTheme } = useOsTheme();
+  const isWindows = osTheme === "windows";
 
   return (
     <div className="desktop">
-      <div className="desktop-icons">
-        {appDefinitions.map(app => (
-          <DesktopIcon key={app.id} app={app} />
-        ))}
+      {!isWindows && <LinuxTopBar />}
+      {!isWindows && <LinuxDock />}
+      <div className="desktop-area">
+        <div className="desktop-icons">
+          {appDefinitions.map(app => (
+            <DesktopIcon key={app.id} app={app} />
+          ))}
+        </div>
+        {windows.filter(w => w.isOpen && !w.isMinimized).map(w => {
+          const AppComponent = appComponentMap[w.id];
+          return (
+            <Window key={w.id} windowState={w}>
+              <AppComponent />
+            </Window>
+          );
+        })}
       </div>
-      {windows.filter(w => w.isOpen).map(w => {
-        const AppComponent = appComponentMap[w.id];
-        return (
-          <Window key={w.id} windowState={w}>
-            <AppComponent />
-          </Window>
-        );
-      })}
-      <SystemTray />
+      {isWindows && <WindowsTaskbar />}
     </div>
   );
 }
