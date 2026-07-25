@@ -19,7 +19,7 @@ type ScreenId = "splash" | "dashboard" | "form" | "stats";
 type ParticlePhase = "idle" | "to-server" | "from-server";
 
 const SCREEN_ORDER: ScreenId[] = ["splash", "dashboard", "form", "stats"];
-const HOLD_MS = 3000;
+const HOLD_MS = 1500;
 const TRANSITION_MS = 350;
 
 /**
