@@ -104,7 +104,7 @@ export default function Window({
   }, [windowState.id, windowState.isMaximized, updatePosition, updateSize]);
 
   const windowStyle: React.CSSProperties = windowState.isMaximized
-    ? { zIndex: windowState.zIndex }
+    ? { zIndex: 99999 }
     : {
         left: windowState.position.x,
         top: windowState.position.y,

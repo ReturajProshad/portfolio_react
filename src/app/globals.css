@@ -465,12 +465,14 @@ html[data-os="linux"] .window.window-maximized {
 .window-titlebar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 4px;
   height: 32px;
   min-height: 32px;
   user-select: none;
   cursor: default;
   touch-action: none;
+  position: relative;
 }
 
 html[data-os="windows"] .window-titlebar {
@@ -479,6 +481,7 @@ html[data-os="windows"] .window-titlebar {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   cursor: grab;
+  flex-direction: row-reverse;
 }
 
 html[data-os="windows"] .window:not(.window-blurred) {
@@ -506,34 +509,26 @@ html[data-os="linux"] .window-titlebar:active {
 }
 
 .window-titlebar-controls-left {
-  order: 0;
+  flex: 0 0 auto;
 }
 
 .window-titlebar-controls-right {
-  order: 2;
-  flex: 1;
-}
-
-html[data-os="windows"] .window-titlebar-controls-left {
-  order: 2;
-}
-
-html[data-os="windows"] .window-titlebar-controls-right {
-  order: 0;
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .window-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 50%;
   font-size: 12px;
   font-weight: 500;
   color: rgb(var(--text));
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  flex: 1;
   text-align: center;
   pointer-events: none;
-  order: 1;
 }
 
 html[data-os="windows"] .window-title {
