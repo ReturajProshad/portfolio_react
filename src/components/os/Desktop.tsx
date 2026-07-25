@@ -12,6 +12,7 @@ import LinuxTopBar from "./LinuxTopBar";
 import LinuxDock from "./LinuxDock";
 import StartMenu from "./StartMenu";
 import ActivitiesOverview from "./ActivitiesOverview";
+import WritingReveal from "./WritingReveal";
 import MobileNav from "./MobileNav";
 import MobileAppView from "./MobileAppView";
 import AboutApp from "@/components/apps/AboutApp";
@@ -73,6 +74,7 @@ function DesktopInner() {
       {!isWindows && <LinuxTopBar onActivitiesClick={handleActivitiesClick} />}
       {!isWindows && <LinuxDock />}
       <div className="desktop-area">
+        <WritingReveal />
         {windows.filter(w => w.isOpen && !w.isMinimized).map(w => {
           const AppComponent = appComponentMap[w.id];
           return (

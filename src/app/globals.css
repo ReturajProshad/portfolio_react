@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@400;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -1094,6 +1094,84 @@ html[data-os="linux"] .activities-app-icon {
 .mobile-app-content {
   flex: 1;
   overflow-y: auto;
+}
+
+/* ── Writing Reveal (handwriting animation) ── */
+
+.writing-reveal {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  font-family: 'Caveat', cursive;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  pointer-events: none;
+}
+
+.reveal-line {
+  position: relative;
+  white-space: nowrap;
+}
+
+.reveal-text-sizer {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  visibility: hidden;
+  pointer-events: none;
+  display: block;
+}
+
+.reveal-text-bright {
+  font-size: 3.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, rgb(var(--accent)) 0%, rgb(var(--emerald)) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.reveal-text-sizer-sub {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.reveal-text-bright-sub {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.reveal-overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.reveal-pen {
+  position: absolute;
+  color: rgb(var(--accent));
+  z-index: 10;
+  transform-origin: 0 0;
+  filter: drop-shadow(0 1px 3px rgb(var(--accent) / 0.4));
+}
+
+.reveal-pen-inner {
+  transform: translate(-50%, -100%);
+}
+
+.reveal-ink {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgb(var(--accent) / 0.8);
+  z-index: 9;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
 }
 
 /* ── Reduced motion ── */
