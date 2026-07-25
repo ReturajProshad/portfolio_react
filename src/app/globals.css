@@ -1604,6 +1604,32 @@ html[data-os="linux"] .activities-app-icon {
   font-weight: 600;
 }
 
+/* ── Education Line ── */
+
+.education-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: rgb(var(--text) / 0.65);
+  margin: -6px 0 0;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgb(var(--accent) / 0.06);
+  border: 1px solid rgb(var(--accent) / 0.08);
+  width: fit-content;
+}
+
+.education-line svg {
+  color: rgb(var(--accent));
+  flex-shrink: 0;
+}
+
+.education-line strong {
+  color: rgb(var(--text) / 0.85);
+  font-weight: 600;
+}
+
 /* ── Stats Cards ── */
 
 .stats-cards {

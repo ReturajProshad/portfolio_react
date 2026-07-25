@@ -18,6 +18,7 @@ import StatsCards from "./StatsCards";
 import QuickInfo from "./QuickInfo";
 import CurrentWork from "./CurrentWork";
 import FlutterShowcase from "./FlutterShowcase";
+import { GraduationCap } from "lucide-react";
 import ThemeToggle from "../ThemeToggle";
 import MobileNav from "./MobileNav";
 import MobileAppView from "./MobileAppView";
@@ -116,8 +117,14 @@ function DesktopInner() {
           {revealDone && <StatsCards />}
           <ProfessionalSummary show={revealDone} />
           {revealDone && <QuickInfo />}
+          {revealDone && (
+            <div className="education-line">
+              <GraduationCap size={14} />
+              <span><strong>B.Sc. in CSE</strong> — Islamic University &middot; <strong>CGPA 3.63/4.00</strong></span>
+            </div>
+          )}
         </div>
-        {revealDone && !windows.some(w => w.isOpen && !w.isMinimized) && <CurrentWork />}
+        {revealDone && <CurrentWork />}
         {revealDone && <FlutterShowcase />}
         {windows.filter(w => w.isOpen && !w.isMinimized).map(w => {
           const AppComponent = appComponentMap[w.id];
