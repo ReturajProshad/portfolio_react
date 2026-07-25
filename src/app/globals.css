@@ -1622,11 +1622,11 @@ html[data-os="linux"] .activities-app-icon {
 .quick-info-link {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
+  gap: 6px;
+  padding: 5px 12px;
   border-radius: 6px;
-  font-size: 0.75rem;
-  color: rgb(var(--text) / 0.7);
+  font-size: 0.8rem;
+  color: rgb(var(--text) / 0.8);
   background: rgb(var(--surface) / 0.4);
   border: 1px solid rgb(var(--border) / 0.3);
   text-decoration: none;
@@ -1643,13 +1643,13 @@ html[data-os="linux"] .activities-app-icon {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.8rem;
-  color: rgb(var(--text) / 0.6);
+  font-size: 0.85rem;
+  color: rgb(var(--text) / 0.7);
 }
 
 .quick-info-company-name {
-  font-weight: 500;
-  color: rgb(var(--text) / 0.8);
+  font-weight: 600;
+  color: rgb(var(--text) / 0.9);
 }
 
 .quick-info-shipped {
@@ -1662,15 +1662,58 @@ html[data-os="linux"] .activities-app-icon {
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  font-size: 0.75rem;
-  line-height: 1.45;
-  color: rgb(var(--text) / 0.65);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgb(var(--text) / 0.7);
 }
 
 .quick-info-bullet svg {
   margin-top: 3px;
   flex-shrink: 0;
   color: rgb(var(--emerald));
+}
+
+/* ── Architecture flow layers (inside FlutterShowcase) ── */
+
+.arch-layers {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.arch-layer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgb(var(--surface) / 0.5);
+  border: 1px solid rgb(var(--border) / 0.2);
+}
+
+.arch-layer-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.arch-layer-label {
+  font-size: 0.5rem;
+  font-weight: 600;
+  color: rgb(var(--text));
+  letter-spacing: 0.01em;
+}
+
+.arch-layer-sub {
+  display: none;
+}
+
+.arch-layer-arrow-svg {
+  opacity: 0.4;
+  flex-shrink: 0;
 }
 
 /* ── Top right actions ── */

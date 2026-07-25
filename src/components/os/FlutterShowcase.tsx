@@ -351,7 +351,7 @@ export default function FlutterShowcase() {
         </svg>
       )}
 
-      {/* Phone + progress dots + caption, laid out in normal flow */}
+      {/* Phone + progress dots + caption + arch layers, laid out in normal flow */}
       <div className="showcase-stack">
         <div ref={phoneRef} className="showcase-phone">
           <div className="phone-camera" />
@@ -381,6 +381,30 @@ export default function FlutterShowcase() {
             </AnimatePresence>
           </div>
           <div className="phone-home-indicator" />
+        </div>
+
+        <div className="arch-layers" aria-hidden="true">
+          <div className="arch-layer">
+            <span className="arch-layer-dot" style={{ background: "rgb(var(--accent))" }} />
+            <span className="arch-layer-label">Presentation</span>
+            <span className="arch-layer-sub">Flutter UI</span>
+            <svg className="arch-layer-arrow-svg" width="8" height="10" viewBox="0 0 8 10" fill="none">
+              <path d="M4 0v7M1 4l3 3 3-3" stroke="rgb(var(--muted))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <div className="arch-layer">
+            <span className="arch-layer-dot" style={{ background: "rgb(var(--emerald))" }} />
+            <span className="arch-layer-label">Domain</span>
+            <span className="arch-layer-sub">Business Logic</span>
+            <svg className="arch-layer-arrow-svg" width="8" height="10" viewBox="0 0 8 10" fill="none">
+              <path d="M4 0v7M1 4l3 3 3-3" stroke="rgb(var(--muted))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <div className="arch-layer">
+            <span className="arch-layer-dot" style={{ background: "rgb(var(--amber))" }} />
+            <span className="arch-layer-label">Data</span>
+            <span className="arch-layer-sub">API / Backend</span>
+          </div>
         </div>
 
         <div className="showcase-dots">
