@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@400;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -62,12 +62,14 @@ html::-webkit-scrollbar-thumb {
 body {
   background: rgb(var(--bg));
   color: rgb(var(--text));
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  transition: background-color 0.35s ease, color 0.35s ease;
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease;
 }
 
 ::selection {
@@ -77,7 +79,7 @@ body {
 
 /* Noise texture overlay */
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
@@ -93,14 +95,22 @@ body::before {
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, rgb(var(--text)) 0%, rgb(var(--subtle)) 100%);
+  background: linear-gradient(
+    135deg,
+    rgb(var(--text)) 0%,
+    rgb(var(--subtle)) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .text-gradient-accent {
-  background: linear-gradient(135deg, rgb(var(--accent)) 0%, rgb(var(--emerald)) 100%);
+  background: linear-gradient(
+    135deg,
+    rgb(var(--accent)) 0%,
+    rgb(var(--emerald)) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -127,20 +137,113 @@ body {
   display: flex;
   flex-direction: column;
   background: rgb(var(--bg));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   z-index: 0;
 }
 
-/* Wallpaper per OS theme */
-html[data-os="windows"] .desktop {
-  background: radial-gradient(ellipse at 20% 50%, rgb(79 142 247 / 0.06) 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 20%, rgb(52 211 153 / 0.04) 0%, transparent 50%),
-              rgb(var(--bg));
+.desktop-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    transparent 40%,
+    rgb(var(--bg) / 0.65) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
 }
 
-html[data-os="linux"] .desktop {
-  background: radial-gradient(ellipse at 50% 0%, rgb(233 84 32 / 0.06) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 80%, rgb(52 211 153 / 0.04) 0%, transparent 50%),
-              rgb(var(--bg));
+/* ── Mesh gradient blobs ── */
+
+.mesh-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mesh-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  will-change: transform;
+  opacity: 0.15;
+  animation: meshFloat 24s ease-in-out infinite;
+}
+
+.mesh-blob-1 {
+  width: 700px;
+  height: 700px;
+  background: #00ff41;
+  top: -15%;
+  left: -10%;
+  animation-duration: 28s;
+  opacity: 0.12;
+}
+
+.mesh-blob-2 {
+  width: 500px;
+  height: 500px;
+  background: #00e5ff;
+  bottom: -12%;
+  right: -8%;
+  animation-duration: 32s;
+  animation-delay: -6s;
+  opacity: 0.08;
+}
+
+.mesh-blob-3 {
+  width: 400px;
+  height: 400px;
+  background: #7c3aed;
+  top: 50%;
+  left: 60%;
+  animation-duration: 26s;
+  animation-delay: -10s;
+  opacity: 0.1;
+}
+
+.mesh-blob-4 {
+  width: 300px;
+  height: 300px;
+  background: #f59e0b;
+  top: 20%;
+  right: 25%;
+  animation-duration: 22s;
+  animation-delay: -3s;
+  opacity: 0.06;
+}
+
+.mesh-blob-5 {
+  width: 350px;
+  height: 350px;
+  background: #00ff41;
+  bottom: 20%;
+  left: 15%;
+  animation-duration: 30s;
+  animation-delay: -14s;
+  opacity: 0.07;
+}
+
+@keyframes meshFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  20% {
+    transform: translate(40px, -30px) scale(1.08);
+  }
+  40% {
+    transform: translate(-20px, 35px) scale(0.92);
+  }
+  60% {
+    transform: translate(25px, -15px) scale(1.04);
+  }
+  80% {
+    transform: translate(-35px, 20px) scale(0.96);
+  }
 }
 
 /* ── Desktop icon grid ── */
@@ -190,11 +293,11 @@ html[data-os="linux"] .desktop {
 }
 
 html[data-os="windows"] .desktop-icon-image {
-  color: #4FC3F7;
+  color: #4fc3f7;
 }
 
 html[data-os="linux"] .desktop-icon-image {
-  color: #E95420;
+  color: #e95420;
 }
 
 .desktop-icon-label {
@@ -231,11 +334,17 @@ html[data-os="linux"] .desktop-area {
   flex-direction: column;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 8px 40px rgb(0 0 0 / 0.45), 0 2px 8px rgb(0 0 0 / 0.2);
-  background: rgb(var(--surface));
-  border: 1px solid rgb(var(--border));
+  box-shadow:
+    0 8px 40px rgb(0 0 0 / 0.45),
+    0 2px 8px rgb(0 0 0 / 0.2);
+  background: rgb(var(--surface) / 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgb(var(--border) / 0.7);
   animation: windowOpen 0.2s ease-out;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 html[data-os="linux"] .window {
@@ -265,8 +374,14 @@ html[data-os="linux"] .window.window-maximized {
 }
 
 @keyframes windowOpen {
-  from { opacity: 0; transform: scale(0.96) translateY(8px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* ── Title bar ── */
@@ -346,11 +461,11 @@ html[data-os="windows"] .window-titlebar-controls-right {
 }
 
 html[data-os="windows"] .window-title {
-  font-family: 'Segoe UI', 'Inter', sans-serif;
+  font-family: "Segoe UI", "Inter", sans-serif;
 }
 
 html[data-os="linux"] .window-title {
-  font-family: 'Ubuntu', 'Inter', sans-serif;
+  font-family: "Ubuntu", "Inter", sans-serif;
 }
 
 /* ── Window control buttons ── */
@@ -366,7 +481,9 @@ html[data-os="linux"] .window-title {
   color: rgb(var(--text));
   cursor: pointer;
   border-radius: 4px;
-  transition: background 0.12s ease, color 0.12s ease;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
 }
 
 .window-btn:hover {
@@ -393,7 +510,9 @@ html[data-os="windows"] .window-blurred .window-btn-close:hover {
 .window-content {
   flex: 1;
   overflow: hidden;
-  background: rgb(var(--bg));
+  background: rgb(var(--surface) / 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 /* ── Taskbar (Windows) ── */
@@ -417,7 +536,7 @@ html[data-os="windows"] .window-blurred .window-btn-close:hover {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid rgb(var(--border));
-  font-family: 'Segoe UI', 'Inter', sans-serif;
+  font-family: "Segoe UI", "Inter", sans-serif;
 }
 
 .taskbar-start {
@@ -461,7 +580,9 @@ html[data-os="windows"] .window-blurred .window-btn-close:hover {
   cursor: pointer;
   border-radius: 6px;
   position: relative;
-  transition: color 0.15s ease, background 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
   min-width: 60px;
 }
 
@@ -485,7 +606,7 @@ html[data-os="windows"] .window-blurred .window-btn-close:hover {
 }
 
 .taskbar-app.running::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 2px;
   left: 50%;
@@ -532,7 +653,7 @@ html[data-os="windows"] .window-blurred .window-btn-close:hover {
 
 .system-tray-clock {
   font-size: 11px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   color: rgb(var(--text));
   padding: 0 4px;
 }
@@ -557,7 +678,7 @@ html[data-os="windows"] .window-blurred .window-btn-close:hover {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgb(var(--border));
-  font-family: 'Ubuntu', 'Inter', sans-serif;
+  font-family: "Ubuntu", "Inter", sans-serif;
 }
 
 .topbar-left {
@@ -587,7 +708,7 @@ html[data-os="windows"] .window-blurred .window-btn-close:hover {
 
 .topbar-clock {
   font-size: 11px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   color: rgb(var(--text));
 }
 
@@ -652,7 +773,9 @@ html[data-os="windows"] .window-blurred .window-btn-close:hover {
   cursor: pointer;
   border-radius: 10px;
   position: relative;
-  transition: color 0.15s ease, background 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
 }
 
 .dock-app:hover {
@@ -665,7 +788,7 @@ html[data-os="windows"] .window-blurred .window-btn-close:hover {
 }
 
 .dock-app.running::before {
-  content: '';
+  content: "";
   position: absolute;
   left: -2px;
   top: 50%;
@@ -685,11 +808,11 @@ html[data-os="windows"] .window-blurred .window-btn-close:hover {
 /* ── OS-specific font overrides ── */
 
 html[data-os="windows"] .window-titlebar {
-  font-family: 'Segoe UI', 'Inter', sans-serif;
+  font-family: "Segoe UI", "Inter", sans-serif;
 }
 
 html[data-os="linux"] .window-titlebar {
-  font-family: 'Ubuntu', 'Inter', sans-serif;
+  font-family: "Ubuntu", "Inter", sans-serif;
 }
 
 /* ── Theme toggle transition ── */
@@ -702,7 +825,10 @@ html[data-os="linux"] .window-titlebar {
 .topbar,
 .dock,
 .start-menu {
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 /* ── Start Menu (Windows) ── */
@@ -725,14 +851,20 @@ html[data-os="linux"] .window-titlebar {
   border-radius: 8px 8px 0 0;
   box-shadow: 0 -4px 32px rgb(0 0 0 / 0.3);
   z-index: 20001;
-  font-family: 'Segoe UI', 'Inter', sans-serif;
+  font-family: "Segoe UI", "Inter", sans-serif;
   animation: startMenuOpen 0.15s ease-out;
   overflow: hidden;
 }
 
 @keyframes startMenuOpen {
-  from { transform: translateY(12px); opacity: 0; }
-  to   { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .start-menu-account {
@@ -753,7 +885,7 @@ html[data-os="linux"] .window-titlebar {
   font-size: 14px;
   font-weight: 700;
   color: #fff;
-  font-family: 'Segoe UI', 'Inter', sans-serif;
+  font-family: "Segoe UI", "Inter", sans-serif;
 }
 
 .start-menu-user {
@@ -850,8 +982,14 @@ html[data-os="linux"] .window-titlebar {
 }
 
 @keyframes activitiesFadeIn {
-  from { opacity: 0; backdrop-filter: blur(0); }
-  to   { opacity: 1; backdrop-filter: blur(20px); }
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(20px);
+  }
 }
 
 .activities {
@@ -886,7 +1024,7 @@ html[data-os="linux"] .window-titlebar {
   background: rgb(var(--surface) / 0.8);
   color: rgb(var(--text));
   font-size: 14px;
-  font-family: 'Ubuntu', 'Inter', sans-serif;
+  font-family: "Ubuntu", "Inter", sans-serif;
   outline: none;
   transition: border-color 0.2s ease;
 }
@@ -918,8 +1056,10 @@ html[data-os="linux"] .window-titlebar {
   color: rgb(var(--text));
   cursor: pointer;
   border-radius: 12px;
-  transition: background 0.15s ease, transform 0.15s ease;
-  font-family: 'Ubuntu', 'Inter', sans-serif;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+  font-family: "Ubuntu", "Inter", sans-serif;
   min-width: 100px;
 }
 
@@ -942,7 +1082,7 @@ html[data-os="linux"] .window-titlebar {
 }
 
 html[data-os="linux"] .activities-app-icon {
-  color: #E95420;
+  color: #e95420;
   border-color: rgb(233 84 32 / 0.3);
   background: rgb(233 84 32 / 0.08);
 }
@@ -961,14 +1101,62 @@ html[data-os="linux"] .activities-app-icon {
   z-index: 10;
 }
 
-.resize-handle-n { top: -3px; left: 6px; right: 6px; height: 6px; cursor: n-resize; }
-.resize-handle-s { bottom: -3px; left: 6px; right: 6px; height: 6px; cursor: s-resize; }
-.resize-handle-e { right: -3px; top: 6px; bottom: 6px; width: 6px; cursor: e-resize; }
-.resize-handle-w { left: -3px; top: 6px; bottom: 6px; width: 6px; cursor: w-resize; }
-.resize-handle-ne { top: -3px; right: -3px; width: 10px; height: 10px; cursor: ne-resize; }
-.resize-handle-nw { top: -3px; left: -3px; width: 10px; height: 10px; cursor: nw-resize; }
-.resize-handle-se { bottom: -3px; right: -3px; width: 10px; height: 10px; cursor: se-resize; }
-.resize-handle-sw { bottom: -3px; left: -3px; width: 10px; height: 10px; cursor: sw-resize; }
+.resize-handle-n {
+  top: -3px;
+  left: 6px;
+  right: 6px;
+  height: 6px;
+  cursor: n-resize;
+}
+.resize-handle-s {
+  bottom: -3px;
+  left: 6px;
+  right: 6px;
+  height: 6px;
+  cursor: s-resize;
+}
+.resize-handle-e {
+  right: -3px;
+  top: 6px;
+  bottom: 6px;
+  width: 6px;
+  cursor: e-resize;
+}
+.resize-handle-w {
+  left: -3px;
+  top: 6px;
+  bottom: 6px;
+  width: 6px;
+  cursor: w-resize;
+}
+.resize-handle-ne {
+  top: -3px;
+  right: -3px;
+  width: 10px;
+  height: 10px;
+  cursor: ne-resize;
+}
+.resize-handle-nw {
+  top: -3px;
+  left: -3px;
+  width: 10px;
+  height: 10px;
+  cursor: nw-resize;
+}
+.resize-handle-se {
+  bottom: -3px;
+  right: -3px;
+  width: 10px;
+  height: 10px;
+  cursor: se-resize;
+}
+.resize-handle-sw {
+  bottom: -3px;
+  left: -3px;
+  width: 10px;
+  height: 10px;
+  cursor: sw-resize;
+}
 
 /* ── Mobile layout ── */
 
@@ -1048,8 +1236,12 @@ html[data-os="linux"] .activities-app-icon {
 }
 
 @keyframes mobileAppSlideIn {
-  from { transform: translateX(100%); }
-  to   { transform: translateX(0); }
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .mobile-app-header {
@@ -1102,7 +1294,7 @@ html[data-os="linux"] .activities-app-icon {
   position: absolute;
   top: 24px;
   left: 24px;
-  font-family: 'Caveat', cursive;
+  font-family: "Caveat", cursive;
   z-index: 0;
   pointer-events: none;
 }
@@ -1180,7 +1372,11 @@ html[data-os="linux"] .activities-app-icon {
 .reveal-text-bright {
   font-size: 3.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, rgb(var(--accent)) 0%, rgb(var(--emerald)) 100%);
+  background: linear-gradient(
+    135deg,
+    rgb(var(--accent)) 0%,
+    rgb(var(--emerald)) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1281,8 +1477,14 @@ html[data-os="linux"] .activities-app-icon {
 }
 
 @keyframes ctxMenuOpen {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .ctx-menu-item {
@@ -1320,7 +1522,9 @@ html[data-os="linux"] .activities-app-icon {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgb(var(--border) / 0.8);
-  transition: background-color 0.35s ease, border-color 0.35s ease;
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease;
 }
 
 /* Animated border gradient */
@@ -1328,11 +1532,16 @@ html[data-os="linux"] .activities-app-icon {
   position: relative;
 }
 .border-gradient::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, rgb(var(--accent) / 0.3), rgb(var(--emerald) / 0.1), transparent);
+  background: linear-gradient(
+    135deg,
+    rgb(var(--accent) / 0.3),
+    rgb(var(--emerald) / 0.1),
+    transparent
+  );
   z-index: -1;
 }
 
@@ -1343,7 +1552,7 @@ html[data-os="linux"] .activities-app-icon {
   isolation: isolate;
 }
 .spotlight::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -1364,7 +1573,9 @@ html[data-os="linux"] .activities-app-icon {
 .section-hidden {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
 }
 .section-visible {
   opacity: 1;
@@ -1379,13 +1590,16 @@ html[data-os="linux"] .activities-app-icon {
   border-radius: 999px;
   font-size: 11px;
   font-weight: 500;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   letter-spacing: 0.02em;
   border: 1px solid rgb(var(--border) / 0.8);
   background: rgb(var(--surface) / 0.6);
   color: rgb(var(--subtle));
   white-space: nowrap;
-  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 .tag:hover {
   border-color: rgb(var(--accent) / 0.4);

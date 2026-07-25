@@ -23,6 +23,7 @@ import OpenSourceApp from "@/components/apps/OpenSourceApp";
 import AchievementsApp from "@/components/apps/AchievementsApp";
 import ContactApp from "@/components/apps/ContactApp";
 import PhotoApp from "@/components/apps/PhotoApp";
+import bgImage from "@/assets/background.jpg";
 
 const appComponentMap: Record<string, React.ComponentType> = {
   about: AboutApp,
@@ -72,7 +73,18 @@ function DesktopInner() {
   }
 
   return (
-    <div className="desktop">
+    <div
+      className="desktop"
+      style={{ backgroundImage: `url(${bgImage.src})` }}
+    >
+      <div className="desktop-overlay" />
+      <div className="mesh-blobs" aria-hidden="true">
+        <div className="mesh-blob mesh-blob-1" />
+        <div className="mesh-blob mesh-blob-2" />
+        <div className="mesh-blob mesh-blob-3" />
+        <div className="mesh-blob mesh-blob-4" />
+        <div className="mesh-blob mesh-blob-5" />
+      </div>
       {!isWindows && <LinuxTopBar onActivitiesClick={handleActivitiesClick} />}
       {!isWindows && <LinuxDock />}
       <div className="desktop-area">
