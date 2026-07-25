@@ -1685,15 +1685,21 @@ html[data-os="linux"] .activities-app-icon {
   gap: 6px;
 }
 
-.top-right-actions button {
+.top-right-actions button:not(.top-action-btn) {
   background: rgb(var(--surface) / 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-color: rgb(var(--border) / 0.5);
 }
 
-.top-right-actions button:hover {
+.top-right-actions button:not(.top-action-btn):hover {
   background: rgb(var(--surface) / 0.9);
+}
+
+.top-right-actions .top-action-btn:not(.top-action-hire) {
+  background: rgb(var(--surface) / 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .theme-toggle-sep {
