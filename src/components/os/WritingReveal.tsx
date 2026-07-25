@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, animate, useMotionValue } from "framer-motion";
 import { Pen } from "lucide-react";
 import { personal } from "@/data/portfolio";
+import profilePic from "@/assets/Returaj_Proshad.png";
 
 enum Phase {
   Hidden,
@@ -101,27 +102,35 @@ function lerpPoint(
   };
 }
 
+const PIC_SIZE = 100;
+const PIC_SIZE_CORNER = 70;
+
 export default function WritingReveal() {
   const [phase, setPhase] = useState(Phase.Hidden);
   const [line1Prog, setLine1Prog] = useState(0);
   const [line2Prog, setLine2Prog] = useState(0);
+  const [picPhase, setPicPhase] = useState<'hidden' | 'appear' | 'move'>('hidden');
 
   const line1SizerRef = useRef<HTMLSpanElement>(null);
   const line2SizerRef = useRef<HTMLSpanElement>(null);
+  const textColRef = useRef<HTMLDivElement>(null);
   const started = useRef(false);
   const c1Ref = useRef<ContourData | null>(null);
   const c2Ref = useRef<ContourData | null>(null);
-  const [ready, setReady] = useState(false);
 
   const penX = useMotionValue(0);
   const penY = useMotionValue(2);
   const penRotate = useMotionValue(-4);
   const penOpacity = useMotionValue(0);
 
+  const picLeft = useMotionValue(0);
+  const picTop = useMotionValue(0);
+  const picScale = useMotionValue(0.5);
+  const picOpacity = useMotionValue(0);
+
   useEffect(() => {
     c1Ref.current = extractContour(personal.fullName, 56);
     c2Ref.current = extractContour(personal.role, 32);
-    setReady(true);
   }, []);
 
   const getTransform = useCallback(
@@ -147,7 +156,6 @@ export default function WritingReveal() {
       if (!contour || !contour.points.length) return;
       const { scale, ox, oy, domH } = getTransform(sizerRef, contour.canvasW);
       const pt = lerpPoint(contour.points, progress);
-      // Map canvas y from [canvasMinY, canvasMaxY] to [oy, oy + domH]
       const yRange = contour.canvasMaxY - contour.canvasMinY;
       const yNorm = yRange > 0 ? (pt.y - contour.canvasMinY) / yRange : 0.5;
       penX.set(pt.x * scale + ox);
@@ -202,7 +210,7 @@ export default function WritingReveal() {
       onComplete: () => setPhase(Phase.MoveTo2),
     });
     return () => c.stop();
-  }, [phase, updatePen, penX, penY]);
+  }, [phase, updatePen]);
 
   useEffect(() => {
     if (phase !== Phase.MoveTo2) return;
@@ -238,7 +246,7 @@ export default function WritingReveal() {
       onComplete: () => setPhase(Phase.PenFadeOut),
     });
     return () => c.stop();
-  }, [phase, updatePen, penX, penY]);
+  }, [phase, updatePen]);
 
   useEffect(() => {
     if (phase !== Phase.PenFadeOut) return;
@@ -254,6 +262,34 @@ export default function WritingReveal() {
     return () => { stopRot.stop(); clearTimeout(t); };
   }, [phase, penRotate, penOpacity]);
 
+  // Picture sequence: appear next to text, then slide to corner
+  useEffect(() => {
+    if (phase !== Phase.Done) return;
+    const t1 = setTimeout(() => {
+      setPicPhase('appear');
+      // Position next to text
+      const el = textColRef.current;
+      if (el) {
+        const r = el.getBoundingClientRect();
+        animate(picLeft, r.right + 32, { duration: 0.4, ease: "easeOut" });
+        animate(picTop, r.top + (r.height - PIC_SIZE) / 2, { duration: 0.4, ease: "easeOut" });
+      }
+      animate(picOpacity, 1, { duration: 0.4, ease: "easeOut" });
+      animate(picScale, 1, { duration: 0.4, ease: "easeOut" });
+    }, 500);
+
+    const t2 = setTimeout(() => {
+      setPicPhase('move');
+      const cX = window.innerWidth - PIC_SIZE_CORNER - 24;
+      const cY = window.innerHeight - PIC_SIZE_CORNER - 76;
+      animate(picLeft, cX, { duration: 0.8, ease: "easeInOut" });
+      animate(picTop, cY, { duration: 0.8, ease: "easeInOut" });
+      animate(picScale, PIC_SIZE_CORNER / PIC_SIZE, { duration: 0.8, ease: "easeInOut" });
+    }, 2800);
+
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [phase, picLeft, picTop, picScale, picOpacity]);
+
   const penSize = 24;
 
   return (
@@ -263,43 +299,48 @@ export default function WritingReveal() {
       animate={{ opacity: phase >= Phase.FadeIn ? 1 : 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="reveal-line">
-        <span ref={line1SizerRef} className="reveal-text-sizer" aria-hidden>
-          {personal.fullName}
-        </span>
-        <div
-          className="reveal-overlay"
-          style={{
-            width:
-              phase >= Phase.Write1
-                ? phase < Phase.MoveTo2
-                  ? `${line1Prog * 100}%`
-                  : "100%"
-                : "0%",
-          }}
-        >
-          <span className="reveal-text-bright">{personal.fullName}</span>
-        </div>
-      </div>
+      <div className="writing-reveal-body">
+        {/* Text column */}
+        <div ref={textColRef} className="writing-reveal-text">
+          <div className="reveal-line">
+            <span ref={line1SizerRef} className="reveal-text-sizer" aria-hidden>
+              {personal.fullName}
+            </span>
+            <div
+              className="reveal-overlay"
+              style={{
+                width:
+                  phase >= Phase.Write1
+                    ? phase < Phase.MoveTo2
+                      ? `${line1Prog * 100}%`
+                      : "100%"
+                    : "0%",
+              }}
+            >
+              <span className="reveal-text-bright">{personal.fullName}</span>
+            </div>
+          </div>
 
-      <div className="reveal-line">
-        <span ref={line2SizerRef} className="reveal-text-sizer reveal-text-sizer-sub" aria-hidden>
-          {personal.role}
-        </span>
-        <div
-          className="reveal-overlay"
-          style={{
-            width:
-              phase >= Phase.Write2
-                ? phase < Phase.PenFadeOut
-                  ? `${line2Prog * 100}%`
-                  : "100%"
-                : "0%",
-          }}
-        >
-          <span className="reveal-text-bright reveal-text-bright-sub">
-            {personal.role}
-          </span>
+          <div className="reveal-line">
+            <span ref={line2SizerRef} className="reveal-text-sizer reveal-text-sizer-sub" aria-hidden>
+              {personal.role}
+            </span>
+            <div
+              className="reveal-overlay"
+              style={{
+                width:
+                  phase >= Phase.Write2
+                    ? phase < Phase.PenFadeOut
+                      ? `${line2Prog * 100}%`
+                      : "100%"
+                    : "0%",
+              }}
+            >
+              <span className="reveal-text-bright reveal-text-bright-sub">
+                {personal.role}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -325,6 +366,21 @@ export default function WritingReveal() {
           <Pen size={penSize} />
         </div>
       </motion.div>
+
+      {/* Profile picture — fixed position, slides from inline to corner */}
+      {picPhase !== 'hidden' && (
+        <motion.div
+          className="writing-reveal-pic writing-reveal-pic-fixed"
+          style={{
+            left: picLeft,
+            top: picTop,
+            opacity: picOpacity,
+            scale: picScale,
+          }}
+        >
+          <img src={profilePic.src} alt={personal.fullName} />
+        </motion.div>
+      )}
     </motion.div>
   );
 }
