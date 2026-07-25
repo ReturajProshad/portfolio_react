@@ -1399,9 +1399,6 @@ html[data-os="linux"] .activities-app-icon {
 /* ── Writing Reveal (handwriting animation) ── */
 
 .writing-reveal {
-  position: absolute;
-  top: 24px;
-  left: 24px;
   font-family: "Caveat", cursive;
   z-index: 0;
   pointer-events: none;
@@ -1542,13 +1539,25 @@ html[data-os="linux"] .activities-app-icon {
 
 /* ── Professional Summary ── */
 
-.professional-summary {
+.hero-left {
   position: absolute;
-  top: calc(24px + 3.5rem * 1.2 + 4px + 2rem * 1.2 + 24px);
+  top: 24px;
   left: 24px;
-  max-width: 640px;
   z-index: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 540px;
   pointer-events: none;
+}
+
+.hero-left > * {
+  pointer-events: auto;
+}
+
+.professional-summary {
+  max-width: 100%;
+  z-index: 0;
 }
 
 .summary-headline {
@@ -1595,7 +1604,76 @@ html[data-os="linux"] .activities-app-icon {
   font-weight: 600;
 }
 
-/* ── Theme Toggle Corner ── */
+/* ── Quick Info (contact + company + shipped) ── */
+
+.quick-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 100%;
+}
+
+.quick-info-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick-info-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: rgb(var(--text) / 0.7);
+  background: rgb(var(--surface) / 0.4);
+  border: 1px solid rgb(var(--border) / 0.3);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.quick-info-link:hover {
+  color: rgb(var(--accent));
+  background: rgb(var(--accent) / 0.1);
+  border-color: rgb(var(--accent) / 0.3);
+}
+
+.quick-info-company {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: rgb(var(--text) / 0.6);
+}
+
+.quick-info-company-name {
+  font-weight: 500;
+  color: rgb(var(--text) / 0.8);
+}
+
+.quick-info-shipped {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quick-info-bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: rgb(var(--text) / 0.65);
+}
+
+.quick-info-bullet svg {
+  margin-top: 3px;
+  flex-shrink: 0;
+  color: rgb(var(--emerald));
+}
+
+/* ── Top right actions ── */
 
 .top-right-actions {
   position: fixed;

@@ -14,6 +14,7 @@ import StartMenu from "./StartMenu";
 import ActivitiesOverview from "./ActivitiesOverview";
 import WritingReveal from "./WritingReveal";
 import ProfessionalSummary from "./ProfessionalSummary";
+import QuickInfo from "./QuickInfo";
 import FlutterShowcase from "./FlutterShowcase";
 import ThemeToggle from "../ThemeToggle";
 import MobileNav from "./MobileNav";
@@ -108,8 +109,11 @@ function DesktopInner() {
       {!isWindows && <LinuxTopBar onActivitiesClick={handleActivitiesClick} />}
       {!isWindows && <LinuxDock />}
       <div className="desktop-area">
-        <WritingReveal onPicClick={() => openApp("photo")} onDone={() => setRevealDone(true)} />
-        <ProfessionalSummary show={revealDone} />
+        <div className="hero-left">
+          <WritingReveal onPicClick={() => openApp("photo")} onDone={() => setRevealDone(true)} />
+          <ProfessionalSummary show={revealDone} />
+          {revealDone && <QuickInfo />}
+        </div>
         {revealDone && <FlutterShowcase />}
         {windows.filter(w => w.isOpen && !w.isMinimized).map(w => {
           const AppComponent = appComponentMap[w.id];
