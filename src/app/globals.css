@@ -1103,7 +1103,7 @@ html[data-os="linux"] .activities-app-icon {
   top: 24px;
   left: 24px;
   font-family: 'Caveat', cursive;
-  z-index: 50;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -1138,7 +1138,7 @@ html[data-os="linux"] .activities-app-icon {
 
 .writing-reveal-pic-fixed {
   position: fixed;
-  z-index: 9999;
+  z-index: 0;
   width: 100px;
   height: 100px;
 }
@@ -1148,6 +1148,24 @@ html[data-os="linux"] .activities-app-icon {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.photo-app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(var(--bg));
+  padding: 16px;
+}
+
+.photo-app img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgb(0 0 0 / 0.3);
 }
 
 .reveal-text-sizer {
@@ -1174,9 +1192,19 @@ html[data-os="linux"] .activities-app-icon {
   font-weight: 600;
 }
 
+.reveal-text-sizer-tag {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
 .reveal-text-bright-sub {
   font-size: 2rem;
   font-weight: 600;
+}
+
+.reveal-text-bright-tag {
+  font-size: 1.3rem;
+  font-weight: 500;
 }
 
 .reveal-overlay {

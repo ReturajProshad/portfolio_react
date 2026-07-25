@@ -22,6 +22,7 @@ import ProjectsApp from "@/components/apps/ProjectsApp";
 import OpenSourceApp from "@/components/apps/OpenSourceApp";
 import AchievementsApp from "@/components/apps/AchievementsApp";
 import ContactApp from "@/components/apps/ContactApp";
+import PhotoApp from "@/components/apps/PhotoApp";
 
 const appComponentMap: Record<string, React.ComponentType> = {
   about: AboutApp,
@@ -31,6 +32,7 @@ const appComponentMap: Record<string, React.ComponentType> = {
   opensource: OpenSourceApp,
   achievements: AchievementsApp,
   contact: ContactApp,
+  photo: PhotoApp,
 };
 
 function DesktopInner() {
@@ -74,7 +76,7 @@ function DesktopInner() {
       {!isWindows && <LinuxTopBar onActivitiesClick={handleActivitiesClick} />}
       {!isWindows && <LinuxDock />}
       <div className="desktop-area">
-        <WritingReveal />
+        <WritingReveal onPicClick={() => openApp("photo")} />
         {windows.filter(w => w.isOpen && !w.isMinimized).map(w => {
           const AppComponent = appComponentMap[w.id];
           return (
