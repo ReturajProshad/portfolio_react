@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { OsThemeProvider, useOsTheme } from "./OsThemeProvider";
 import { WindowManagerProvider, useWindowManager } from "@/lib/windowManager";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { appDefinitions } from "@/config/apps";
 import DesktopIcon from "./DesktopIcon";
 import Window from "./Window";
@@ -11,6 +12,8 @@ import LinuxTopBar from "./LinuxTopBar";
 import LinuxDock from "./LinuxDock";
 import StartMenu from "./StartMenu";
 import ActivitiesOverview from "./ActivitiesOverview";
+import MobileNav from "./MobileNav";
+import MobileAppView from "./MobileAppView";
 import AboutApp from "@/components/apps/AboutApp";
 import ExperienceApp from "@/components/apps/ExperienceApp";
 import SkillsApp from "@/components/apps/SkillsApp";
@@ -30,25 +33,46 @@ const appComponentMap: Record<string, React.ComponentType> = {
 };
 
 function DesktopInner() {
-  const { windows } = useWindowManager();
+  const { windows, openApp } = useWindowManager();
   const { osTheme } = useOsTheme();
   const [showStart, setShowStart] = useState(false);
   const [showActivities, setShowActivities] = useState(false);
+  const [mobileApp, setMobileApp] = useState<string | null>(null);
+  const isMobile = useIsMobile();
   const isWindows = osTheme === "windows";
 
   const handleStartClick = useCallback(() => setShowStart(prev => !prev), []);
   const handleActivitiesClick = useCallback(() => setShowActivities(prev => !prev), []);
+  const handleMobileAppSelect = useCallback((id: string) => {
+    openApp(id);
+    setMobileApp(id);
+  }, [openApp]);
+
+  if (isMobile) {
+    return (
+      <div className="desktop mobile-desktop">
+        <div className="mobile-home">
+          <div className="mobile-icons">
+            {appDefinitions.map(app => (
+              <DesktopIcon key={app.id} app={app} />
+            ))}
+          </div>
+        </div>
+        <MobileNav onAppSelect={handleMobileAppSelect} />
+        {mobileApp && (
+          <MobileAppView appId={mobileApp} onClose={() => setMobileApp(null)}>
+            {React.createElement(appComponentMap[mobileApp])}
+          </MobileAppView>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="desktop">
       {!isWindows && <LinuxTopBar onActivitiesClick={handleActivitiesClick} />}
       {!isWindows && <LinuxDock />}
       <div className="desktop-area">
-        <div className="desktop-icons">
-          {appDefinitions.map(app => (
-            <DesktopIcon key={app.id} app={app} />
-          ))}
-        </div>
         {windows.filter(w => w.isOpen && !w.isMinimized).map(w => {
           const AppComponent = appComponentMap[w.id];
           return (

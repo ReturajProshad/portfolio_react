@@ -49,7 +49,8 @@ export default function WindowsTaskbar({ onStartClick }: { onStartClick: () => v
               onClick={() => handleAppClick(app.id)}
               aria-label={app.title}
             >
-              <app.icon size={18} />
+              <app.icon size={24} />
+              <span className="taskbar-app-label">{app.title}</span>
             </button>
           );
         })}
