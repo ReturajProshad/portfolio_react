@@ -137,7 +137,7 @@ body {
   display: flex;
   flex-direction: column;
   background: rgb(var(--bg));
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   z-index: 0;
@@ -148,16 +148,16 @@ body {
   inset: 0;
   background: radial-gradient(
     ellipse at 50% 50%,
-    transparent 40%,
-    rgb(var(--bg) / 0.65) 100%
+    transparent 35%,
+    rgb(var(--bg) / 0.55) 100%
   );
   z-index: 0;
   pointer-events: none;
 }
 
-/* ── Mesh gradient blobs ── */
+/* ── Animated background: grid + mesh ── */
 
-.mesh-blobs {
+.animated-bg {
   position: fixed;
   inset: 0;
   z-index: 0;
@@ -165,84 +165,160 @@ body {
   pointer-events: none;
 }
 
+/* Grid pattern overlay */
+.animated-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(0 255 65 / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(0 255 65 / 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  z-index: 3;
+  animation: gridPulse 8s ease-in-out infinite;
+}
+
+/* Subtle radial scan glow */
+.animated-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 30% 40%,
+      rgb(0 255 65 / 0.06) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 70% 60%,
+      rgb(0 229 255 / 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 50% 80%,
+      rgb(124 58 237 / 0.04) 0%,
+      transparent 40%
+    );
+  z-index: 2;
+  animation: glowShift 12s ease-in-out infinite alternate;
+}
+
+@keyframes gridPulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes glowShift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(-20px, 10px) scale(1.05);
+  }
+}
+
+/* ── Mesh gradient blobs ── */
+
+.mesh-blobs {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
 .mesh-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(100px);
   will-change: transform;
-  opacity: 0.15;
   animation: meshFloat 24s ease-in-out infinite;
 }
 
 .mesh-blob-1 {
-  width: 700px;
-  height: 700px;
-  background: #00ff41;
-  top: -15%;
-  left: -10%;
-  animation-duration: 28s;
-  opacity: 0.12;
+  width: 900px;
+  height: 900px;
+  background: radial-gradient(circle, #00ff41 0%, transparent 70%);
+  top: -20%;
+  left: -15%;
+  animation-duration: 26s;
+  opacity: 0.25;
 }
 
 .mesh-blob-2 {
-  width: 500px;
-  height: 500px;
-  background: #00e5ff;
-  bottom: -12%;
-  right: -8%;
-  animation-duration: 32s;
-  animation-delay: -6s;
-  opacity: 0.08;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, #00e5ff 0%, transparent 70%);
+  bottom: -15%;
+  right: -10%;
+  animation-duration: 30s;
+  animation-delay: -7s;
+  opacity: 0.18;
 }
 
 .mesh-blob-3 {
-  width: 400px;
-  height: 400px;
-  background: #7c3aed;
-  top: 50%;
-  left: 60%;
-  animation-duration: 26s;
-  animation-delay: -10s;
-  opacity: 0.1;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, #7c3aed 0%, transparent 70%);
+  top: 40%;
+  left: 55%;
+  animation-duration: 28s;
+  animation-delay: -12s;
+  opacity: 0.2;
 }
 
 .mesh-blob-4 {
-  width: 300px;
-  height: 300px;
-  background: #f59e0b;
-  top: 20%;
-  right: 25%;
-  animation-duration: 22s;
-  animation-delay: -3s;
-  opacity: 0.06;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #f59e0b 0%, transparent 70%);
+  top: 10%;
+  right: 20%;
+  animation-duration: 24s;
+  animation-delay: -4s;
+  opacity: 0.12;
 }
 
 .mesh-blob-5 {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, #ff2d55 0%, transparent 70%);
+  bottom: 25%;
+  left: 10%;
+  animation-duration: 32s;
+  animation-delay: -16s;
+  opacity: 0.1;
+}
+
+.mesh-blob-6 {
   width: 350px;
   height: 350px;
-  background: #00ff41;
-  bottom: 20%;
-  left: 15%;
-  animation-duration: 30s;
-  animation-delay: -14s;
-  opacity: 0.07;
+  background: radial-gradient(circle, #0ea5e9 0%, transparent 70%);
+  top: 60%;
+  right: 5%;
+  animation-duration: 22s;
+  animation-delay: -9s;
+  opacity: 0.13;
 }
 
 @keyframes meshFloat {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
   20% {
-    transform: translate(40px, -30px) scale(1.08);
+    transform: translate(60px, -40px) scale(1.12);
   }
   40% {
-    transform: translate(-20px, 35px) scale(0.92);
+    transform: translate(-30px, 50px) scale(0.88);
   }
   60% {
-    transform: translate(25px, -15px) scale(1.04);
+    transform: translate(40px, -25px) scale(1.06);
   }
   80% {
-    transform: translate(-35px, 20px) scale(0.96);
+    transform: translate(-50px, 30px) scale(0.94);
   }
 }
 
@@ -1430,6 +1506,526 @@ html[data-os="linux"] .activities-app-icon {
   z-index: 9;
   pointer-events: none;
   transform: translate(-50%, -50%);
+}
+
+/* ── Professional Summary ── */
+
+.professional-summary {
+  position: absolute;
+  top: calc(24px + 3.5rem * 1.2 + 4px + 2rem * 1.2 + 24px);
+  left: 24px;
+  max-width: 640px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.summary-headline {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgb(var(--accent));
+  margin: 0 0 8px 0;
+  letter-spacing: 0.02em;
+}
+
+.summary-tagline {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgb(var(--fg) / 0.7);
+  margin: 0 0 20px 0;
+  max-width: 580px;
+}
+
+.summary-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  background: color-mix(in srgb, var(--badge-color) 18%, transparent);
+  color: var(--badge-accent);
+  border: 1px solid color-mix(in srgb, var(--badge-color) 30%, transparent);
+  transition: all 0.2s ease;
+}
+
+.tech-badge-primary {
+  background: color-mix(in srgb, var(--badge-color) 28%, transparent);
+  border-color: color-mix(in srgb, var(--badge-color) 50%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--badge-color) 15%, transparent);
+  font-weight: 600;
+}
+
+/* ── Theme Toggle Corner ── */
+
+.theme-toggle-corner {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 10001;
+}
+
+.theme-toggle-corner button {
+  background: rgb(var(--surface) / 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-color: rgb(var(--border) / 0.5);
+}
+
+.theme-toggle-corner button:hover {
+  background: rgb(var(--surface) / 0.9);
+}
+
+html[data-os="linux"] .theme-toggle-corner {
+  top: 44px;
+}
+
+/* ══════════════════════════════════════════════════
+   Mobile + Backend Showcase
+   ══════════════════════════════════════════════════ */
+
+.flutter-showcase {
+  position: absolute;
+  right: clamp(24px, 4vw, 72px);
+  top: 46%;
+  transform: translateY(-50%);
+  width: 480px;
+  max-width: calc(100vw - 48px);
+  z-index: 0;
+  pointer-events: auto;
+}
+
+/* Soft ambient glow tying the composition together */
+.showcase-halo {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgb(var(--accent) / 0.16) 0%,
+    transparent 70%
+  );
+  filter: blur(20px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Phone + dots + caption stack in normal flow so spacing is never guessed */
+.showcase-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Floating capability pills (deliberately generic — reads as
+   "any mobile framework / any state-management approach", not
+   locked to one brand) ── */
+
+.showcase-pill {
+  position: absolute;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  background: color-mix(in srgb, var(--pill-color) 16%, transparent);
+  color: var(--pill-color);
+  border: 1px solid color-mix(in srgb, var(--pill-color) 32%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.showcase-pill-0 {
+  top: 0%;
+  left: 3%;
+}
+.showcase-pill-1 {
+  top: 44%;
+  left: -1%;
+}
+.showcase-pill-2 {
+  bottom: 17%;
+  right: 1%;
+}
+
+/* ── Phone frame ── */
+
+.showcase-phone {
+  position: relative;
+  width: 188px;
+  height: 372px;
+  background: linear-gradient(155deg, #1c1c1e 0%, #0a0a0c 100%);
+  border-radius: 32px;
+  padding: 8px;
+  box-shadow:
+    0 20px 50px rgb(0 0 0 / 0.45),
+    0 0 0 1px rgb(255 255 255 / 0.06),
+    inset 0 0 0 2px rgb(255 255 255 / 0.03);
+}
+
+.phone-camera {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #000;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  z-index: 5;
+}
+
+.phone-statusbar {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px 0;
+  height: 24px;
+}
+
+.phone-time {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: white;
+}
+
+.phone-status-icons {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: white;
+}
+
+.phone-screen {
+  width: 100%;
+  height: calc(100% - 24px - 14px);
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgb(var(--surface));
+  position: relative;
+}
+
+.phone-screen-anim {
+  width: 100%;
+  height: 100%;
+}
+
+.phone-screen-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.phone-screen-center {
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgb(var(--accent));
+}
+
+.phone-home-indicator {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.25);
+}
+
+/* ── Phone screen content ── */
+
+.phone-splash-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: rgb(var(--accent));
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.2);
+}
+
+.phone-splash-title {
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.phone-splash-sub {
+  color: rgb(255 255 255 / 0.65);
+  font-size: 0.55rem;
+  letter-spacing: 0.02em;
+}
+
+.phone-appbar {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  min-height: 30px;
+  background: rgb(var(--accent));
+}
+
+.phone-appbar span {
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.phone-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: rgb(var(--surface) / 0.5);
+}
+
+.phone-card {
+  height: 30px;
+  background: rgb(var(--bg));
+  border: 1px solid rgb(var(--border) / 0.6);
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.06);
+  width: 100%;
+}
+
+.phone-card-lg {
+  height: 54px;
+}
+
+.phone-fab {
+  position: absolute;
+  bottom: 44px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgb(var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgb(var(--accent) / 0.45);
+}
+
+.phone-bottom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 6px 0;
+  background: rgb(var(--surface));
+  border-top: 1px solid rgb(var(--border) / 0.6);
+  min-height: 26px;
+}
+
+.nav-active {
+  color: rgb(var(--accent));
+}
+.nav-idle {
+  color: rgb(var(--muted));
+}
+
+.phone-input {
+  position: relative;
+  height: 26px;
+  background: rgb(var(--bg));
+  border: 1px solid rgb(var(--border) / 0.8);
+  border-radius: 6px;
+  width: 100%;
+}
+
+.phone-input-check {
+  border-color: rgb(46 125 50 / 0.4);
+}
+
+.phone-check {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  color: #2e7d32;
+  background: rgb(var(--surface));
+  border-radius: 50%;
+}
+
+.phone-submit-btn {
+  background: rgb(var(--accent));
+  color: white;
+  border-radius: 6px;
+  padding: 7px 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-align: center;
+  width: 100%;
+  letter-spacing: 0.02em;
+}
+
+.phone-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 68px;
+  padding: 0 2px;
+}
+
+.phone-bar {
+  flex: 1;
+  background: rgb(var(--accent) / 0.35);
+  border-radius: 3px 3px 0 0;
+  min-height: 4px;
+}
+
+.phone-bar-active {
+  background: rgb(var(--accent));
+}
+
+.phone-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: rgb(var(--bg));
+  border: 1px solid rgb(var(--border) / 0.5);
+  border-radius: 6px;
+}
+
+.phone-stat-label {
+  font-size: 0.58rem;
+  color: rgb(var(--subtle));
+}
+
+.phone-stat-value {
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: rgb(var(--accent));
+}
+
+/* ── Backend server card ── */
+
+.showcase-server {
+  position: absolute;
+  top: 6%;
+  right: 0%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgb(var(--surface) / 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgb(var(--border) / 0.8);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 0.2);
+  z-index: 3;
+}
+
+.server-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.server-icon-wrap {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: rgb(var(--accent) / 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(var(--accent));
+  flex-shrink: 0;
+}
+
+.server-title {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgb(var(--text));
+  letter-spacing: 0.02em;
+}
+
+.server-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.server-tag {
+  font-size: 0.58rem;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: rgb(var(--accent) / 0.08);
+  color: rgb(var(--subtle));
+  border: 1px solid rgb(var(--border) / 0.7);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* ── Connection line SVG ── */
+
+.showcase-line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* ── Dots + Caption ── */
+
+.showcase-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.showcase-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgb(var(--accent));
+}
+
+.showcase-caption {
+  font-size: 0.68rem;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  color: rgb(var(--subtle));
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-align: center;
+}
+
+@media (max-width: 1100px) {
+  .flutter-showcase {
+    display: none;
+  }
 }
 
 /* ── Reduced motion ── */

@@ -13,6 +13,9 @@ import LinuxDock from "./LinuxDock";
 import StartMenu from "./StartMenu";
 import ActivitiesOverview from "./ActivitiesOverview";
 import WritingReveal from "./WritingReveal";
+import ProfessionalSummary from "./ProfessionalSummary";
+import FlutterShowcase from "./FlutterShowcase";
+import ThemeToggle from "../ThemeToggle";
 import MobileNav from "./MobileNav";
 import MobileAppView from "./MobileAppView";
 import AboutApp from "@/components/apps/AboutApp";
@@ -23,8 +26,6 @@ import OpenSourceApp from "@/components/apps/OpenSourceApp";
 import AchievementsApp from "@/components/apps/AchievementsApp";
 import ContactApp from "@/components/apps/ContactApp";
 import PhotoApp from "@/components/apps/PhotoApp";
-import bgImage from "@/assets/background.jpg";
-
 const appComponentMap: Record<string, React.ComponentType> = {
   about: AboutApp,
   experience: ExperienceApp,
@@ -42,6 +43,7 @@ function DesktopInner() {
   const [showStart, setShowStart] = useState(false);
   const [showActivities, setShowActivities] = useState(false);
   const [mobileApp, setMobileApp] = useState<string | null>(null);
+  const [revealDone, setRevealDone] = useState(false);
   const isMobile = useIsMobile();
   const isWindows = osTheme === "windows";
 
@@ -73,22 +75,27 @@ function DesktopInner() {
   }
 
   return (
-    <div
-      className="desktop"
-      style={{ backgroundImage: `url(${bgImage.src})` }}
-    >
-      <div className="desktop-overlay" />
-      <div className="mesh-blobs" aria-hidden="true">
-        <div className="mesh-blob mesh-blob-1" />
-        <div className="mesh-blob mesh-blob-2" />
-        <div className="mesh-blob mesh-blob-3" />
-        <div className="mesh-blob mesh-blob-4" />
-        <div className="mesh-blob mesh-blob-5" />
+    <div className="desktop">
+      <div className="theme-toggle-corner">
+        <ThemeToggle />
       </div>
+      <div className="animated-bg" aria-hidden="true">
+        <div className="mesh-blobs">
+          <div className="mesh-blob mesh-blob-1" />
+          <div className="mesh-blob mesh-blob-2" />
+          <div className="mesh-blob mesh-blob-3" />
+          <div className="mesh-blob mesh-blob-4" />
+          <div className="mesh-blob mesh-blob-5" />
+          <div className="mesh-blob mesh-blob-6" />
+        </div>
+      </div>
+      <div className="desktop-overlay" />
       {!isWindows && <LinuxTopBar onActivitiesClick={handleActivitiesClick} />}
       {!isWindows && <LinuxDock />}
       <div className="desktop-area">
-        <WritingReveal onPicClick={() => openApp("photo")} />
+        <WritingReveal onPicClick={() => openApp("photo")} onDone={() => setRevealDone(true)} />
+        <ProfessionalSummary show={revealDone} />
+        {revealDone && <FlutterShowcase />}
         {windows.filter(w => w.isOpen && !w.isMinimized).map(w => {
           const AppComponent = appComponentMap[w.id];
           return (

@@ -112,7 +112,7 @@ function getCornerPos() {
   };
 }
 
-export default function WritingReveal({ onPicClick }: { onPicClick?: () => void }) {
+export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () => void; onDone?: () => void }) {
   const [phase, setPhase] = useState(Phase.Hidden);
   const [line1Prog, setLine1Prog] = useState(0);
   const [line2Prog, setLine2Prog] = useState(0);
@@ -276,6 +276,11 @@ export default function WritingReveal({ onPicClick }: { onPicClick?: () => void 
     }, 200);
     return () => { stopRot.stop(); clearTimeout(t); };
   }, [phase, penRotate, penOpacity]);
+
+  useEffect(() => {
+    if (phase !== Phase.Done) return;
+    onDone?.();
+  }, [phase, onDone]);
 
   // Picture: start appearing during Write1, slide to corner during Write2
   useEffect(() => {
