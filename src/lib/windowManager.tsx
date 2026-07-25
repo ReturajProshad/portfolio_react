@@ -35,6 +35,7 @@ const defaultWindows: WindowState[] = [
   { id: "opensource", title: "rj_form_engine", isOpen: false, isMinimized: false, isMaximized: false, zIndex: 1, position: { x: 180, y: 140 }, size: { width: 780, height: 540 } },
   { id: "achievements", title: "Achievements", isOpen: false, isMinimized: false, isMaximized: false, zIndex: 1, position: { x: 200, y: 160 }, size: { width: 720, height: 520 } },
   { id: "contact", title: "Contact Me", isOpen: false, isMinimized: false, isMaximized: false, zIndex: 1, position: { x: 220, y: 180 }, size: { width: 600, height: 480 } },
+  { id: "listportfolio", title: "Full Portfolio", isOpen: false, isMinimized: false, isMaximized: false, zIndex: 1, position: { x: 80, y: 40 }, size: { width: 960, height: 640 } },
 ];
 
 export function WindowManagerProvider({ children }: { children: React.ReactNode }) {

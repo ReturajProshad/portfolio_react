@@ -1597,26 +1597,99 @@ html[data-os="linux"] .activities-app-icon {
 
 /* ── Theme Toggle Corner ── */
 
-.theme-toggle-corner {
+.top-right-actions {
   position: fixed;
   top: 12px;
   right: 12px;
   z-index: 10001;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.theme-toggle-corner button {
+.top-right-actions button {
   background: rgb(var(--surface) / 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-color: rgb(var(--border) / 0.5);
 }
 
-.theme-toggle-corner button:hover {
+.top-right-actions button:hover {
   background: rgb(var(--surface) / 0.9);
 }
 
-html[data-os="linux"] .theme-toggle-corner {
+.theme-toggle-sep {
+  width: 1px;
+  height: 20px;
+  background: rgb(var(--border) / 0.4);
+}
+
+html[data-os="linux"] .top-right-actions {
   top: 44px;
+}
+
+/* ── Top action buttons (Hire Me, List View) ── */
+
+.top-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgb(var(--border) / 0.5);
+  background: rgb(var(--surface) / 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgb(var(--text));
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.top-action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.top-action-hire {
+  background: rgb(var(--accent));
+  color: white;
+  border-color: rgb(var(--accent));
+}
+
+.top-action-hire:hover {
+  background: rgb(var(--accent) / 0.85);
+  box-shadow: 0 4px 16px rgb(var(--accent) / 0.3);
+  transform: translateY(-1px);
+}
+
+.top-action-list {
+  background: rgb(var(--surface) / 0.8);
+  color: rgb(var(--text));
+}
+
+.top-action-list:hover {
+  background: rgb(var(--surface));
+  border-color: rgb(var(--accent) / 0.4);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
+}
+
+/* ── List Portfolio (full scrollable view) ── */
+
+.list-portfolio {
+  width: 100%;
+  min-height: 100%;
+  background: rgb(var(--bg));
+}
+
+.window:has(.list-portfolio) .window-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.list-portfolio > section {
+  scroll-margin-top: 24px;
 }
 
 /* ══════════════════════════════════════════════════

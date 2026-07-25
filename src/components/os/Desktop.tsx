@@ -26,6 +26,7 @@ import OpenSourceApp from "@/components/apps/OpenSourceApp";
 import AchievementsApp from "@/components/apps/AchievementsApp";
 import ContactApp from "@/components/apps/ContactApp";
 import PhotoApp from "@/components/apps/PhotoApp";
+import ListPortfolio from "@/components/apps/ListPortfolio";
 const appComponentMap: Record<string, React.ComponentType> = {
   about: AboutApp,
   experience: ExperienceApp,
@@ -35,10 +36,11 @@ const appComponentMap: Record<string, React.ComponentType> = {
   achievements: AchievementsApp,
   contact: ContactApp,
   photo: PhotoApp,
+  listportfolio: ListPortfolio,
 };
 
 function DesktopInner() {
-  const { windows, openApp } = useWindowManager();
+  const { windows, openApp, toggleMaximize } = useWindowManager();
   const { osTheme } = useOsTheme();
   const [showStart, setShowStart] = useState(false);
   const [showActivities, setShowActivities] = useState(false);
@@ -49,6 +51,12 @@ function DesktopInner() {
 
   const handleStartClick = useCallback(() => setShowStart(prev => !prev), []);
   const handleActivitiesClick = useCallback(() => setShowActivities(prev => !prev), []);
+  const handleOpenList = useCallback(() => {
+    openApp("listportfolio");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => toggleMaximize("listportfolio"));
+    });
+  }, [openApp, toggleMaximize]);
   const handleMobileAppSelect = useCallback((id: string) => {
     openApp(id);
     setMobileApp(id);
@@ -76,7 +84,14 @@ function DesktopInner() {
 
   return (
     <div className="desktop">
-      <div className="theme-toggle-corner">
+      <div className="top-right-actions">
+        <button className="top-action-btn top-action-hire" onClick={() => openApp("contact")}>
+          Hire Me
+        </button>
+        <button className="top-action-btn top-action-list" onClick={handleOpenList}>
+          List View
+        </button>
+        <div className="theme-toggle-sep" />
         <ThemeToggle />
       </div>
       <div className="animated-bg" aria-hidden="true">
