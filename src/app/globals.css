@@ -283,9 +283,15 @@ html[data-os="linux"] .window.window-maximized {
 }
 
 html[data-os="windows"] .window-titlebar {
-  background: rgb(var(--surface));
+  background: rgb(var(--surface) / 0.55);
   border-bottom: 1px solid rgb(var(--border));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   cursor: grab;
+}
+
+html[data-os="windows"] .window:not(.window-blurred) {
+  border-color: rgb(var(--accent) / 0.3);
 }
 
 html[data-os="windows"] .window-titlebar:active {
@@ -306,15 +312,24 @@ html[data-os="linux"] .window-titlebar:active {
   display: flex;
   align-items: center;
   gap: 2px;
-  min-width: 72px;
+}
+
+.window-titlebar-controls-left {
+  order: 0;
 }
 
 .window-titlebar-controls-right {
-  min-width: 72px;
+  order: 2;
+  flex: 1;
 }
 
-html[data-os="linux"] .window-titlebar-controls-left {
+html[data-os="windows"] .window-titlebar-controls-left {
+  order: 2;
+}
+
+html[data-os="windows"] .window-titlebar-controls-right {
   order: 0;
+  flex: 1;
 }
 
 .window-title {
@@ -327,6 +342,7 @@ html[data-os="linux"] .window-titlebar-controls-left {
   flex: 1;
   text-align: center;
   pointer-events: none;
+  order: 1;
 }
 
 html[data-os="windows"] .window-title {
@@ -663,6 +679,268 @@ html[data-os="windows"] .window-titlebar {
 
 html[data-os="linux"] .window-titlebar {
   font-family: 'Ubuntu', 'Inter', sans-serif;
+}
+
+/* ── Theme toggle transition ── */
+
+.desktop,
+.desktop-area,
+.window,
+.window-titlebar,
+.taskbar,
+.topbar,
+.dock,
+.start-menu {
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ── Start Menu (Windows) ── */
+
+.start-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+}
+
+.start-menu {
+  position: fixed;
+  bottom: 36px;
+  left: 0;
+  width: 280px;
+  background: rgb(var(--surface) / 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgb(var(--border));
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 -4px 32px rgb(0 0 0 / 0.3);
+  z-index: 20001;
+  font-family: 'Segoe UI', 'Inter', sans-serif;
+  animation: startMenuOpen 0.15s ease-out;
+  overflow: hidden;
+}
+
+@keyframes startMenuOpen {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.start-menu-account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.start-menu-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgb(var(--accent)), rgb(var(--emerald)));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'Segoe UI', 'Inter', sans-serif;
+}
+
+.start-menu-user {
+  display: flex;
+  flex-direction: column;
+}
+
+.start-menu-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgb(var(--text));
+}
+
+.start-menu-role {
+  font-size: 11px;
+  color: rgb(var(--muted));
+}
+
+.start-menu-divider {
+  height: 1px;
+  background: rgb(var(--border));
+  margin: 0 12px;
+}
+
+.start-menu-apps {
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.start-menu-app {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: rgb(var(--text));
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: left;
+  font-family: inherit;
+  font-size: 13px;
+  transition: background 0.12s ease;
+}
+
+.start-menu-app:hover {
+  background: rgb(var(--accent) / 0.12);
+}
+
+.start-menu-app-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--border));
+  color: rgb(var(--accent));
+}
+
+.start-menu-footer {
+  display: flex;
+  gap: 16px;
+  padding: 10px 16px;
+}
+
+.start-menu-footer-text {
+  font-size: 11px;
+  color: rgb(var(--muted));
+  cursor: pointer;
+}
+
+.start-menu-footer-text:hover {
+  color: rgb(var(--text));
+}
+
+/* ── Activities Overview (Linux) ── */
+
+.activities-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30000;
+  background: rgb(var(--bg) / 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: activitiesFadeIn 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 80px;
+}
+
+@keyframes activitiesFadeIn {
+  from { opacity: 0; backdrop-filter: blur(0); }
+  to   { opacity: 1; backdrop-filter: blur(20px); }
+}
+
+.activities {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+  max-width: 720px;
+}
+
+.activities-search {
+  position: relative;
+  width: 360px;
+}
+
+.activities-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgb(var(--muted));
+  pointer-events: none;
+}
+
+.activities-search-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 16px 0 42px;
+  border-radius: 22px;
+  border: 1px solid rgb(var(--border));
+  background: rgb(var(--surface) / 0.8);
+  color: rgb(var(--text));
+  font-size: 14px;
+  font-family: 'Ubuntu', 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.activities-search-input:focus {
+  border-color: rgb(var(--accent) / 0.5);
+}
+
+.activities-search-input::placeholder {
+  color: rgb(var(--muted));
+}
+
+.activities-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  padding: 0 24px;
+}
+
+.activities-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  border: none;
+  background: transparent;
+  color: rgb(var(--text));
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background 0.15s ease, transform 0.15s ease;
+  font-family: 'Ubuntu', 'Inter', sans-serif;
+  min-width: 100px;
+}
+
+.activities-app:hover {
+  background: rgb(var(--accent) / 0.1);
+  transform: scale(1.05);
+}
+
+.activities-app-icon {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--border));
+  color: rgb(var(--accent));
+  font-size: 28px;
+}
+
+html[data-os="linux"] .activities-app-icon {
+  color: #E95420;
+  border-color: rgb(233 84 32 / 0.3);
+  background: rgb(233 84 32 / 0.08);
+}
+
+.activities-app-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgb(var(--text));
+  text-align: center;
 }
 
 /* ── Context menu ── */

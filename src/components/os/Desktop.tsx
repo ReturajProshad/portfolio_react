@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { OsThemeProvider, useOsTheme } from "./OsThemeProvider";
 import { WindowManagerProvider, useWindowManager } from "@/lib/windowManager";
 import { appDefinitions } from "@/config/apps";
@@ -8,6 +9,8 @@ import Window from "./Window";
 import WindowsTaskbar from "./WindowsTaskbar";
 import LinuxTopBar from "./LinuxTopBar";
 import LinuxDock from "./LinuxDock";
+import StartMenu from "./StartMenu";
+import ActivitiesOverview from "./ActivitiesOverview";
 import AboutApp from "@/components/apps/AboutApp";
 import ExperienceApp from "@/components/apps/ExperienceApp";
 import SkillsApp from "@/components/apps/SkillsApp";
@@ -29,11 +32,16 @@ const appComponentMap: Record<string, React.ComponentType> = {
 function DesktopInner() {
   const { windows } = useWindowManager();
   const { osTheme } = useOsTheme();
+  const [showStart, setShowStart] = useState(false);
+  const [showActivities, setShowActivities] = useState(false);
   const isWindows = osTheme === "windows";
+
+  const handleStartClick = useCallback(() => setShowStart(prev => !prev), []);
+  const handleActivitiesClick = useCallback(() => setShowActivities(prev => !prev), []);
 
   return (
     <div className="desktop">
-      {!isWindows && <LinuxTopBar />}
+      {!isWindows && <LinuxTopBar onActivitiesClick={handleActivitiesClick} />}
       {!isWindows && <LinuxDock />}
       <div className="desktop-area">
         <div className="desktop-icons">
@@ -50,7 +58,9 @@ function DesktopInner() {
           );
         })}
       </div>
-      {isWindows && <WindowsTaskbar />}
+      {isWindows && <WindowsTaskbar onStartClick={handleStartClick} />}
+      {showStart && <StartMenu onClose={() => setShowStart(false)} />}
+      {showActivities && <ActivitiesOverview onClose={() => setShowActivities(false)} />}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { useWindowManager } from "@/lib/windowManager";
 import { appDefinitions } from "@/config/apps";
 import SystemTray from "./SystemTray";
 
-export default function WindowsTaskbar() {
+export default function WindowsTaskbar({ onStartClick }: { onStartClick: () => void }) {
   const { windows, focusedId, openApp, focusApp, minimizeApp } = useWindowManager();
   const [time, setTime] = useState("");
 
@@ -34,7 +34,7 @@ export default function WindowsTaskbar() {
 
   return (
     <div className="taskbar taskbar-windows">
-      <button className="taskbar-start" aria-label="Start">
+      <button className="taskbar-start" onClick={onStartClick} aria-label="Start">
         <span className="taskbar-start-icon">⊞</span>
       </button>
       <div className="taskbar-apps">

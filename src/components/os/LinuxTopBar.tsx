@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import SystemTray from "./SystemTray";
 
-export default function LinuxTopBar() {
+export default function LinuxTopBar({ onActivitiesClick }: { onActivitiesClick: () => void }) {
   const [time, setTime] = useState("");
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function LinuxTopBar() {
   return (
     <div className="topbar topbar-linux">
       <div className="topbar-left">
-        <span className="topbar-activities">Activities</span>
+        <button className="topbar-activities" onClick={onActivitiesClick}>Activities</button>
       </div>
       <div className="topbar-center">
         <span className="topbar-clock">{time}</span>
