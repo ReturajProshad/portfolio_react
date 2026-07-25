@@ -14,7 +14,9 @@ import StartMenu from "./StartMenu";
 import ActivitiesOverview from "./ActivitiesOverview";
 import WritingReveal from "./WritingReveal";
 import ProfessionalSummary from "./ProfessionalSummary";
+import StatsCards from "./StatsCards";
 import QuickInfo from "./QuickInfo";
+import CurrentWork from "./CurrentWork";
 import FlutterShowcase from "./FlutterShowcase";
 import ThemeToggle from "../ThemeToggle";
 import MobileNav from "./MobileNav";
@@ -111,9 +113,11 @@ function DesktopInner() {
       <div className="desktop-area">
         <div className="hero-left">
           <WritingReveal onPicClick={() => openApp("photo")} onDone={() => setRevealDone(true)} />
+          {revealDone && <StatsCards />}
           <ProfessionalSummary show={revealDone} />
           {revealDone && <QuickInfo />}
         </div>
+        {revealDone && !windows.some(w => w.isOpen && !w.isMinimized) && <CurrentWork />}
         {revealDone && <FlutterShowcase />}
         {windows.filter(w => w.isOpen && !w.isMinimized).map(w => {
           const AppComponent = appComponentMap[w.id];

@@ -1547,7 +1547,7 @@ html[data-os="linux"] .activities-app-icon {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 540px;
+  max-width: 580px;
   pointer-events: none;
 }
 
@@ -1602,6 +1602,52 @@ html[data-os="linux"] .activities-app-icon {
   border-color: color-mix(in srgb, var(--badge-color) 50%, transparent);
   box-shadow: 0 0 12px color-mix(in srgb, var(--badge-color) 15%, transparent);
   font-weight: 600;
+}
+
+/* ── Stats Cards ── */
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 12px 8px;
+  border-radius: 10px;
+  background: rgb(var(--surface) / 0.35);
+  border: 1px solid rgb(var(--border) / 0.2);
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  background: rgb(var(--surface) / 0.55);
+  border-color: color-mix(in srgb, var(--stat-color) 30%, transparent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.1);
+}
+
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--stat-color);
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: rgb(var(--text) / 0.6);
+  line-height: 1.3;
+  max-width: 72px;
 }
 
 /* ── Quick Info (contact + company + shipped) ── */
@@ -1671,6 +1717,254 @@ html[data-os="linux"] .activities-app-icon {
   margin-top: 3px;
   flex-shrink: 0;
   color: rgb(var(--emerald));
+}
+
+/* ── Current Work + Exploring (desktop idle cards) ── */
+
+.current-work {
+  position: absolute;
+  left: 35%;
+  top: 5%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.current-work-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 28px;
+  max-width: 420px;
+  border-radius: 16px;
+  background: rgb(var(--surface) / 0.5);
+  border: 1px solid rgb(var(--border) / 0.25);
+  text-align: center;
+}
+
+.current-work-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgb(var(--accent));
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgb(var(--accent) / 0.1);
+}
+
+.current-work-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: rgb(var(--text));
+  margin: 0;
+}
+
+.current-work-desc {
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: rgb(var(--text) / 0.65);
+  margin: 0;
+}
+
+.current-work-features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.current-work-feature {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  color: rgb(var(--text) / 0.55);
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgb(var(--surface) / 0.3);
+  border: 1px solid rgb(var(--border) / 0.15);
+}
+
+.current-work-feature svg {
+  color: rgb(var(--emerald));
+}
+
+.current-work-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+}
+
+.current-work-tag {
+  font-size: 0.6rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgb(var(--accent) / 0.1);
+  color: rgb(var(--accent));
+  border: 1px solid rgb(var(--accent) / 0.15);
+}
+
+/* ── Exploring Card (dashed border, compact) ── */
+
+.exploring-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 20px;
+  max-width: 420px;
+  border-radius: 12px;
+  background: rgb(var(--surface) / 0.2);
+  border: 1px dashed rgb(var(--border) / 0.3);
+}
+
+.exploring-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgb(var(--emerald));
+}
+
+.exploring-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.exploring-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgb(var(--surface) / 0.2);
+  border: 1px solid rgb(var(--border) / 0.1);
+}
+
+.exploring-item-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgb(var(--emerald) / 0.1);
+  color: rgb(var(--emerald));
+  flex-shrink: 0;
+}
+
+.exploring-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.exploring-item-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgb(var(--text));
+  line-height: 1.2;
+}
+
+.exploring-item-sub {
+  font-size: 0.55rem;
+  color: rgb(var(--text) / 0.45);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Writing Card (documents/book) ── */
+
+.writing-card {
+  display: flex;
+  max-width: 420px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgb(var(--surface) / 0.2);
+  border: 1px solid rgb(var(--border) / 0.2);
+}
+
+.writing-card-accent {
+  width: 4px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--accent)),
+    rgb(var(--emerald))
+  );
+}
+
+.writing-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+}
+
+.writing-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgb(var(--accent));
+}
+
+.writing-card-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgb(var(--text));
+  margin: 0;
+  line-height: 1.3;
+}
+
+.writing-card-desc {
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: rgb(var(--text) / 0.6);
+  margin: 0;
+}
+
+.writing-card-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.writing-card-chapter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.6rem;
+  color: rgb(var(--text) / 0.5);
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgb(var(--surface) / 0.15);
+}
+
+.writing-card-chapter svg {
+  color: rgb(var(--emerald));
+  flex-shrink: 0;
 }
 
 /* ── Architecture flow layers (inside FlutterShowcase) ── */
@@ -1825,7 +2119,7 @@ html[data-os="linux"] .top-right-actions {
 
 .flutter-showcase {
   position: absolute;
-  right: clamp(24px, 4vw, 72px);
+  right: clamp(24px, 10vw, 80px);
   top: 46%;
   transform: translateY(-50%);
   width: 480px;
