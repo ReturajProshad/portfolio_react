@@ -1272,18 +1272,203 @@ html[data-os="linux"] .activities-app-icon {
   flex-direction: column;
 }
 
+.mobile-top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 11000;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgb(var(--bg) / 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.mobile-top-bar .theme-toggle {
+  width: 32px;
+  height: 32px;
+}
+
+.mobile-top-bar .theme-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
 .mobile-home {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 72px;
+  padding: 56px 0 72px;
 }
 
-.mobile-icons {
+.mobile-profile {
   display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 14px 24px;
+}
+
+.mobile-profile .writing-reveal {
+  margin: 0;
+}
+
+.mobile-profile .stats-cards {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.mobile-profile .stats-card {
+  padding: 10px 8px;
+}
+
+.mobile-profile .stats-card-value {
+  font-size: 1.1rem;
+}
+
+.mobile-profile .stats-card-label {
+  font-size: 0.6rem;
+}
+
+.mobile-profile .professional-summary {
+  max-width: 100%;
+}
+
+.mobile-profile .summary-headline {
+  font-size: 0.95rem;
+}
+
+.mobile-profile .summary-tagline {
+  font-size: 0.82rem;
+  margin-bottom: 14px;
+}
+
+.mobile-profile .summary-badges {
+  gap: 6px;
+}
+
+.mobile-profile .tech-badge {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+}
+
+.mobile-profile .quick-info {
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-profile .quick-info-badges {
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  padding: 24px 12px;
+  gap: 6px;
+}
+
+.mobile-profile .quick-info-badge {
+  font-size: 0.72rem;
+  padding: 4px 10px;
+}
+
+.mobile-profile .quick-info-company {
+  font-size: 0.75rem;
+}
+
+.mobile-profile .quick-info-bullets {
+  gap: 4px;
+  padding-left: 14px;
+}
+
+.mobile-profile .quick-info-bullets li {
+  font-size: 0.72rem;
+}
+
+.mobile-profile .education-line {
+  font-size: 0.75rem;
+  padding: 5px 10px;
+}
+
+.mobile-profile .current-work {
+  position: static;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.mobile-profile .current-work-card {
+  max-width: 100%;
+  padding: 16px 18px;
+}
+
+.mobile-profile .current-work-header {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+}
+
+.mobile-profile .current-work-title {
+  font-size: 1rem;
+}
+
+.mobile-profile .current-work-desc {
+  font-size: 0.78rem;
+}
+
+.mobile-profile .current-work-feature {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+}
+
+.mobile-profile .current-work-tag {
+  font-size: 0.68rem;
+  padding: 2px 8px;
+}
+
+.mobile-profile .exploring-card {
+  max-width: 100%;
+  padding: 12px 14px;
+}
+
+.mobile-profile .exploring-header {
+  font-size: 0.7rem;
+}
+
+.mobile-profile .exploring-item {
+  padding: 6px 8px;
+  gap: 6px;
+}
+
+.mobile-profile .exploring-item-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.mobile-profile .exploring-item-label {
+  font-size: 0.7rem;
+}
+
+.mobile-profile .exploring-item-sub {
+  font-size: 0.6rem;
+}
+
+.mobile-profile .writing-card {
+  max-width: 100%;
+}
+
+.mobile-profile .writing-card-header {
+  font-size: 0.7rem;
+}
+
+.mobile-profile .writing-card-title {
+  font-size: 0.9rem;
+}
+
+.mobile-profile .writing-card-desc {
+  font-size: 0.75rem;
+}
+
+.mobile-profile .writing-card-chapter {
+  font-size: 0.68rem;
+}
+
+.mobile-profile .flutter-showcase {
+  display: none;
 }
 
 .mobile-nav {
@@ -1295,12 +1480,13 @@ html[data-os="linux"] .activities-app-icon {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background: rgb(var(--surface) / 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid rgb(var(--border));
+  background: rgb(var(--surface) / 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgb(var(--border) / 0.3);
   z-index: 10000;
-  padding: 0 4px;
+  padding: 0 2px;
+  box-shadow: 0 -4px 24px rgb(0 0 0 / 0.15);
 }
 
 .mobile-nav-btn {
@@ -1308,27 +1494,159 @@ html[data-os="linux"] .activities-app-icon {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 4px 8px;
+  padding: 4px 6px;
   border: none;
   background: transparent;
   color: rgb(var(--muted));
   cursor: pointer;
-  border-radius: 6px;
-  transition: color 0.15s ease;
+  border-radius: 8px;
+  transition: all 0.2s ease;
   font-family: inherit;
   min-width: 0;
+  position: relative;
 }
 
-.mobile-nav-btn:hover {
-  color: rgb(var(--text));
+.mobile-nav-btn svg {
+  color: var(--nav-color, rgb(var(--muted)));
+  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--nav-color, rgb(var(--muted))) 20%, transparent));
+  transition: all 0.2s ease;
+}
+
+.mobile-nav-btn:active svg {
+  transform: scale(0.9);
 }
 
 .mobile-nav-label {
-  font-size: 9px;
+  font-size: 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 56px;
+  color: rgb(var(--text) / 0.45);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.mobile-nav-btn:hover .mobile-nav-label {
+  color: rgb(var(--text) / 0.7);
+}
+
+.mobile-nav-drawer {
+  --nav-color: rgb(var(--text) / 0.4);
+}
+
+.mobile-nav-drawer.active {
+  --nav-color: rgb(var(--accent));
+  background: rgb(var(--accent) / 0.1);
+}
+
+.mobile-nav-drawer.active .mobile-nav-label {
+  color: rgb(var(--accent));
+}
+
+/* Mobile App Drawer */
+
+.mobile-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 15000;
+  background: rgb(0 0 0 / 0.4);
+  display: flex;
+  align-items: flex-end;
+  animation: drawerFadeIn 0.2s ease-out;
+}
+
+@keyframes drawerFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mobile-drawer {
+  width: 100%;
+  max-height: 60vh;
+  background: rgb(var(--surface) / 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px 20px 0 0;
+  overflow-y: auto;
+  animation: drawerSlideUp 0.25s ease-out;
+  padding: 16px 12px 24px;
+}
+
+@keyframes drawerSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.mobile-drawer-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgb(var(--text));
+}
+
+.mobile-drawer-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgb(var(--text) / 0.08);
+  color: rgb(var(--text));
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.mobile-drawer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.mobile-drawer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border: none;
+  background: transparent;
+  color: rgb(var(--text));
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background 0.15s ease;
+  font-family: inherit;
+}
+
+.mobile-drawer-item:active {
+  background: rgb(var(--accent) / 0.1);
+}
+
+.mobile-drawer-item-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgb(var(--accent) / 0.08);
+  color: rgb(var(--accent));
+}
+
+.mobile-drawer-item-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: rgb(var(--text) / 0.7);
+  text-align: center;
+  line-height: 1.2;
 }
 
 /* Mobile App View (slide-in panel) */
@@ -1394,6 +1712,24 @@ html[data-os="linux"] .activities-app-icon {
 .mobile-app-content {
   flex: 1;
   overflow-y: auto;
+}
+
+.mobile-app-content .flutter-showcase {
+  position: relative;
+  right: auto;
+  top: auto;
+  transform: none;
+  width: 100%;
+  max-width: 100%;
+  padding: 24px 0;
+}
+
+.mobile-app-content .showcase-pill {
+  display: none;
+}
+
+.mobile-app-content .showcase-line {
+  display: none;
 }
 
 /* ── Writing Reveal (handwriting animation) ── */
