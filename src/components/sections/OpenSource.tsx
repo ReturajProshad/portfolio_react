@@ -75,7 +75,7 @@ export default function OpenSource() {
           {/* Links */}
           <div className="flex flex-wrap gap-3 mt-6">
             <a
-              href={personal.github}
+              href="https://github.com/ReturajProshad/rj_form_engine"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent/90 transition-all"
@@ -83,10 +83,15 @@ export default function OpenSource() {
               <Github size={14} />
               View on GitHub
             </a>
-            <span className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border/80 text-muted text-sm font-medium">
+            <a
+              href="https://pub.dev/packages/rj_form_engine"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-accent/40 text-accent text-sm font-medium hover:bg-accent/10 transition-all"
+            >
               <PackageSearch size={14} />
-              pub.dev listing pending
-            </span>
+              pub.dev
+            </a>
           </div>
         </div>
 

@@ -21,6 +21,7 @@ import FlutterShowcase from "./FlutterShowcase";
 import { GraduationCap } from "lucide-react";
 import ThemeToggle from "../ThemeToggle";
 import MobileNav from "./MobileNav";
+import MobileDrawer from "./MobileDrawer";
 import MobileAppView from "./MobileAppView";
 import AboutApp from "@/components/apps/AboutApp";
 import ExperienceApp from "@/components/apps/ExperienceApp";
@@ -49,6 +50,7 @@ function DesktopInner() {
   const [showStart, setShowStart] = useState(false);
   const [showActivities, setShowActivities] = useState(false);
   const [mobileApp, setMobileApp] = useState<string | null>(null);
+  const [mobileDrawer, setMobileDrawer] = useState(false);
   const [revealDone, setRevealDone] = useState(false);
   const isMobile = useIsMobile();
   const isWindows = osTheme === "windows";
@@ -66,17 +68,38 @@ function DesktopInner() {
     setMobileApp(id);
   }, [openApp]);
 
+  const handleDrawerToggle = useCallback(() => {
+    setMobileDrawer(prev => !prev);
+  }, []);
+
+  const handleDrawerSelect = useCallback((id: string) => {
+    openApp(id);
+    setMobileApp(id);
+  }, [openApp]);
+
   if (isMobile) {
     return (
       <div className="desktop mobile-desktop">
+        <div className="mobile-top-bar">
+          <ThemeToggle />
+        </div>
         <div className="mobile-home">
-          <div className="mobile-icons">
-            {appDefinitions.map(app => (
-              <DesktopIcon key={app.id} app={app} />
-            ))}
+          <div className="mobile-profile">
+            <WritingReveal onPicClick={() => openApp("photo")} onDone={() => setRevealDone(true)} />
+            {revealDone && <StatsCards />}
+            <ProfessionalSummary show={revealDone} />
+            {revealDone && <QuickInfo />}
+            {revealDone && (
+              <div className="education-line">
+                <GraduationCap size={14} />
+                <span><strong>B.Sc. in CSE</strong> — Islamic University &middot; <strong>CGPA 3.63/4.00</strong></span>
+              </div>
+            )}
+            {revealDone && <CurrentWork />}
           </div>
         </div>
-        <MobileNav onAppSelect={handleMobileAppSelect} />
+        <MobileNav onAppSelect={handleMobileAppSelect} onDrawerToggle={handleDrawerToggle} drawerOpen={mobileDrawer} />
+        {mobileDrawer && <MobileDrawer onSelect={handleDrawerSelect} onClose={() => setMobileDrawer(false)} />}
         {mobileApp && (
           <MobileAppView appId={mobileApp} onClose={() => setMobileApp(null)}>
             {React.createElement(appComponentMap[mobileApp])}
