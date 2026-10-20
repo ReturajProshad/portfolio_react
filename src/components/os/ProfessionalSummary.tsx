@@ -29,7 +29,7 @@ export default function ProfessionalSummary({ show }: Props) {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <p className="summary-headline">
-        Full-Stack Engineer · Flutter · Spring Boot · Problem Solver
+        {personal.headline}
       </p>
       <p className="summary-tagline">{personal.tagline}</p>
       <div className="summary-badges">

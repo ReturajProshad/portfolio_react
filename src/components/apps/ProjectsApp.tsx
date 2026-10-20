@@ -63,14 +63,19 @@ export default function ProjectsApp() {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   {project.links.github && (
-                    <a href={project.links.github} target="_blank" rel="noopener noreferrer"
+                    <a href={project.links.github} aria-label={`${project.title} on GitHub`} target="_blank" rel="noopener noreferrer"
                       className="w-7 h-7 flex items-center justify-center rounded-lg border border-border/60 text-muted hover:text-text hover:border-accent/40 transition-all"
                     ><Github size={13} /></a>
                   )}
                   {project.links.playstore && (
-                    <a href={project.links.playstore} target="_blank" rel="noopener noreferrer"
+                    <a href={project.links.playstore} aria-label={`${project.title} on Google Play`} target="_blank" rel="noopener noreferrer"
                       className="w-7 h-7 flex items-center justify-center rounded-lg border border-border/60 text-muted hover:text-text hover:border-accent/40 transition-all"
                     ><ExternalLink size={13} /></a>
+                  )}
+                  {project.links.pubdev && (
+                    <a href={project.links.pubdev} aria-label={`${project.title} on pub.dev`} target="_blank" rel="noopener noreferrer"
+                      className="w-7 h-7 flex items-center justify-center rounded-lg border border-border/60 text-muted hover:text-text hover:border-accent/40 transition-all"
+                    ><Package size={13} /></a>
                   )}
                 </div>
               </div>
@@ -128,7 +133,7 @@ export default function ProjectsApp() {
                   <p className="text-[11px] font-mono text-muted">{project.subtitle}</p>
                 </div>
                 {project.links.github && (
-                  <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-text transition-colors shrink-0">
+                  <a href={project.links.github} aria-label={`${project.title} on GitHub`} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-text transition-colors shrink-0">
                     <Github size={13} />
                   </a>
                 )}

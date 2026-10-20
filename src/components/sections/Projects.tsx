@@ -75,7 +75,7 @@ export default function Projects() {
                 <div className="flex items-center gap-2">
                   {project.links.github && (
                     <a
-                      href={project.links.github}
+                      href={project.links.github} aria-label={`${project.title} on GitHub`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-8 h-8 flex items-center justify-center rounded-lg border border-border/60 text-muted hover:text-text hover:border-accent/40 transition-all"
@@ -85,12 +85,22 @@ export default function Projects() {
                   )}
                   {project.links.playstore && (
                     <a
-                      href={project.links.playstore}
+                      href={project.links.playstore} aria-label={`${project.title} on Google Play`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-8 h-8 flex items-center justify-center rounded-lg border border-border/60 text-muted hover:text-text hover:border-accent/40 transition-all"
                     >
                       <ExternalLink size={14} />
+                    </a>
+                  )}
+                  {project.links.pubdev && (
+                    <a
+                      href={project.links.pubdev} aria-label={`${project.title} on pub.dev`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-8 h-8 flex items-center justify-center rounded-lg border border-border/60 text-muted hover:text-text hover:border-accent/40 transition-all"
+                    >
+                      <Package size={14} />
                     </a>
                   )}
                 </div>
@@ -170,7 +180,7 @@ export default function Projects() {
                 </div>
                 {project.links.github && (
                   <a
-                    href={project.links.github}
+                    href={project.links.github} aria-label={`${project.title} on GitHub`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-muted hover:text-text transition-colors"

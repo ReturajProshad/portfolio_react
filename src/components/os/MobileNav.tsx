@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Briefcase, Wrench, Mail, Grid3X3 } from "lucide-react";
+import { User, Briefcase, Folder, Mail, Grid3X3 } from "lucide-react";
 
 interface NavItem {
   id: string;
@@ -12,7 +12,7 @@ interface NavItem {
 const primaryItems: NavItem[] = [
   { id: "about", label: "About", icon: User, color: "var(--accent)" },
   { id: "experience", label: "Experience", icon: Briefcase, color: "#f59e0b" },
-  { id: "skills", label: "Skills", icon: Wrench, color: "#10b981" },
+  { id: "projects", label: "Projects", icon: Folder, color: "#10b981" },
   { id: "contact", label: "Contact", icon: Mail, color: "#ef4444" },
 ];
 
@@ -26,7 +26,7 @@ export default function MobileNav({
   drawerOpen: boolean;
 }) {
   return (
-    <nav className="mobile-nav" role="tablist" aria-label="Applications">
+    <nav className="mobile-nav" aria-label="Portfolio sections">
       {primaryItems.map(item => {
         const Icon = item.icon;
         return (
@@ -35,7 +35,6 @@ export default function MobileNav({
             className="mobile-nav-btn"
             onClick={() => onAppSelect(item.id)}
             aria-label={`Open ${item.label}`}
-            role="tab"
             style={{ "--nav-color": item.color } as React.CSSProperties}
           >
             <Icon size={20} />
@@ -47,7 +46,6 @@ export default function MobileNav({
         className={`mobile-nav-btn mobile-nav-drawer${drawerOpen ? " active" : ""}`}
         onClick={onDrawerToggle}
         aria-label="App drawer"
-        role="tab"
       >
         <Grid3X3 size={20} />
         <span className="mobile-nav-label">Explore</span>

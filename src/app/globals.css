@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@400;600;700&display=swap");
+/* Fonts are self-hosted via @fontsource (imported in app/layout.tsx) — no render-blocking third-party request. */
 
 @tailwind base;
 @tailwind components;
@@ -3107,4 +3107,185 @@ html[data-os="linux"] .top-right-actions {
   border-color: rgb(var(--amber) / 0.3);
   background: rgb(var(--amber) / 0.08);
   color: rgb(var(--amber));
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   Layout refresh — desktop home grid, mobile hero, live card, a11y
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Desktop home: a real grid instead of absolutely positioned panels,
+   so the hero, current work and showcase never overlap at any width. */
+.desktop-home {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(420px, 1.2fr) minmax(340px, 1fr) 480px;
+  gap: 28px 40px;
+  align-items: start;
+  padding: 24px 32px 40px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+
+.desktop-home .hero-left {
+  position: relative;
+  top: auto;
+  left: auto;
+  max-width: none;
+  min-width: 0;
+}
+
+.desktop-home .current-work {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  align-items: stretch;
+  padding-top: 56px;
+  min-width: 0;
+}
+
+.desktop-home .current-work-card {
+  max-width: none;
+}
+
+.desktop-home .flutter-showcase {
+  position: sticky;
+  top: 80px;
+  right: auto;
+  transform: none;
+  width: 100%;
+  max-width: 480px;
+  justify-self: center;
+  margin-top: 80px;
+}
+
+/* Name scales with the column instead of overflowing it */
+.desktop-home .reveal-line:first-child .reveal-text-sizer,
+.desktop-home .reveal-line:first-child .reveal-text-bright {
+  font-size: clamp(2.4rem, 3.1vw, 3.5rem);
+}
+
+/* Laptop widths (e.g. 1440px MacBook Air): keep the showcase, scaled down */
+@media (max-width: 1479px) {
+  .desktop-home {
+    grid-template-columns: minmax(420px, 1.2fr) minmax(320px, 1fr) 400px;
+    gap: 24px 32px;
+  }
+  .desktop-home .flutter-showcase {
+    zoom: 0.83;
+  }
+}
+
+@media (max-width: 1320px) {
+  .desktop-home {
+    grid-template-columns: minmax(420px, 1.15fr) minmax(320px, 1fr);
+  }
+  .desktop-home .flutter-showcase {
+    display: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  .desktop-home {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 720px;
+  }
+  .desktop-home .current-work {
+    padding-top: 0;
+  }
+}
+
+/* Mobile hero: keep the handwritten name on one line, sized to the screen */
+.mobile-profile .reveal-line:first-child .reveal-text-sizer,
+.mobile-profile .reveal-line:first-child .reveal-text-bright {
+  font-size: clamp(1.8rem, 8.6vw, 2.6rem);
+}
+
+.mobile-profile .reveal-text-sizer-sub,
+.mobile-profile .reveal-text-bright-sub {
+  font-size: clamp(1.3rem, 6vw, 1.7rem);
+}
+
+/* Mobile: the photo docks into the top bar as an avatar instead of
+   floating over the content above the bottom navigation */
+.mobile-desktop .writing-reveal-pic-fixed {
+  z-index: 11001;
+  border-radius: 28px;
+}
+
+.mobile-top-bar {
+  min-height: 52px;
+}
+
+.mobile-nav-btn:focus-visible,
+.top-action-btn:focus-visible,
+.current-work-cta:focus-visible,
+.writing-reveal-pic:focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 2px;
+}
+
+.photo-app img {
+  width: auto;
+  height: auto;
+}
+
+/* "Recently shipped · Live" card */
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgb(var(--emerald));
+  box-shadow: 0 0 0 0 rgb(var(--emerald) / 0.6);
+  animation: livePulse 2s ease-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes livePulse {
+  0% { box-shadow: 0 0 0 0 rgb(var(--emerald) / 0.55); }
+  70% { box-shadow: 0 0 0 8px rgb(var(--emerald) / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(var(--emerald) / 0); }
+}
+
+.current-work-cta {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgb(var(--accent));
+  text-decoration: none;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.current-work-cta:hover {
+  background: rgb(var(--accent) / 0.88);
+  transform: translateY(-1px);
+}
+
+.mobile-profile .current-work-cta {
+  align-self: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot {
+    animation: none;
+  }
+}
+
+/* Mobile: "Running tasks" items get full width so subtitles aren't clipped */
+.mobile-profile .exploring-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.exploring-item-text {
+  min-width: 0;
 }

@@ -14,7 +14,7 @@ export default function MobileAppView({
   children: React.ReactNode;
 }) {
   const definition = appDefinitions.find(a => a.id === appId);
-  const title = definition?.title ?? "App";
+  const title = definition?.title ?? (appId === "photo" ? "Profile Photo" : "Portfolio");
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") onClose();

@@ -83,9 +83,9 @@ function DesktopInner() {
         <div className="mobile-top-bar">
           <ThemeToggle />
         </div>
-        <div className="mobile-home">
+        <main className="mobile-home">
           <div className="mobile-profile">
-            <WritingReveal onPicClick={() => openApp("photo")} onDone={() => setRevealDone(true)} />
+            <WritingReveal onPicClick={() => handleMobileAppSelect("photo")} onDone={() => setRevealDone(true)} />
             {revealDone && <StatsCards />}
             <ProfessionalSummary show={revealDone} />
             {revealDone && <QuickInfo />}
@@ -97,7 +97,7 @@ function DesktopInner() {
             )}
             {revealDone && <CurrentWork />}
           </div>
-        </div>
+        </main>
         <MobileNav onAppSelect={handleMobileAppSelect} onDrawerToggle={handleDrawerToggle} drawerOpen={mobileDrawer} />
         {mobileDrawer && <MobileDrawer onSelect={handleDrawerSelect} onClose={() => setMobileDrawer(false)} />}
         {mobileApp && (
@@ -134,21 +134,23 @@ function DesktopInner() {
       <div className="desktop-overlay" />
       {!isWindows && <LinuxTopBar onActivitiesClick={handleActivitiesClick} />}
       {!isWindows && <LinuxDock />}
-      <div className="desktop-area">
-        <div className="hero-left">
-          <WritingReveal onPicClick={() => openApp("photo")} onDone={() => setRevealDone(true)} />
-          {revealDone && <StatsCards />}
-          <ProfessionalSummary show={revealDone} />
-          {revealDone && <QuickInfo />}
-          {revealDone && (
-            <div className="education-line">
-              <GraduationCap size={14} />
-              <span><strong>B.Sc. in CSE</strong> — Islamic University &middot; <strong>CGPA 3.63/4.00</strong></span>
-            </div>
-          )}
+      <main className="desktop-area">
+        <div className="desktop-home">
+          <div className="hero-left">
+            <WritingReveal onPicClick={() => openApp("photo")} onDone={() => setRevealDone(true)} />
+            {revealDone && <StatsCards />}
+            <ProfessionalSummary show={revealDone} />
+            {revealDone && <QuickInfo />}
+            {revealDone && (
+              <div className="education-line">
+                <GraduationCap size={14} />
+                <span><strong>B.Sc. in CSE</strong> — Islamic University &middot; <strong>CGPA 3.63/4.00</strong></span>
+              </div>
+            )}
+          </div>
+          {revealDone && <CurrentWork />}
+          {revealDone && <FlutterShowcase />}
         </div>
-        {revealDone && <CurrentWork />}
-        {revealDone && <FlutterShowcase />}
         {windows.filter(w => w.isOpen && !w.isMinimized).map(w => {
           const AppComponent = appComponentMap[w.id];
           return (
@@ -157,7 +159,7 @@ function DesktopInner() {
             </Window>
           );
         })}
-      </div>
+      </main>
       {isWindows && <WindowsTaskbar onStartClick={handleStartClick} />}
       {showStart && <StartMenu onClose={() => setShowStart(false)} />}
       {showActivities && <ActivitiesOverview onClose={() => setShowActivities(false)} />}

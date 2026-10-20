@@ -14,6 +14,10 @@ export const personal = {
   leetcode: "https://leetcode.com/u/returajsumon0808/",
   available: true,
   languages: ["English", "Bangla"],
+  siteUrl: "https://returaj.vercel.app",
+  headline: "Backend (Java/Spring Boot, Node.js) · Mobile (Flutter) · System Design",
+  university: "Islamic University, Bangladesh",
+  degree: "B.Sc. in Computer Science & Engineering",
 };
 
 export const summary =
@@ -61,14 +65,14 @@ export const skills = {
 export const experiences = [
   {
     company: "One Direction Companies Limited (ODCL)",
-    role: "Software Engineer — Flutter & Mobile",
-    period: "Apr 2025 – Jun 2026",
+    role: "Software Engineer",
+    period: "Apr 2025 – Present",
     location: "Dhaka, Bangladesh",
     type: "Full-time",
     current: true,
     highlights: [
       "Owned Flutter development end-to-end across 3 concurrent enterprise systems — Smart Gowala, FoodExpo Kiosk, and Shimana — spanning livestock management, self-service F&B POS kiosks, and border compliance workflows",
-      "Built a metadata-driven form engine rendering 90+ complex forms from JSON, cutting UI dev effort by ~90% — later extracted into the open-source rj form engine package",
+      "Built a metadata-driven form engine rendering 90+ complex forms from JSON, cutting UI dev effort by ~90% — later extracted into the open-source rj_form_engine package",
       "Designed a centralized, type-safe routing and pagination framework with GoRouter across 30+ feature modules, eliminating navigation boilerplate",
       "Implemented JWT auth with dynamic RBAC, letting a single build serve multiple roles with granular, module-level permissions",
       "Engineered an offline-first data layer with Hive-based caching (SWR/TTL) and conflict resolution (LWW, CRDTs) to keep workflows reliable under intermittent connectivity",
@@ -82,7 +86,7 @@ export const experiences = [
   },
   {
     company: "Kensink Labs",
-    role: "Flutter Developer (Contract)",
+    role: "Software Engineer (Contract)",
     period: "Mar 2025 – Apr 2025",
     location: "Remote",
     type: "Contract",
@@ -96,7 +100,7 @@ export const experiences = [
   },
   {
     company: "Brainwave Matrix Solutions",
-    role: "Mobile Developer Intern",
+    role: "Software Engineer Intern",
     period: "Sep 2024 – Oct 2024",
     location: "Remote",
     type: "Internship",
@@ -138,28 +142,29 @@ export const projects = [
   },
   {
     id: "rj-form-engine",
-    title: "rj form engine",
+    title: "rj_form_engine",
     subtitle: "Open-Source Schema-Driven Form Engine",
     description:
-      "A production-grade Flutter form engine that lets developers render complex, fully-validated forms from JSON configuration — no UI code needed.",
-    achievement: "90% reduction in UI development effort across 3 enterprise systems",
-    tags: ["Dart", "Flutter", "Open Source", "pub.dev"],
+      "A published Flutter package that turns a declarative field schema into a fully validated, responsive form — dependency graph, cascading data loading, derived fields, and state handled by the engine instead of hand-written UI code.",
+    achievement: "Extracted from production: powers 90+ forms across 3 enterprise systems, ~90% less form code",
+    tags: ["Dart", "Flutter", "System Design", "Open Source", "pub.dev"],
     links: {
-      github: "https://github.com/ReturajProshad",
+      github: "https://github.com/ReturajProshad/rj_form_engine",
+      pubdev: "https://pub.dev/packages/rj_form_engine",
     },
     featured: true,
     type: "opensource",
     stats: [
-      { label: "Field Types", value: "13+" },
-      { label: "Validation Rules", value: "25+" },
-      { label: "State Managers", value: "4" },
-      { label: "Forms Rendered", value: "90+" },
+      { label: "Field Types", value: "14" },
+      { label: "Validators", value: "25+" },
+      { label: "Automated Tests", value: "55+" },
+      { label: "Runtime Deps", value: "1" },
     ],
     details: [
-      "Metadata-driven pipeline with parent-child dependency tracking",
-      "Async data loading for multi-step workflows",
-      "State-management-agnostic FormController (Provider, Riverpod, Bloc, GetX)",
-      "Comprehensive Widget & Unit test suite covering conditional visibility and dependency resolution",
+      "Field dependencies modelled as a graph: one change clears dependents and recomputes chained derivations (A → B → C) in a single pass, with visited-set guards against cycles",
+      "Async, cascading data sources with label shadowing, so business rules read human-readable values without extra lookups",
+      "Framework-agnostic FormController (Provider, Riverpod, Bloc, GetX) with immutable state updates",
+      "Unit + widget tests for the controller, cascade resolution and responsive 12-column grid; only image_picker beyond the Flutter SDK",
     ],
   },
   {
@@ -179,6 +184,32 @@ export const projects = [
       { label: "Downloads", value: "50K+" },
       { label: "Rating", value: "4.3★" },
       { label: "Solo Build", value: "✓" },
+    ],
+  },
+  {
+    id: "amar-babu",
+    title: "Amar Babu",
+    subtitle: "Pregnancy Companion & Baby Game App — Live on Play Store",
+    description:
+      "A Bangla-first pregnancy companion built and shipped solo: offline-first data, cloud backup, an interactive talking baby, and physics-based mini-games, with production monitoring and an automated test suite.",
+    achievement: "Live in production · 12 backward-compatible schema migrations · 127 automated tests",
+    tags: ["Flutter", "Riverpod", "SQLite", "Firebase", "Flame", "Clean Architecture"],
+    links: {
+      playstore: "https://play.google.com/store/apps/details?id=com.returaj.amarBabu",
+    },
+    featured: true,
+    type: "production",
+    stats: [
+      { label: "Status", value: "Live" },
+      { label: "Migrations", value: "12" },
+      { label: "Tests", value: "127" },
+      { label: "Mini-games", value: "6" },
+    ],
+    details: [
+      "Feature-first Clean Architecture with Riverpod and GoRouter; EN/BN localization",
+      "Offline-first SQLite with 12 backward-compatible migrations, Firebase Auth and cloud backup",
+      "6 Flame + Forge2D mini-games, profiled and tuned (adaptive physics sub-stepping, pre-rasterized rendering)",
+      "Crashlytics, AdMob with UMP consent, and remotely configured ad units via Firestore",
     ],
   },
   {
@@ -255,7 +286,7 @@ export const achievements = [
   {
     icon: "📦",
     title: "Published on pub.dev",
-    detail: "rj form engine — schema-driven Flutter form library in active production use",
+    detail: "rj_form_engine — schema-driven Flutter form engine, extracted from production and open-sourced",
     tag: "Open Source",
   },
   {
@@ -283,3 +314,62 @@ export const achievements = [
     tag: "Academic",
   },
 ];
+
+export const openSource = {
+  name: "rj_form_engine",
+  tagline: "A schema-driven form engine for Flutter — extracted from production, published on pub.dev.",
+  github: "https://github.com/ReturajProshad/rj_form_engine",
+  pubdev: "https://pub.dev/packages/rj_form_engine",
+  problem:
+    "Enterprise apps at ODCL needed 90+ data-entry forms with cascading dropdowns, computed fields and role-specific rules. Hand-writing each one meant repeated layout, validation, state wiring and dependency bugs.",
+  solution:
+    "Describe each field once in a typed schema. The engine renders it, tracks dependencies between fields, loads data, validates, and returns typed results — the same engine serves every app.",
+  impact:
+    "Powers 90+ forms across 3 enterprise systems with ~90% less form code, then generalised into a standalone package with no state-management lock-in.",
+  design: [
+    {
+      title: "Dependency graph, single pass",
+      desc: "A change clears downstream dependents and recomputes chained derivations (A → B → C) in one pass; visited-set guards stop cycles.",
+    },
+    {
+      title: "Cascading async data",
+      desc: "Parent → child dropdowns reload and auto-clear from async or static sources, with label shadowing for readable business rules.",
+    },
+    {
+      title: "Typed schema API",
+      desc: "Factory constructors (FieldMeta.text, .dropdown, .date …) expose only valid options per field — 14 field types, 25+ validators.",
+    },
+    {
+      title: "Framework-agnostic state",
+      desc: "One FormController with immutable updates works with Provider, Riverpod, Bloc, GetX — or nothing at all.",
+    },
+    {
+      title: "Responsive layout engine",
+      desc: "Mobile-first 12-column grid with breakpoint-aware spans; phones stack, tablets and desktops use declared spans.",
+    },
+    {
+      title: "Tested & lean",
+      desc: "55+ unit and widget tests cover the controller, cascades and grid; the only dependency beyond Flutter is image_picker.",
+    },
+  ],
+  snippet: `RjForm(
+  fields: [
+    FieldMeta.dropdown(
+      key: 'district',
+      label: 'District',
+      required: true,
+      dropdownSource: DropdownSource.async(fetchDistricts),
+    ),
+    FieldMeta.dropdown(
+      key: 'upazila',
+      label: 'Upazila',
+      // reloads & clears whenever district changes
+      dependency: FieldDependency(dependsOn: 'district'),
+      dropdownSource: DropdownSource.async(
+        ({parentValue}) async => fetchUpazilas(parentValue: parentValue),
+      ),
+    ),
+  ],
+  onSubmit: (result) async => api.save(result.values),
+)`,
+};
