@@ -4,6 +4,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import { Lock, Play } from "lucide-react";
 import { useRebuildTracker } from "./store";
+import { BackButton } from "./PhoneApps";
 
 /* A small, working copy of Amar Babu's home screen (the real app is Flutter
    + Flame). Same layout and Bangla copy: week chips with locked future weeks,
@@ -317,9 +318,12 @@ export default function BabyApp() {
   return (
     <div ref={ref} className="ph-app bb-app">
       <div className="bb-scroll">
-        <div className="bb-header">
-          <span className="bb-hi">হাই, আম্মু! 👋</span>
-          <span className="bb-title">আমার বাবু</span>
+        <div className="bb-header-row">
+          <BackButton tone="light" />
+          <div className="bb-header">
+            <span className="bb-hi">হাই, আম্মু! 👋</span>
+            <span className="bb-title">আমার বাবু</span>
+          </div>
         </div>
 
         {tab === "home" && (

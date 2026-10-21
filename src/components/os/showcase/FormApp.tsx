@@ -4,6 +4,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Check, Loader2, Link2, AlertCircle } from "lucide-react";
 import { emitRequest, setPhoneTree, useRebuildTracker } from "./store";
+import { BackButton } from "./PhoneApps";
 
 /* A miniature of rj_form_engine running in the browser: the form is rendered
    from a schema, so the Builder tab can add and remove fields live, the
@@ -450,9 +451,12 @@ export default function FormApp() {
   return (
     <div ref={ref} className="ph-app fx-app">
       <div className="ph-appbar fx-appbar">
-        <div className="fx-appbar-title">
-          <span className="fx-brand">Smart Gowala</span>
-          <span className="ph-appbar-title">Farm registration</span>
+        <div className="ph-appbar-lead">
+          <BackButton />
+          <div className="fx-appbar-title">
+            <span className="fx-brand">Smart Gowala</span>
+            <span className="ph-appbar-title">Farm registration</span>
+          </div>
         </div>
         <span className="fx-count">{fields.length} fields</span>
       </div>

@@ -3437,10 +3437,10 @@ html[data-os="linux"] .top-right-actions {
   gap: 10px;
   padding: 12px;
   border-radius: 14px;
-  background: rgb(var(--surface) / 0.75);
+  /* Opaque instead of backdrop-filter: blurring the drifting background
+     behind it cost a GPU pass on every frame */
+  background: rgb(var(--surface) / 0.94);
   border: 1px solid rgb(var(--border) / 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 12px 30px -12px rgb(0 0 0 / 0.35);
 }
 
@@ -4824,4 +4824,51 @@ html[data-os="linux"] .top-right-actions {
 @keyframes phPulse {
   0% { opacity: 0.9; transform: scale(0.95); }
   100% { opacity: 0; transform: scale(1.25); }
+}
+
+/* ── Phone: in-app back button ── */
+
+.ph-appbar-lead {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.ph-back {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-left: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ph-back-dark {
+  color: rgb(var(--ph-accent));
+  background: rgb(var(--ph-accent) / 0.12);
+}
+
+.ph-back-dark:hover {
+  background: rgb(var(--ph-accent) / 0.22);
+}
+
+.ph-back-light {
+  color: #8b1046;
+  background: #fde7ef;
+}
+
+.ph-back-light:hover {
+  background: #fbd3e2;
+}
+
+.bb-header-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }

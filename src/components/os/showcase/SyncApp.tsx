@@ -4,6 +4,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Wifi, WifiOff, Smartphone } from "lucide-react";
 import { emitRequest, useRebuildTracker } from "./store";
+import { BackButton } from "./PhoneApps";
 
 /* FieldOps in miniature: edits made offline stay Pending; going online
    pulls the server copy and merges per field against the last-synced
@@ -175,7 +176,10 @@ export default function SyncApp() {
   return (
     <div ref={ref} className="ph-app sy-app">
       <div className="ph-appbar">
-        <span className="ph-appbar-title">FieldOps</span>
+        <div className="ph-appbar-lead">
+          <BackButton />
+          <span className="ph-appbar-title">FieldOps</span>
+        </div>
         <button className={`sy-net${online ? " on" : ""}`} onClick={toggleOnline} aria-pressed={online}>
           {online ? <Wifi size={11} /> : <WifiOff size={11} />}
           {online ? "Online" : "Offline"}

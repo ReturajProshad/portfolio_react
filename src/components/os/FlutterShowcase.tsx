@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Wifi, Signal, Battery, Gauge } from "lucide-react";
 import { useRoleLens } from "@/lib/roleLens";
-import { HomeScreen, PHONE_APPS, type PhoneAppId } from "./showcase/PhoneApps";
+import { HomeScreen, PHONE_APPS, PhoneBackContext, type PhoneAppId } from "./showcase/PhoneApps";
 import FormApp from "./showcase/FormApp";
 import SyncApp from "./showcase/SyncApp";
 import BabyApp from "./showcase/BabyApp";
@@ -45,23 +45,36 @@ export default function FlutterShowcase() {
   const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-7, 7]), { stiffness: 150, damping: 18 });
   const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [6, -6]), { stiffness: 150, damping: 18 });
 
+  // Measure once per hover rather than on every move (no forced layout mid-animation)
+  const tiltBox = useRef<DOMRect | null>(null);
+  const handlePointerEnter = (e: React.PointerEvent<HTMLDivElement>) => {
+    tiltBox.current = e.currentTarget.getBoundingClientRect();
+  };
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
+    const r = tiltBox.current;
+    if (!r) return;
     mx.set((e.clientX - r.left) / r.width - 0.5);
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
   const handlePointerLeave = () => {
+    tiltBox.current = null;
     mx.set(0);
     my.set(0);
   };
 
-  // Apps zoom out of their icon, iOS-style
+  // Apps zoom out of their icon, iOS-style. Opening or closing an app is a
+  // transition: the tap's pressed state paints at once and React renders the
+  // app in interruptible chunks, instead of blocking the click handler
+  // (that blocking was the INP issue).
+  const [, startTransition] = useTransition();
   const openApp = useCallback((id: PhoneAppId, index: number) => {
-    setOrigin({ x: 0.2 + index * 0.3, y: 0.6 });
-    setApp(id);
     setTouched(true);
+    startTransition(() => {
+      setOrigin({ x: 0.2 + index * 0.3, y: 0.6 });
+      setApp(id);
+    });
   }, []);
-  const goHome = useCallback(() => setApp("home"), []);
+  const goHome = useCallback(() => startTransition(() => setApp("home")), []);
 
   const AppComponent = app === "home" ? null : APP_COMPONENTS[app];
   const appMeta = PHONE_APPS.find(a => a.id === app);
@@ -73,6 +86,7 @@ export default function FlutterShowcase() {
           <motion.div
             className="sc-tilt"
             style={{ rotateX, rotateY }}
+            onPointerEnter={handlePointerEnter}
             onPointerMove={handlePointerMove}
             onPointerLeave={handlePointerLeave}
           >
@@ -99,7 +113,9 @@ export default function FlutterShowcase() {
                       exit={{ scale: 0.2, opacity: 0, borderRadius: 40 }}
                       transition={{ type: "spring", stiffness: 380, damping: 32 }}
                     >
-                      <AppComponent />
+                      <PhoneBackContext.Provider value={goHome}>
+                        <AppComponent />
+                      </PhoneBackContext.Provider>
                     </motion.div>
                   ) : (
                     <motion.div

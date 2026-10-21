@@ -1,11 +1,31 @@
 "use client";
 
+import { createContext, useContext } from "react";
 import { motion } from "framer-motion";
-import { ClipboardList, RefreshCw, Github, Linkedin, Mail } from "lucide-react";
+import { ClipboardList, RefreshCw, Github, Linkedin, Mail, ChevronLeft } from "lucide-react";
 import { personal } from "@/data/portfolio";
 import { useRebuildTracker } from "./store";
 
 export type PhoneAppId = "home" | "form" | "sync" | "baby";
+
+/** Returns to the phone's home screen; provided by FlutterShowcase. */
+export const PhoneBackContext = createContext<() => void>(() => {});
+
+/** In-app back button, placed at the start of each app's top bar. */
+export function BackButton({ tone = "dark" }: { tone?: "dark" | "light" }) {
+  const goBack = useContext(PhoneBackContext);
+  return (
+    <motion.button
+      type="button"
+      className={`ph-back ph-back-${tone}`}
+      onClick={goBack}
+      whileTap={{ scale: 0.88 }}
+      aria-label="Back to home screen"
+    >
+      <ChevronLeft size={15} />
+    </motion.button>
+  );
+}
 
 export const PHONE_APPS = [
   { id: "form" as const, name: "Forms", tag: "rj_form_engine", icon: ClipboardList, color: "#4F8EF7" },
