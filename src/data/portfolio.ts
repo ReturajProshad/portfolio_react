@@ -437,22 +437,19 @@ export const openSource = {
 
 /* ─────────────────────────────────────────────────────────────────────────
    Role lens — the same portfolio framed for a Software Engineer reader or a
-   Flutter / mobile reader. The SWE lens is the default and matches the
+   Flutter / mobile reader. Picked only by the link (?role=flutter), so each
+   CV links to its own version. The SWE lens is the default and matches the
    exports above (which the server-rendered SEO content uses); the Flutter
-   lens follows the Flutter & Mobile CV. Shareable as ?role=flutter.
+   lens follows the Flutter & Mobile CV.
    ───────────────────────────────────────────────────────────────────────── */
 
 export type Lens = "swe" | "flutter";
-
-export const lensOrder: Lens[] = ["swe", "flutter"];
 
 export type FocusArea = { title: string; detail: string; icon: string };
 export type Stat = { value: string; label: string; color: string };
 export type TechBadge = { label: string; color: string; accent: string; primary?: boolean };
 
 export interface LensProfile {
-  label: string;
-  shortLabel: string;
   role: string;
   headline: string;
   tagline: string;
@@ -472,8 +469,6 @@ export interface LensProfile {
 
 export const lensProfiles: Record<Lens, LensProfile> = {
   swe: {
-    label: "Software Engineer",
-    shortLabel: "SWE",
     role: personal.role,
     headline: personal.headline,
     tagline: personal.tagline,
@@ -522,8 +517,6 @@ export const lensProfiles: Record<Lens, LensProfile> = {
     featuredProjects: ["eztrainz", "rj-form-engine", "codehorse", "amar-babu"],
   },
   flutter: {
-    label: "Flutter Engineer",
-    shortLabel: "Flutter",
     role: "Flutter & Mobile Engineer",
     headline: "Cross-Platform Flutter (Android · iOS · Windows) · Native Integration · Offline-First",
     tagline:

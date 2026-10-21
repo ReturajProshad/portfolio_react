@@ -12,7 +12,7 @@ Built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS** and **F
 
 - **Window manager** (`src/lib/windowManager.tsx`) — open, focus, minimise, maximise, drag and resize windows with z-order handling, behind a small React context API.
 - **Two desktop themes** — Windows-style taskbar or Linux/GNOME-style top bar + dock, remembered per visitor.
-- **Role lens** (`src/lib/roleLens.tsx`) — one switch reframes the whole portfolio for a Software Engineer or a Flutter Engineer reader: role, summary, stats, skills, experience bullets and project order. Shareable as `/?role=flutter`.
+- **Role-specific links** (`src/lib/roleLens.tsx`) — `/` shows the Software Engineer portfolio and `/?role=flutter` the Flutter Engineer one (role, summary, stats, skills, experience bullets and project order), so each CV links to its own version. There is no on-page toggle and nothing is remembered between visits.
 - **macOS-style motion** — windows grow out of their dock/taskbar icon and minimise back into it, maximise/restore animates, dock icons magnify under the pointer and bounce on launch, stats count up.
 - **Mobile app shell** — bottom navigation, app drawer and full-screen app views instead of shrunken windows. The phone's back button/gesture closes the open section (it no longer leaves the site), and a swipe from the left edge goes back.
 - **Pen-drawn hero** (`WritingReveal.tsx`) — glyph outlines are sampled from a canvas so the pen follows the real letter shapes; waits for the handwriting font before measuring.

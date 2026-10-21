@@ -1,65 +1,39 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
+import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { experiences, projects, lensProfiles, type Lens, type LensProfile } from "@/data/portfolio";
 
-type RoleLensContextType = {
-  lens: Lens;
-  setLens: (lens: Lens) => void;
-};
+const RoleLensContext = createContext<Lens | null>(null);
 
-const RoleLensContext = createContext<RoleLensContextType | null>(null);
-
-const STORAGE_KEY = "roleLens";
-
-function parseLens(value: string | null): Lens | null {
-  if (!value) return null;
-  const v = value.toLowerCase();
-  if (v === "flutter" || v === "mobile") return "flutter";
-  if (v === "swe" || v === "se" || v === "software" || v === "backend") return "swe";
-  return null;
+function parseLens(value: string | null): Lens {
+  const v = value?.toLowerCase();
+  return v === "flutter" || v === "mobile" ? "flutter" : "swe";
 }
 
+/**
+ * The lens comes only from the link: /?role=flutter shows the Flutter view,
+ * anything else the Software Engineer view. Nothing is remembered, so each CV
+ * link always opens its own version.
+ */
 export function RoleLensProvider({ children }: { children: React.ReactNode }) {
-  const [lens, setLensState] = useState<Lens>("swe");
+  const [lens, setLens] = useState<Lens>("swe");
 
-  // A shared ?role= link wins over what this browser last picked
   useEffect(() => {
-    const fromUrl = parseLens(new URLSearchParams(window.location.search).get("role"));
-    let stored: Lens | null = null;
-    try {
-      stored = parseLens(localStorage.getItem(STORAGE_KEY));
-    } catch {}
-    const initial = fromUrl ?? stored;
-    if (initial) setLensState(initial);
+    setLens(parseLens(new URLSearchParams(window.location.search).get("role")));
   }, []);
 
-  const setLens = useCallback((next: Lens) => {
-    setLensState(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, next);
-    } catch {}
-    // Keep the address bar shareable: /?role=flutter sends the Flutter view
-    const url = new URL(window.location.href);
-    if (next === "swe") url.searchParams.delete("role");
-    else url.searchParams.set("role", next);
-    window.history.replaceState(window.history.state, "", url);
-  }, []);
-
-  const value = useMemo(() => ({ lens, setLens }), [lens, setLens]);
-
-  return <RoleLensContext.Provider value={value}>{children}</RoleLensContext.Provider>;
+  return <RoleLensContext.Provider value={lens}>{children}</RoleLensContext.Provider>;
 }
 
 export function useRoleLens() {
-  const ctx = useContext(RoleLensContext);
-  if (!ctx) throw new Error("useRoleLens must be used within RoleLensProvider");
-  return ctx;
+  const lens = useContext(RoleLensContext);
+  if (!lens) throw new Error("useRoleLens must be used within RoleLensProvider");
+  return lens;
 }
 
 /** Portfolio content resolved for the active lens. */
 export function useProfile() {
-  const { lens, setLens } = useRoleLens();
+  const lens = useRoleLens();
 
   return useMemo(() => {
     const profile: LensProfile = lensProfiles[lens];
@@ -78,6 +52,6 @@ export function useProfile() {
       featured: profile.featuredProjects.includes(p.id),
     }));
 
-    return { ...profile, lens, setLens, experiences: lensExperiences, projects: lensProjects };
-  }, [lens, setLens]);
+    return { ...profile, lens, experiences: lensExperiences, projects: lensProjects };
+  }, [lens]);
 }

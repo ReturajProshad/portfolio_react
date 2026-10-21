@@ -3310,73 +3310,8 @@ html[data-os="linux"] .top-right-actions {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   Role lens switch, macOS-style dock motion, mobile back gesture
+   macOS-style dock motion, mobile back gesture
    ═══════════════════════════════════════════════════════════════════ */
-
-/* ── Role switch (Software Engineer ⇄ Flutter Engineer) ── */
-
-.role-switch {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  padding: 3px;
-  gap: 2px;
-  border-radius: 999px;
-  background: rgb(var(--surface) / 0.7);
-  border: 1px solid rgb(var(--border) / 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.role-switch-btn {
-  position: relative;
-  border: none;
-  background: transparent;
-  padding: 5px 12px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  color: rgb(var(--subtle));
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color 0.2s ease;
-}
-
-.role-switch-btn:hover {
-  color: rgb(var(--text));
-}
-
-.role-switch-btn.active {
-  color: rgb(var(--bg));
-}
-
-.role-switch-btn:focus-visible {
-  outline: 2px solid rgb(var(--accent));
-  outline-offset: 2px;
-}
-
-.role-switch-pill {
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  background: linear-gradient(135deg, rgb(var(--accent)), rgb(var(--accent) / 0.75));
-  box-shadow: 0 2px 10px rgb(var(--accent) / 0.35);
-}
-
-.role-switch-label {
-  position: relative;
-  z-index: 1;
-}
-
-.role-switch-compact .role-switch-btn {
-  padding: 5px 10px;
-  font-size: 0.7rem;
-}
-
-.mobile-top-bar {
-  gap: 8px;
-}
 
 /* ── Linux dock: magnification grows icons away from the screen edge ── */
 

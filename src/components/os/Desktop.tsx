@@ -7,7 +7,6 @@ import { WindowManagerProvider, useWindowManager } from "@/lib/windowManager";
 import { RoleLensProvider, useRoleLens } from "@/lib/roleLens";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import Window, { type WindowExitReason } from "./Window";
-import RoleSwitch from "./RoleSwitch";
 import WindowsTaskbar from "./WindowsTaskbar";
 import LinuxTopBar from "./LinuxTopBar";
 import LinuxDock from "./LinuxDock";
@@ -48,7 +47,7 @@ const appComponentMap: Record<string, React.ComponentType> = {
 function DesktopInner() {
   const { windows, openApp, toggleMaximize } = useWindowManager();
   const { osTheme } = useOsTheme();
-  const { lens } = useRoleLens();
+  const lens = useRoleLens();
   const [showStart, setShowStart] = useState(false);
   const [showActivities, setShowActivities] = useState(false);
   const [mobileApp, setMobileApp] = useState<string | null>(null);
@@ -113,7 +112,6 @@ function DesktopInner() {
     return (
       <div className="desktop mobile-desktop">
         <div className="mobile-top-bar">
-          <RoleSwitch compact />
           <ThemeToggle />
         </div>
         <main className="mobile-home">
@@ -147,7 +145,6 @@ function DesktopInner() {
   return (
     <div className="desktop">
       <div className="top-right-actions">
-        <RoleSwitch />
         <button className="top-action-btn top-action-hire" onClick={() => openApp("contact")}>
           Hire Me
         </button>
