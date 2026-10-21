@@ -206,8 +206,12 @@ export default function FlutterShowcase() {
     // Re-measure once more after layout/fonts settle (avoids a stale line on first paint)
     const t = setTimeout(updateCoords, 60);
     window.addEventListener("resize", updateCoords);
+    // The grid can move or resize the showcase without a window resize
+    const ro = new ResizeObserver(updateCoords);
+    if (containerRef.current) ro.observe(containerRef.current);
     return () => {
       window.removeEventListener("resize", updateCoords);
+      ro.disconnect();
       clearTimeout(t);
     };
   }, [updateCoords]);

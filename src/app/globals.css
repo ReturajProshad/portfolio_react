@@ -3156,8 +3156,10 @@ html[data-os="linux"] .top-right-actions {
   top: 80px;
   right: auto;
   transform: none;
-  width: 100%;
-  max-width: 480px;
+  /* Fixed size: the pills, Backend card and connector line are laid out for
+     480px, and the connector is measured on screen, so never scale it. */
+  width: 480px;
+  max-width: none;
   justify-self: center;
   margin-top: 80px;
 }
@@ -3168,23 +3170,39 @@ html[data-os="linux"] .top-right-actions {
   font-size: clamp(2.4rem, 3.1vw, 3.5rem);
 }
 
-/* Laptop widths (e.g. 1440px MacBook Air): keep the showcase, scaled down */
-@media (max-width: 1479px) {
+/* Laptop widths (e.g. 1366px, or 1920px at 125% scaling): too narrow for three
+   columns, so current work moves under the hero and the showcase keeps its
+   own full-size column. */
+@media (max-width: 1399px) {
   .desktop-home {
-    grid-template-columns: minmax(420px, 1.2fr) minmax(320px, 1fr) 400px;
+    grid-template-columns: minmax(380px, 1fr) 480px;
     gap: 24px 32px;
   }
+  .desktop-home .hero-left {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .desktop-home .current-work {
+    grid-column: 1;
+    grid-row: 2;
+    padding-top: 0;
+  }
   .desktop-home .flutter-showcase {
-    zoom: 0.83;
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
 }
 
-@media (max-width: 1320px) {
+/* Showcase is hidden below 1100px (see Mobile + Backend Showcase), so
+   hero and current work go back to sitting side by side. */
+@media (max-width: 1100px) {
   .desktop-home {
     grid-template-columns: minmax(420px, 1.15fr) minmax(320px, 1fr);
   }
-  .desktop-home .flutter-showcase {
-    display: none;
+  .desktop-home .current-work {
+    grid-column: 2;
+    grid-row: 1;
+    padding-top: 56px;
   }
 }
 
@@ -3194,6 +3212,8 @@ html[data-os="linux"] .top-right-actions {
     max-width: 720px;
   }
   .desktop-home .current-work {
+    grid-column: auto;
+    grid-row: auto;
     padding-top: 0;
   }
 }
