@@ -333,7 +333,7 @@ export default function BabyApp() {
               <span className="bb-pill">সপ্তাহ {bn(week)} / ৪০</span>
             </div>
             <div className="bb-progress">
-              <motion.div className="bb-progress-fill" animate={{ width: `${(week / 40) * 100}%` }} transition={{ type: "spring", stiffness: 200, damping: 26 }} />
+              <motion.div className="bb-progress-fill" initial={false} animate={{ scaleX: week / 40 }} transition={{ type: "spring", stiffness: 200, damping: 26 }} />
             </div>
             <WeekChips week={week} onPick={pickWeek} />
             <span className="bb-trimester">

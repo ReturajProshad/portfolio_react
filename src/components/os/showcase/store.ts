@@ -50,10 +50,13 @@ const RAINBOW = [0, 50, 120, 190, 260, 320];
 let hueIdx = 0;
 
 /** Counts every render of a phone widget and, while the performance overlay
- *  is on, flashes a "repaint rainbow" outline on it. The flash uses the Web
- *  Animations API, so it never forces a synchronous layout. */
+ *  is on, flashes a "repaint rainbow" outline when it *re*-renders (not on
+ *  mount: opening an app would flash every widget at once). The outline is
+ *  a ::after layer whose opacity is animated, so the flash stays on the
+ *  compositor instead of repainting the widget every frame. */
 export function useRebuildTracker<T extends HTMLElement>(name: string) {
   const ref = useRef<T>(null);
+  const mounted = useRef(false);
   useEffect(() => {
     pending.push(name);
     if (!scheduled) {
@@ -61,16 +64,16 @@ export function useRebuildTracker<T extends HTMLElement>(name: string) {
       queueMicrotask(flushRebuilds);
     }
     const el = ref.current;
-    if (!el || !el.closest(".ph-rb") || typeof el.animate !== "function") return;
+    if (!el) return;
+    if (!mounted.current) {
+      mounted.current = true;
+      el.classList.add("rb-target");
+      return;
+    }
+    if (!el.closest(".ph-rb") || typeof el.animate !== "function") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const hue = RAINBOW[hueIdx++ % RAINBOW.length];
-    el.animate(
-      [
-        { boxShadow: `0 0 0 2px hsl(${hue} 90% 60%), 0 0 12px hsl(${hue} 90% 60% / 0.6)` },
-        { boxShadow: `0 0 0 2px hsl(${hue} 90% 60% / 0), 0 0 12px hsl(${hue} 90% 60% / 0)` },
-      ],
-      { duration: 500, easing: "ease-out" }
-    );
+    el.style.setProperty("--rb-hue", String(RAINBOW[hueIdx++ % RAINBOW.length]));
+    el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, easing: "ease-out", pseudoElement: "::after" });
   });
   return ref;
 }

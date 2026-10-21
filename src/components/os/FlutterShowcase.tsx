@@ -114,9 +114,9 @@ export default function FlutterShowcase() {
                       key={app}
                       className="ph-layer"
                       style={{ originX: origin.x, originY: origin.y }}
-                      initial={{ scale: 0.2, opacity: 0, borderRadius: 40 }}
-                      animate={{ scale: 1, opacity: 1, borderRadius: 0 }}
-                      exit={{ scale: 0.2, opacity: 0, borderRadius: 40 }}
+                      initial={{ scale: 0.2, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.2, opacity: 0 }}
                       transition={{ type: "spring", stiffness: 380, damping: 32 }}
                     >
                       <PhoneBackContext.Provider value={goHome}>

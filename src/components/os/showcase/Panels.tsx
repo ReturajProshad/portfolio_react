@@ -235,9 +235,9 @@ export function TracePanel() {
                     <div className="sp-span-track">
                       <motion.div
                         className="sp-span-bar"
-                        style={{ left: `${left}%`, background: s.color }}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${width}%` }}
+                        style={{ left: `${left}%`, width: `${width}%`, background: s.color, originX: 0 }}
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
                         transition={{ duration: 0.3 }}
                       />
                     </div>

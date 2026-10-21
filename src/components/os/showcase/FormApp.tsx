@@ -273,7 +273,7 @@ const Field = memo(function Field({ def, value, error, loading, disabled, onChan
           className={`fx-switch${value ? " on" : ""}`}
           onClick={() => onChange(def.key, !value)}
         >
-          <motion.span className="fx-switch-knob" layout transition={{ type: "spring", stiffness: 600, damping: 32 }} />
+          <motion.span className="fx-switch-knob" initial={false} animate={{ x: value ? 12 : 0 }} transition={{ type: "spring", stiffness: 600, damping: 32 }} />
         </button>
       );
       break;
@@ -324,7 +324,7 @@ const BuilderRow = memo(function BuilderRow({ def, on, onToggle }: { def: FieldD
         )}
       </span>
       <span className={`fx-switch fx-switch-sm${on ? " on" : ""}`} aria-hidden="true">
-        <motion.span className="fx-switch-knob" layout transition={{ type: "spring", stiffness: 600, damping: 32 }} />
+        <motion.span className="fx-switch-knob" initial={false} animate={{ x: on ? 10 : 0 }} transition={{ type: "spring", stiffness: 600, damping: 32 }} />
       </span>
     </button>
   );
@@ -471,7 +471,7 @@ export default function FormApp() {
 
       {tab === "form" && !submitted && (
         <div className="fx-progress" aria-hidden="true">
-          <motion.div className="fx-progress-fill" animate={{ width: `${progress * 100}%` }} transition={{ type: "spring", stiffness: 220, damping: 28 }} />
+          <motion.div className="fx-progress-fill" initial={false} animate={{ scaleX: progress }} transition={{ type: "spring", stiffness: 220, damping: 28 }} />
         </div>
       )}
 
@@ -529,7 +529,8 @@ export default function FormApp() {
             {fields.map(def => (
               <motion.div
                 key={def.key}
-                layout
+                // No `layout` here: it re-measured every field on every keystroke.
+                // Height in/out is enough to animate fields added in Builder.
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}

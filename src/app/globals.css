@@ -4134,7 +4134,7 @@ html[data-os="linux"] .top-right-actions {
 }
 
 .fx-switch.on {
-  justify-content: flex-end;
+  /* knob slides with a transform from FormApp; no layout change */
   background: rgb(var(--ph-ok));
 }
 
@@ -4869,4 +4869,29 @@ html[data-os="linux"] .top-right-actions {
 .fx-builder > *,
 .sy-body > :not(.sy-log) {
   flex-shrink: 0;
+}
+
+/* Repaint-rainbow outline, flashed by useRebuildTracker (opacity only) */
+/* :where() keeps this at zero specificity, so widgets that set their own
+   position (e.g. the absolutely placed game overlay) keep it */
+:where(.rb-target) {
+  position: relative;
+}
+
+.rb-target::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  box-shadow: 0 0 0 2px hsl(var(--rb-hue, 120) 90% 60%), 0 0 10px hsl(var(--rb-hue, 120) 90% 60% / 0.6);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Progress bars animate scaleX (composited), not width (layout every frame) */
+.bb-progress-fill,
+.fx-progress-fill {
+  width: 100%;
+  transform-origin: left center;
 }
