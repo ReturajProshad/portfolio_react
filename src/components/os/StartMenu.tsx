@@ -4,9 +4,11 @@ import { useCallback, useEffect, useRef } from "react";
 import { useWindowManager } from "@/lib/windowManager";
 import { appDefinitions } from "@/config/apps";
 import { personal } from "@/data/portfolio";
+import { useProfile } from "@/lib/roleLens";
 
 export default function StartMenu({ onClose }: { onClose: () => void }) {
   const { openApp } = useWindowManager();
+  const { role } = useProfile();
   const menuRef = useRef<HTMLDivElement>(null);
 
   const handleAppClick = useCallback((id: string) => {
@@ -31,7 +33,7 @@ export default function StartMenu({ onClose }: { onClose: () => void }) {
           </div>
           <div className="start-menu-user">
             <span className="start-menu-name">{personal.name}</span>
-            <span className="start-menu-role">{personal.role}</span>
+            <span className="start-menu-role">{role}</span>
           </div>
         </div>
         <div className="start-menu-divider" />

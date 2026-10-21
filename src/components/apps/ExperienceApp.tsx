@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { experiences } from "@/data/portfolio";
+import { useProfile } from "@/lib/roleLens";
 
 export default function ExperienceApp() {
+  const { experiences } = useProfile();
+
   return (
     <div className="p-6 overflow-y-auto h-full">
       <span className="inline-flex items-center gap-2 text-xs font-mono text-accent tracking-widest uppercase mb-4">

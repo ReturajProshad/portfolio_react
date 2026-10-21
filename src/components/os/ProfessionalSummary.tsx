@@ -1,26 +1,15 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { personal } from "@/data/portfolio";
+import { motion, AnimatePresence } from "framer-motion";
+import { useProfile } from "@/lib/roleLens";
 
 interface Props {
   show: boolean;
 }
 
-const techStack = [
-  { label: "Flutter", primary: true, color: "#02569B", accent: "#13B9FD" },
-  { label: "Spring Boot", color: "#6DB33F", accent: "#8BC84B" },
-  { label: "Java", color: "#ED8B00", accent: "#FFB347" },
-  { label: "C++", color: "#00599C", accent: "#004482" },
-  { label: "DSA", color: "#FF6F00", accent: "#FFA040" },
-  { label: "Node.js", color: "#339933", accent: "#5CBF5C" },
-  { label: "React", color: "#61DAFB", accent: "#00D8FF" },
-  { label: "TypeScript", color: "#3178C6", accent: "#5BA3E6" },
-  { label: "PostgreSQL", color: "#4169E1", accent: "#6B8FE3" },
-  { label: "MySQL", color: "#4479A1", accent: "#6B9DC1" },
-];
-
 export default function ProfessionalSummary({ show }: Props) {
+  const { lens, headline, tagline, techStack } = useProfile();
+
   return (
     <motion.div
       className="professional-summary"
@@ -28,26 +17,37 @@ export default function ProfessionalSummary({ show }: Props) {
       animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <p className="summary-headline">
-        {personal.headline}
-      </p>
-      <p className="summary-tagline">{personal.tagline}</p>
-      <div className="summary-badges">
-        {techStack.map((tech) => (
-          <span
-            key={tech.label}
-            className={`tech-badge${tech.primary ? " tech-badge-primary" : ""}`}
-            style={
-              {
-                "--badge-color": tech.color,
-                "--badge-accent": tech.accent,
-              } as React.CSSProperties
-            }
-          >
-            {tech.label}
-          </span>
-        ))}
-      </div>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={lens}
+          initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+        >
+          <p className="summary-headline">{headline}</p>
+          <p className="summary-tagline">{tagline}</p>
+          <div className="summary-badges">
+            {techStack.map((tech, i) => (
+              <motion.span
+                key={tech.label}
+                className={`tech-badge${tech.primary ? " tech-badge-primary" : ""}`}
+                style={
+                  {
+                    "--badge-color": tech.color,
+                    "--badge-accent": tech.accent,
+                  } as React.CSSProperties
+                }
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ type: "spring", stiffness: 420, damping: 22, delay: 0.05 + i * 0.035 }}
+              >
+                {tech.label}
+              </motion.span>
+            ))}
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </motion.div>
   );
 }

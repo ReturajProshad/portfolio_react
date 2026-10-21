@@ -2,9 +2,11 @@
 
 import { motion } from "framer-motion";
 import SectionWrapper, { SectionLabel, SectionHeading } from "@/components/SectionWrapper";
-import { summary, focusAreas } from "@/data/portfolio";
+import { useProfile } from "@/lib/roleLens";
 
 export default function About() {
+  const { summary, focusAreas, aboutHeading, config } = useProfile();
+
   return (
     <SectionWrapper id="about">
       <div className="grid md:grid-cols-2 gap-16 items-start">
@@ -12,8 +14,8 @@ export default function About() {
         <div>
           <SectionLabel>About</SectionLabel>
           <SectionHeading>
-            A generalist engineer,<br />
-            <span className="text-gradient-accent">not a one-stack specialist.</span>
+            {aboutHeading[0]}<br />
+            <span className="text-gradient-accent">{aboutHeading[1]}</span>
           </SectionHeading>
           <p className="text-subtle text-base leading-relaxed mt-4 mb-8">{summary}</p>
 
@@ -48,10 +50,16 @@ export default function About() {
                 <span className="text-subtle">= {"{"}</span>
               </div>
               <div className="pl-4 space-y-2 text-subtle">
-                <div><span className="text-amber-400">role</span>: <span className="text-emerald-400">"Software Engineer"</span>,</div>
-                <div><span className="text-amber-400">stacks</span>: [<span className="text-emerald-400">"Flutter"</span>, <span className="text-emerald-400">"Spring Boot"</span>, <span className="text-emerald-400">"Next.js"</span>],</div>
-                <div><span className="text-amber-400">location</span>: <span className="text-emerald-400">"Dhaka, BD"</span>,</div>
-                <div><span className="text-amber-400">focus</span>: <span className="text-emerald-400">"Systems & Architecture"</span>,</div>
+                <div><span className="text-amber-400">role</span>: <span className="text-emerald-400">&quot;{config.role}&quot;</span>,</div>
+                <div>
+                  <span className="text-amber-400">stacks</span>: [
+                  {config.stacks.map((s, i) => (
+                    <span key={s}><span className="text-emerald-400">&quot;{s}&quot;</span>{i < config.stacks.length - 1 ? ", " : ""}</span>
+                  ))}
+                  ],
+                </div>
+                <div><span className="text-amber-400">location</span>: <span className="text-emerald-400">&quot;Dhaka, BD&quot;</span>,</div>
+                <div><span className="text-amber-400">focus</span>: <span className="text-emerald-400">&quot;{config.focus}&quot;</span>,</div>
                 <div><span className="text-amber-400">openSource</span>: <span className="text-accent">true</span>,</div>
                 <div><span className="text-amber-400">aiAssisted</span>: <span className="text-accent">true</span>,</div>
                 <div><span className="text-amber-400">available</span>: <span className="text-accent">true</span>,</div>

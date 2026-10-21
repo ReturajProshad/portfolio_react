@@ -2,9 +2,8 @@
 
 import { motion } from "framer-motion";
 import { Github, Linkedin, Phone, Mail, Building2, CheckCircle2 } from "lucide-react";
-import { personal, experiences } from "@/data/portfolio";
-
-const current = experiences.find(e => e.current) || experiences[0];
+import { personal } from "@/data/portfolio";
+import { useProfile } from "@/lib/roleLens";
 
 const contacts = [
   { icon: Github, href: personal.github, label: "GitHub" },
@@ -13,9 +12,11 @@ const contacts = [
   { icon: Mail, href: `mailto:${personal.email}`, label: personal.email },
 ];
 
-const topHighlights = current.highlights.slice(0, 4);
-
 export default function QuickInfo() {
+  const { experiences } = useProfile();
+  const current = experiences.find(e => e.current) || experiences[0];
+  const topHighlights = current.highlights.slice(0, 4);
+
   return (
     <motion.div
       className="quick-info"

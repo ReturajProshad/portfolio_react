@@ -3,34 +3,19 @@
 import { motion } from "framer-motion";
 import SectionWrapper, { SectionLabel, SectionHeading } from "@/components/SectionWrapper";
 import SpotlightCard from "@/components/SpotlightCard";
-import { skills } from "@/data/portfolio";
-
-const categoryColors: Record<string, string> = {
-  Languages: "tag-accent",
-  "Backend & APIs": "tag-emerald",
-  "Frontend & Mobile": "tag-amber",
-  Databases: "tag",
-  "Architecture & Systems": "tag",
-  "Tools & Workflow": "tag",
-};
-
-const categoryIcons: Record<string, string> = {
-  Languages: "{ }",
-  "Backend & APIs": "☁️",
-  "Frontend & Mobile": "📱",
-  Databases: "🗄️",
-  "Architecture & Systems": "🏗️",
-  "Tools & Workflow": "🛠️",
-};
+import { useProfile } from "@/lib/roleLens";
+import { skillIcon, skillTagClass } from "@/config/skillCategories";
 
 export default function Skills() {
+  const { skills, skillsBlurb } = useProfile();
+
   return (
     <SectionWrapper id="skills">
       <div className="text-center mb-12">
         <SectionLabel>Skills</SectionLabel>
         <SectionHeading>Tools of the trade</SectionHeading>
         <p className="text-subtle text-sm mt-2 max-w-md mx-auto">
-          The stack I use to build scalable, production-grade systems — mobile, backend, and web.
+          {skillsBlurb}
         </p>
       </div>
 
@@ -45,13 +30,13 @@ export default function Skills() {
           >
             <SpotlightCard className="glass rounded-2xl p-5 hover:border-accent/20 transition-colors group h-full">
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-sm">{categoryIcons[category]}</span>
+                <span className="text-sm">{skillIcon(category)}</span>
                 <span className="font-display font-semibold text-sm text-text">{category}</span>
                 <span className="ml-auto font-mono text-xs text-muted">{items.length}</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {items.map((skill) => (
-                  <span key={skill} className={categoryColors[category] || "tag"}>
+                  <span key={skill} className={skillTagClass(category)}>
                     {skill}
                   </span>
                 ))}

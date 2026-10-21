@@ -2,8 +2,34 @@
 
 import { useCallback, useState, useEffect } from "react";
 import { useWindowManager } from "@/lib/windowManager";
-import { appDefinitions } from "@/config/apps";
+import { useLaunchBounce } from "@/hooks/useLaunchBounce";
+import { appDefinitions, type AppDefinition } from "@/config/apps";
 import SystemTray from "./SystemTray";
+
+function TaskbarApp({
+  app,
+  isActive,
+  isRunning,
+  onClick,
+}: {
+  app: AppDefinition;
+  isActive: boolean;
+  isRunning: boolean;
+  onClick: () => void;
+}) {
+  const bouncing = useLaunchBounce(isRunning);
+  return (
+    <button
+      className={`taskbar-app${isActive ? " active" : ""}${isRunning ? " running" : ""}${bouncing ? " taskbar-app-bounce" : ""}`}
+      onClick={onClick}
+      aria-label={app.title}
+      data-launcher={app.id}
+    >
+      <app.icon size={24} />
+      <span className="taskbar-app-label">{app.title}</span>
+    </button>
+  );
+}
 
 export default function WindowsTaskbar({ onStartClick }: { onStartClick: () => void }) {
   const { windows, focusedId, openApp, focusApp, minimizeApp } = useWindowManager();
@@ -43,15 +69,13 @@ export default function WindowsTaskbar({ onStartClick }: { onStartClick: () => v
           const isActive = win?.isOpen && !win?.isMinimized && focusedId === app.id;
           const isRunning = win?.isOpen;
           return (
-            <button
+            <TaskbarApp
               key={app.id}
-              className={`taskbar-app${isActive ? " active" : ""}${isRunning ? " running" : ""}`}
+              app={app}
+              isActive={Boolean(isActive)}
+              isRunning={Boolean(isRunning)}
               onClick={() => handleAppClick(app.id)}
-              aria-label={app.title}
-            >
-              <app.icon size={24} />
-              <span className="taskbar-app-label">{app.title}</span>
-            </button>
+            />
           );
         })}
       </div>

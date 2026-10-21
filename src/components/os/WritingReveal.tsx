@@ -5,6 +5,7 @@ import { motion, animate, useMotionValue } from "framer-motion";
 import { Pen } from "lucide-react";
 import Image from "next/image";
 import { personal } from "@/data/portfolio";
+import { useProfile } from "@/lib/roleLens";
 import profilePic from "@/assets/Returaj_Proshad.png";
 
 enum Phase {
@@ -152,6 +153,10 @@ export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () 
   const started = useRef(false);
   const c1Ref = useRef<ContourData | null>(null);
   const c2Ref = useRef<ContourData | null>(null);
+  const { role } = useProfile();
+  // The pen traces whichever role is showing once the font has loaded
+  const roleRef = useRef(role);
+  roleRef.current = role;
   const cornerRef = useRef({ x: 0, y: 0, size: PIC_SIZE_CORNER });
 
   const penX = useMotionValue(0);
@@ -211,7 +216,7 @@ export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () 
     // StrictMode, and a cancel would leave the animation stuck in dev.
     waitForHandwritingFont().then(() => {
       c1Ref.current = extractContour(personal.fullName, 56);
-      c2Ref.current = extractContour(personal.role, 32);
+      c2Ref.current = extractContour(roleRef.current, 32);
       setPhase(Phase.FadeIn);
     });
   }, []);
@@ -370,7 +375,7 @@ export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () 
 
             <div className="reveal-line">
               <span ref={line2SizerRef} className="reveal-text-sizer reveal-text-sizer-sub" aria-hidden>
-                {personal.role}
+                {role}
               </span>
               <div
                 className="reveal-overlay"
@@ -381,7 +386,7 @@ export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () 
                 }}
               >
                 <span className="reveal-text-bright reveal-text-bright-sub">
-                  {personal.role}
+                  {role}
                 </span>
               </div>
             </div>
