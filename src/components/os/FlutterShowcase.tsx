@@ -62,19 +62,25 @@ export default function FlutterShowcase() {
     my.set(0);
   };
 
-  // Apps zoom out of their icon, iOS-style. Opening or closing an app is a
-  // transition: the tap's pressed state paints at once and React renders the
-  // app in interruptible chunks, instead of blocking the click handler
-  // (that blocking was the INP issue).
+  // Apps zoom out of their icon, iOS-style. The click handler itself does no
+  // work: it waits for the next frame to paint the tap, then starts a
+  // transition so React renders the app in interruptible chunks. Rendering
+  // inside the handler is what Chrome flagged as the INP issue.
   const [, startTransition] = useTransition();
-  const openApp = useCallback((id: PhoneAppId, index: number) => {
-    setTouched(true);
-    startTransition(() => {
-      setOrigin({ x: 0.2 + index * 0.3, y: 0.6 });
-      setApp(id);
-    });
-  }, []);
-  const goHome = useCallback(() => startTransition(() => setApp("home")), []);
+  const afterPaint = useCallback(
+    (fn: () => void) => requestAnimationFrame(() => setTimeout(() => startTransition(fn), 0)),
+    []
+  );
+  const openApp = useCallback(
+    (id: PhoneAppId, index: number) =>
+      afterPaint(() => {
+        setTouched(true);
+        setOrigin({ x: 0.2 + index * 0.3, y: 0.6 });
+        setApp(id);
+      }),
+    [afterPaint]
+  );
+  const goHome = useCallback(() => afterPaint(() => setApp("home")), [afterPaint]);
 
   const AppComponent = app === "home" ? null : APP_COMPONENTS[app];
   const appMeta = PHONE_APPS.find(a => a.id === app);

@@ -175,7 +175,7 @@ body {
     linear-gradient(90deg, rgb(0 255 65 / 0.04) 1px, transparent 1px);
   background-size: 48px 48px;
   z-index: 3;
-  animation: gridPulse 8s ease-in-out infinite;
+  opacity: 0.6; /* static: animating full-screen layers under the glass UI forced a re-blur every frame */
 }
 
 /* Subtle radial scan glow */
@@ -200,7 +200,7 @@ body {
       transparent 40%
     );
   z-index: 2;
-  animation: glowShift 12s ease-in-out infinite alternate;
+  /* static (was glowShift): see .animated-bg::after */
 }
 
 @keyframes gridPulse {
@@ -233,11 +233,10 @@ body {
 .mesh-blob {
   position: absolute;
   border-radius: 50%;
-  /* The radial gradients are already soft; a 100px blur on six moving 900px
-     layers cost a full GPU pass every frame (and every backdrop-filter on top
-     re-blurred it), which held the page near 30 fps. */
-  will-change: transform;
-  animation: meshFloat 24s ease-in-out infinite;
+  /* Static and unblurred. These used to drift (meshFloat) under blur(100px);
+     every backdrop-filter in the UI then had to re-blur them on every frame,
+     which held the page near 25-30 fps. The radial gradients are already
+     soft, so the look survives. */
 }
 
 .mesh-blob-1 {
@@ -246,7 +245,6 @@ body {
   background: radial-gradient(circle, #00ff41 0%, transparent 70%);
   top: -20%;
   left: -15%;
-  animation-duration: 26s;
   opacity: 0.25;
 }
 
@@ -256,8 +254,6 @@ body {
   background: radial-gradient(circle, #00e5ff 0%, transparent 70%);
   bottom: -15%;
   right: -10%;
-  animation-duration: 30s;
-  animation-delay: -7s;
   opacity: 0.18;
 }
 
@@ -267,8 +263,6 @@ body {
   background: radial-gradient(circle, #7c3aed 0%, transparent 70%);
   top: 40%;
   left: 55%;
-  animation-duration: 28s;
-  animation-delay: -12s;
   opacity: 0.2;
 }
 
@@ -278,8 +272,6 @@ body {
   background: radial-gradient(circle, #f59e0b 0%, transparent 70%);
   top: 10%;
   right: 20%;
-  animation-duration: 24s;
-  animation-delay: -4s;
   opacity: 0.12;
 }
 
@@ -289,8 +281,6 @@ body {
   background: radial-gradient(circle, #ff2d55 0%, transparent 70%);
   bottom: 25%;
   left: 10%;
-  animation-duration: 32s;
-  animation-delay: -16s;
   opacity: 0.1;
 }
 
@@ -300,8 +290,6 @@ body {
   background: radial-gradient(circle, #0ea5e9 0%, transparent 70%);
   top: 60%;
   right: 5%;
-  animation-duration: 22s;
-  animation-delay: -9s;
   opacity: 0.13;
 }
 
@@ -4871,4 +4859,14 @@ html[data-os="linux"] .top-right-actions {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+/* Rows inside the phone's scrolling columns keep their natural height.
+   (A horizontally scrolling row such as the week chips has min-height 0 in a
+   flex column and was being squashed to a sliver.) */
+.bb-scroll > *,
+.fx-body > *,
+.fx-builder > *,
+.sy-body > :not(.sy-log) {
+  flex-shrink: 0;
 }
