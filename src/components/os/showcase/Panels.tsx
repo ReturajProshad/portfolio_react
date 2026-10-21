@@ -3,68 +3,63 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Activity, RotateCcw, Server, Database, Shield, Smartphone, Globe } from "lucide-react";
-import { useLastRequest, useRebuilds, resetRebuilds, type PhoneRequest } from "./store";
+import { useLastRequest, useRebuilds, resetRebuilds, subscribeFrames, usePhoneTree, type PhoneRequest } from "./store";
 import type { PhoneAppId } from "./PhoneApps";
 
-/* ── Real frame timing: requestAnimationFrame deltas drawn like Flutter's
-   performance overlay (bars over the 16.7 ms budget turn red). ── */
+/* ── Real frame timing, drawn like Flutter's performance overlay: each bar
+   is the main thread's work for one frame; bars over the 16.7 ms budget
+   turn red. ── */
+
+const BUDGET = 16.7;
+const SCALE = 33; // ms at the top of the graph
 
 export function FrameGraph({ className, label = true }: { className?: string; label?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const fpsRef = useRef<HTMLSpanElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
-    const samples: number[] = [];
-    let last = performance.now();
-    let lastText = last;
-    let raf = 0;
+    let lastText = 0;
 
-    const frame = (now: number) => {
-      const dt = Math.min(now - last, 66);
-      last = now;
-      samples.push(dt);
-      if (samples.length > 48) samples.shift();
-
+    return subscribeFrames(samples => {
       const dpr = window.devicePixelRatio || 1;
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      if (canvas.width !== w * dpr) {
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
+      if (!w || !h) return;
+      if (canvas.width !== Math.round(w * dpr)) {
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
       const barW = w / 48;
       samples.forEach((s, i) => {
-        const bh = Math.max(1, (s / 33) * h);
-        ctx.fillStyle = s > 17.5 ? "rgba(248,113,113,0.95)" : "rgba(52,211,153,0.85)";
+        const bh = Math.max(1, (Math.min(s.work, SCALE) / SCALE) * h);
+        ctx.fillStyle = s.work > BUDGET ? "rgba(248,113,113,0.95)" : "rgba(52,211,153,0.9)";
         ctx.fillRect(i * barW, h - bh, Math.max(1, barW - 1), bh);
       });
-      // 16.7 ms budget line
-      const y = h - (16.7 / 33) * h;
+      const y = h - (BUDGET / SCALE) * h;
       ctx.fillStyle = "rgba(255,255,255,0.35)";
       ctx.fillRect(0, y, w, 1);
 
-      if (fpsRef.current && now - lastText > 400) {
+      const now = performance.now();
+      if (textRef.current && now - lastText > 500) {
         lastText = now;
-        const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
-        fpsRef.current.textContent = `${Math.round(1000 / avg)} fps · ${avg.toFixed(1)} ms`;
+        const work = samples.reduce((a, s) => a + s.work, 0) / samples.length;
+        const interval = samples.reduce((a, s) => a + s.interval, 0) / samples.length;
+        textRef.current.textContent = `${work.toFixed(1)} ms / frame · ${Math.round(1000 / interval)} fps`;
       }
-      raf = requestAnimationFrame(frame);
-    };
-    raf = requestAnimationFrame(frame);
-    return () => cancelAnimationFrame(raf);
+    });
   }, []);
 
   return (
     <div className={`fg ${className ?? ""}`}>
       {label && (
         <div className="fg-head">
-          <span>UI thread</span>
-          <span ref={fpsRef} className="fg-fps">— fps</span>
+          <span>UI thread · budget 16.7 ms</span>
+          <span ref={textRef} className="fg-fps">—</span>
         </div>
       )}
       <canvas ref={canvasRef} className="fg-canvas" />
@@ -76,14 +71,7 @@ export function FrameGraph({ className, label = true }: { className?: string; la
 
 const TREES: Record<PhoneAppId, { name: string; depth: number }[]> = {
   home: [{ name: "Launcher", depth: 0 }],
-  form: [
-    { name: "RjForm", depth: 0 },
-    { name: "TextField(Farmer name)", depth: 1 },
-    { name: "Dropdown(District)", depth: 1 },
-    { name: "Dropdown(Upazila)", depth: 1 },
-    { name: "TextField(Herd size)", depth: 1 },
-    { name: "Derived(Daily milk)", depth: 1 },
-  ],
+  form: [{ name: "RjForm", depth: 0 }],
   sync: [
     { name: "FieldOpsApp", depth: 0 },
     { name: "SyncBadge", depth: 1 },
@@ -93,22 +81,26 @@ const TREES: Record<PhoneAppId, { name: string; depth: number }[]> = {
   ],
   baby: [
     { name: "AmarBabuApp", depth: 0 },
-    { name: "WeekTracker", depth: 1 },
+    { name: "WeekChips", depth: 1 },
     { name: "TalkingBaby", depth: 1 },
+    { name: "SizeCard", depth: 1 },
+    { name: "BalloonGame", depth: 1 },
   ],
 };
 
 // Each claim matches what the counters show: siblings are memoized with stable callbacks
 const NOTES: Record<PhoneAppId, string> = {
   home: "Open an app on the phone. Counts are real re-renders of each widget.",
-  form: "Type in one field: only that field and RjForm rebuild — memoized siblings keep their count.",
+  form: "Type in one field: only that field and RjForm rebuild — memoized siblings keep their count. Toggle fields in Builder and the tree follows.",
   sync: "New log lines rebuild only SyncLog; a row rebuilds only when its own value changes.",
-  baby: "Tapping the baby rebuilds only TalkingBaby; the week tracker stays put.",
+  baby: "Tap the baby: only TalkingBaby rebuilds. Pick a week: the chips and size card do, the baby doesn't.",
 };
 
 export function DevToolsPanel({ app }: { app: PhoneAppId }) {
   const { counts, last, tick } = useRebuilds();
-  const tree = TREES[app];
+  const live = usePhoneTree();
+  // The form's tree is built from its schema, so it follows the Builder tab
+  const tree = app === "form" && live ? live.map((name, i) => ({ name, depth: i === 0 ? 0 : 1 })) : TREES[app];
 
   return (
     <div className="sp sp-devtools">

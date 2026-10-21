@@ -49,7 +49,9 @@ function flushRebuilds() {
 const RAINBOW = [0, 50, 120, 190, 260, 320];
 let hueIdx = 0;
 
-/** Counts every render of a phone widget and flashes a "repaint rainbow" outline on it. */
+/** Counts every render of a phone widget and, while the performance overlay
+ *  is on, flashes a "repaint rainbow" outline on it. The flash uses the Web
+ *  Animations API, so it never forces a synchronous layout. */
 export function useRebuildTracker<T extends HTMLElement>(name: string) {
   const ref = useRef<T>(null);
   useEffect(() => {
@@ -59,13 +61,71 @@ export function useRebuildTracker<T extends HTMLElement>(name: string) {
       queueMicrotask(flushRebuilds);
     }
     const el = ref.current;
-    if (!el) return;
-    el.style.setProperty("--rb-hue", String(RAINBOW[hueIdx++ % RAINBOW.length]));
-    el.classList.remove("rb-flash");
-    void el.offsetWidth; // restart the flash animation
-    el.classList.add("rb-flash");
+    if (!el || !el.closest(".ph-rb") || typeof el.animate !== "function") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const hue = RAINBOW[hueIdx++ % RAINBOW.length];
+    el.animate(
+      [
+        { boxShadow: `0 0 0 2px hsl(${hue} 90% 60%), 0 0 12px hsl(${hue} 90% 60% / 0.6)` },
+        { boxShadow: `0 0 0 2px hsl(${hue} 90% 60% / 0), 0 0 12px hsl(${hue} 90% 60% / 0)` },
+      ],
+      { duration: 500, easing: "ease-out" }
+    );
   });
   return ref;
+}
+
+/* ── Frame sampler ──
+   One requestAnimationFrame loop shared by every graph. For each frame it
+   records how long the main thread was busy: from the frame's rAF callback
+   until a message posted from it runs, which is after style, layout and
+   paint for that frame. That is the browser's equivalent of Flutter's UI
+   thread time. The loop runs only while a graph is mounted. */
+
+export type FrameSample = { work: number; interval: number };
+type FrameListener = (samples: FrameSample[]) => void;
+
+const frameListeners = new Set<FrameListener>();
+const frameSamples: FrameSample[] = [];
+let frameRaf = 0;
+let frameLast = 0;
+
+function startSampler() {
+  const channel = new MessageChannel();
+  let frameStart = 0;
+  let interval = 0;
+  channel.port1.onmessage = () => {
+    frameSamples.push({ work: performance.now() - frameStart, interval });
+    if (frameSamples.length > 48) frameSamples.shift();
+    frameListeners.forEach(l => l(frameSamples));
+  };
+  const tick = (now: number) => {
+    interval = frameLast ? Math.min(now - frameLast, 100) : 16.7;
+    frameLast = now;
+    frameStart = performance.now();
+    channel.port2.postMessage(0);
+    frameRaf = requestAnimationFrame(tick);
+  };
+  frameRaf = requestAnimationFrame(tick);
+  return () => {
+    cancelAnimationFrame(frameRaf);
+    channel.port1.close();
+    frameLast = 0;
+  };
+}
+
+let stopSampler: (() => void) | null = null;
+
+export function subscribeFrames(listener: FrameListener) {
+  frameListeners.add(listener);
+  if (!stopSampler) stopSampler = startSampler();
+  return () => {
+    frameListeners.delete(listener);
+    if (frameListeners.size === 0 && stopSampler) {
+      stopSampler();
+      stopSampler = null;
+    }
+  };
 }
 
 export function useRebuilds() {
@@ -74,6 +134,19 @@ export function useRebuilds() {
 
 export function resetRebuilds() {
   rebuilds.set({ counts: {}, last: null, tick: rebuilds.get().tick + 1 });
+}
+
+/* ── Widget tree of the open app, when it is built at runtime (the form's
+   fields come from its schema, so its tree changes with the builder) ── */
+
+const phoneTree = createStore<string[] | null>(null);
+
+export function setPhoneTree(names: string[] | null) {
+  phoneTree.set(names);
+}
+
+export function usePhoneTree() {
+  return useSyncExternalStore(phoneTree.subscribe, phoneTree.get, () => null);
 }
 
 /* ── Requests leaving the phone (for the backend trace) ── */

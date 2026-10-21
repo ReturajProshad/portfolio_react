@@ -57,7 +57,7 @@ export default function FlutterShowcase() {
 
   // Apps zoom out of their icon, iOS-style
   const openApp = useCallback((id: PhoneAppId, index: number) => {
-    setOrigin({ x: 0.2 + index * 0.3, y: 0.42 });
+    setOrigin({ x: 0.2 + index * 0.3, y: 0.6 });
     setApp(id);
     setTouched(true);
   }, []);
@@ -88,7 +88,7 @@ export default function FlutterShowcase() {
               </div>
 
               <div className="ph-screen">
-                <AnimatePresence initial={false} mode="popLayout">
+                <AnimatePresence initial={false}>
                   {AppComponent ? (
                     <motion.div
                       key={app}
@@ -115,7 +115,6 @@ export default function FlutterShowcase() {
                   )}
                 </AnimatePresence>
 
-                {overlay && <FrameGraph className="ph-perf" label={false} />}
               </div>
 
               <button className="ph-home-bar" onClick={goHome} aria-label="Go to home screen" disabled={app === "home"} />
@@ -123,6 +122,7 @@ export default function FlutterShowcase() {
           </motion.div>
 
           <div className="sc-controls">
+            {overlay && <FrameGraph className="sc-perf" label={false} />}
             <button
               className={`sc-toggle${overlay ? " on" : ""}`}
               onClick={() => setOverlay(o => !o)}
