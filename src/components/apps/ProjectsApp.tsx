@@ -3,11 +3,12 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Github, Package, Smartphone, Building2, ShoppingBag, Layers, Database } from "lucide-react";
 import SpotlightCard from "@/components/SpotlightCard";
-import { projects } from "@/data/portfolio";
+import { useProfile } from "@/lib/roleLens";
 
 const typeIcon: Record<string, React.ReactNode> = {
   opensource: <Package size={14} />,
   production: <Smartphone size={14} />,
+  mobile: <Smartphone size={14} />,
   enterprise: <Building2 size={14} />,
   project: <ShoppingBag size={14} />,
   fullstack: <Layers size={14} />,
@@ -17,6 +18,7 @@ const typeIcon: Record<string, React.ReactNode> = {
 const typeColor: Record<string, string> = {
   opensource: "text-accent border-accent/30 bg-accent/10",
   production: "text-emerald-400 border-emerald-400/30 bg-emerald-400/10",
+  mobile: "text-cyan-400 border-cyan-400/30 bg-cyan-400/10",
   enterprise: "text-amber-400 border-amber-400/30 bg-amber-400/10",
   project: "text-subtle border-border bg-surface",
   fullstack: "text-purple-400 border-purple-400/30 bg-purple-400/10",
@@ -24,6 +26,7 @@ const typeColor: Record<string, string> = {
 };
 
 export default function ProjectsApp() {
+  const { projects } = useProfile();
   const featured = projects.filter(p => p.featured);
   const rest = projects.filter(p => !p.featured);
 
@@ -63,14 +66,19 @@ export default function ProjectsApp() {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   {project.links.github && (
-                    <a href={project.links.github} target="_blank" rel="noopener noreferrer"
+                    <a href={project.links.github} aria-label={`${project.title} on GitHub`} target="_blank" rel="noopener noreferrer"
                       className="w-7 h-7 flex items-center justify-center rounded-lg border border-border/60 text-muted hover:text-text hover:border-accent/40 transition-all"
                     ><Github size={13} /></a>
                   )}
                   {project.links.playstore && (
-                    <a href={project.links.playstore} target="_blank" rel="noopener noreferrer"
+                    <a href={project.links.playstore} aria-label={`${project.title} on Google Play`} target="_blank" rel="noopener noreferrer"
                       className="w-7 h-7 flex items-center justify-center rounded-lg border border-border/60 text-muted hover:text-text hover:border-accent/40 transition-all"
                     ><ExternalLink size={13} /></a>
+                  )}
+                  {project.links.pubdev && (
+                    <a href={project.links.pubdev} aria-label={`${project.title} on pub.dev`} target="_blank" rel="noopener noreferrer"
+                      className="w-7 h-7 flex items-center justify-center rounded-lg border border-border/60 text-muted hover:text-text hover:border-accent/40 transition-all"
+                    ><Package size={13} /></a>
                   )}
                 </div>
               </div>
@@ -128,7 +136,7 @@ export default function ProjectsApp() {
                   <p className="text-[11px] font-mono text-muted">{project.subtitle}</p>
                 </div>
                 {project.links.github && (
-                  <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-text transition-colors shrink-0">
+                  <a href={project.links.github} aria-label={`${project.title} on GitHub`} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-text transition-colors shrink-0">
                     <Github size={13} />
                   </a>
                 )}

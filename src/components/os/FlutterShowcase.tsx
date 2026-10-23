@@ -1,430 +1,163 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Wifi,
-  Signal,
-  Battery,
-  Plus,
-  CheckCircle,
-  Home,
-  Grid,
-  Bell,
-  User,
-  Server,
-} from "lucide-react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { Wifi, Signal, Battery, Gauge } from "lucide-react";
+import { useRoleLens } from "@/lib/roleLens";
+import { HomeScreen, PHONE_APPS, PhoneBackContext, type PhoneAppId } from "./showcase/PhoneApps";
+import FormApp from "./showcase/FormApp";
+import SyncApp from "./showcase/SyncApp";
+import BabyApp from "./showcase/BabyApp";
+import { DevToolsPanel, FrameGraph, TracePanel } from "./showcase/Panels";
 
-type ScreenId = "splash" | "dashboard" | "form" | "stats";
-type ParticlePhase = "idle" | "to-server" | "from-server";
+/* An interactive phone running small, real versions of the work in the
+   portfolio, next to a panel that changes with the link the visitor came
+   from: a backend request trace for Software Engineer readers, a Flutter
+   DevTools inspector for Flutter readers. */
 
-const SCREEN_ORDER: ScreenId[] = ["splash", "dashboard", "form", "stats"];
-const HOLD_MS = 1500;
-const TRANSITION_MS = 350;
+const APP_COMPONENTS = { form: FormApp, sync: SyncApp, baby: BabyApp };
 
-/**
- * Deliberately generic — the point is to read as "comfortable in any mobile
- * framework / any state-management approach", not locked to one brand.
- * Colors are pulled from the site's own theme tokens so they stay in sync
- * with light/dark mode automatically.
- */
-const FLOATING_PILLS = [
-  { label: "Mobile Framework", color: "rgb(var(--accent))" },
-  { label: "State Management", color: "rgb(var(--emerald))" },
-  { label: "Cross-Platform UI", color: "rgb(var(--amber))" },
-];
-
-const BACKEND_TAGS = ["Spring Boot", "Node.js", "PostgreSQL"];
-
-function SplashScreen() {
-  return (
-    <div className="phone-screen-inner phone-screen-center">
-      <div className="phone-splash-icon">
-        <span>A</span>
-      </div>
-      <span className="phone-splash-title">AppFlow</span>
-      <span className="phone-splash-sub">built for any stack</span>
-    </div>
-  );
-}
-
-function DashboardScreen() {
-  return (
-    <div className="phone-screen-inner">
-      <div className="phone-appbar">
-        <span>Dashboard</span>
-      </div>
-      <div className="phone-content">
-        <div className="phone-card phone-card-lg" />
-        <div className="phone-card" style={{ width: "88%" }} />
-        <div className="phone-card" style={{ width: "72%" }} />
-      </div>
-      <div className="phone-fab">
-        <Plus size={13} color="white" />
-      </div>
-      <div className="phone-bottom-nav">
-        {[Home, Grid, Bell, User].map((Icon, i) => (
-          <Icon
-            key={i}
-            size={13}
-            className={i === 0 ? "nav-active" : "nav-idle"}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function FormScreen() {
-  const [showCheck, setShowCheck] = useState(false);
-
+function useClock() {
+  const [time, setTime] = useState("");
   useEffect(() => {
-    const t = setTimeout(() => setShowCheck(true), 600);
-    return () => clearTimeout(t);
+    const update = () => setTime(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+    update();
+    const t = setInterval(update, 15000);
+    return () => clearInterval(t);
   }, []);
-
-  return (
-    <div className="phone-screen-inner">
-      <div className="phone-appbar">
-        <span>New Entry</span>
-      </div>
-      <div className="phone-content">
-        <div className="phone-input" />
-        <div className="phone-input phone-input-check">
-          {showCheck && (
-            <motion.span
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 15 }}
-              className="phone-check"
-            >
-              <CheckCircle size={13} />
-            </motion.span>
-          )}
-        </div>
-        <div className="phone-input" />
-        <motion.div
-          className="phone-submit-btn"
-          animate={showCheck ? { opacity: 1 } : { opacity: 0.45 }}
-        >
-          Submit
-        </motion.div>
-      </div>
-    </div>
-  );
-}
-
-function StatsScreen() {
-  const bars = [58, 40, 74, 50, 66, 44, 70, 52];
-
-  return (
-    <div className="phone-screen-inner">
-      <div className="phone-appbar">
-        <span>Analytics</span>
-      </div>
-      <div className="phone-content">
-        <div className="phone-chart">
-          {bars.map((h, i) => (
-            <motion.div
-              key={i}
-              initial={{ height: 0 }}
-              animate={{ height: `${h}%` }}
-              transition={{ duration: 0.5, delay: i * 0.05, ease: "easeOut" }}
-              className={`phone-bar${i === 3 ? " phone-bar-active" : ""}`}
-            />
-          ))}
-        </div>
-        <div className="phone-stat-row">
-          <span className="phone-stat-label">Downloads</span>
-          <span className="phone-stat-value">50K+</span>
-        </div>
-        <div className="phone-stat-row">
-          <span className="phone-stat-label">Rating</span>
-          <span className="phone-stat-value">4.8 ★</span>
-        </div>
-        <div className="phone-stat-row">
-          <span className="phone-stat-label">Uptime</span>
-          <span className="phone-stat-value">99.9%</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const SCREEN_COMPONENTS: Record<ScreenId, typeof SplashScreen> = {
-  splash: SplashScreen,
-  dashboard: DashboardScreen,
-  form: FormScreen,
-  stats: StatsScreen,
-};
-
-function getTime() {
-  const d = new Date();
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  return time;
 }
 
 export default function FlutterShowcase() {
-  const [screenIdx, setScreenIdx] = useState(0);
-  const [particle, setParticle] = useState<ParticlePhase>("idle");
-  const [paused, setPaused] = useState(false);
-  const [reduced, setReduced] = useState(false);
-  const [coords, setCoords] = useState({ x1: 0, y1: 0, x2: 0, y2: 0 });
-  const [mounted, setMounted] = useState(false);
+  const lens = useRoleLens();
+  const time = useClock();
+  const [app, setApp] = useState<PhoneAppId>("home");
+  const [origin, setOrigin] = useState({ x: 0.5, y: 0.5 });
+  const [touched, setTouched] = useState(false);
+  const [overlay, setOverlay] = useState(false);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const phoneRef = useRef<HTMLDivElement>(null);
-  const serverRef = useRef<HTMLDivElement>(null);
+  // Flutter readers start with the performance overlay on
+  useEffect(() => setOverlay(lens === "flutter"), [lens]);
 
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const h = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mq.addEventListener("change", h);
-    return () => mq.removeEventListener("change", h);
-  }, []);
+  // Subtle 3D tilt toward the pointer
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-7, 7]), { stiffness: 150, damping: 18 });
+  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [6, -6]), { stiffness: 150, damping: 18 });
 
-  const updateCoords = useCallback(() => {
-    if (!phoneRef.current || !serverRef.current || !containerRef.current)
-      return;
-    const cr = containerRef.current.getBoundingClientRect();
-    const pr = phoneRef.current.getBoundingClientRect();
-    const sr = serverRef.current.getBoundingClientRect();
-    // NOTE: previously this mixed cr.left into the y1 calculation, which sent
-    // the connector line to essentially a random point off-screen. Fixed to
-    // consistently use cr.top for vertical offsets and cr.left for horizontal.
-    setCoords({
-      x1: pr.right - cr.left,
-      y1: pr.top - cr.top + pr.height * 0.22,
-      x2: sr.left - cr.left,
-      y2: sr.top - cr.top + sr.height * 0.5,
-    });
-  }, []);
+  // Measure once per hover rather than on every move (no forced layout mid-animation)
+  const tiltBox = useRef<DOMRect | null>(null);
+  const handlePointerEnter = (e: React.PointerEvent<HTMLDivElement>) => {
+    tiltBox.current = e.currentTarget.getBoundingClientRect();
+  };
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const r = tiltBox.current;
+    if (!r) return;
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
+  };
+  const handlePointerLeave = () => {
+    tiltBox.current = null;
+    mx.set(0);
+    my.set(0);
+  };
 
-  useEffect(() => {
-    setMounted(true);
-    updateCoords();
-    // Re-measure once more after layout/fonts settle (avoids a stale line on first paint)
-    const t = setTimeout(updateCoords, 60);
-    window.addEventListener("resize", updateCoords);
-    return () => {
-      window.removeEventListener("resize", updateCoords);
-      clearTimeout(t);
-    };
-  }, [updateCoords]);
+  // Apps zoom out of their icon, iOS-style. The click handler itself does no
+  // work: it waits for the next frame to paint the tap, then starts a
+  // transition so React renders the app in interruptible chunks. Rendering
+  // inside the handler is what Chrome flagged as the INP issue.
+  const [, startTransition] = useTransition();
+  const afterPaint = useCallback(
+    (fn: () => void) => requestAnimationFrame(() => setTimeout(() => startTransition(fn), 0)),
+    []
+  );
+  const openApp = useCallback(
+    (id: PhoneAppId, index: number) =>
+      afterPaint(() => {
+        setTouched(true);
+        setOrigin({ x: 0.2 + index * 0.3, y: 0.6 });
+        setApp(id);
+      }),
+    [afterPaint]
+  );
+  const goHome = useCallback(() => afterPaint(() => setApp("home")), [afterPaint]);
 
-  useEffect(() => {
-    if (reduced || paused) return;
-    const interval = setInterval(() => {
-      setScreenIdx((prev) => (prev + 1) % SCREEN_ORDER.length);
-    }, HOLD_MS + TRANSITION_MS);
-    return () => clearInterval(interval);
-  }, [reduced, paused]);
-
-  useEffect(() => {
-    if (reduced) return;
-    if (SCREEN_ORDER[screenIdx] === "form") {
-      const t1 = setTimeout(() => setParticle("to-server"), 800);
-      const t2 = setTimeout(() => setParticle("from-server"), 1800);
-      const t3 = setTimeout(() => setParticle("idle"), 2800);
-      return () => {
-        clearTimeout(t1);
-        clearTimeout(t2);
-        clearTimeout(t3);
-      };
-    }
-  }, [screenIdx, reduced]);
-
-  const currentScreen = SCREEN_ORDER[screenIdx];
-  const ScreenComponent = SCREEN_COMPONENTS[currentScreen];
-  const time = getTime();
+  const AppComponent = app === "home" ? null : APP_COMPONENTS[app];
+  const appMeta = PHONE_APPS.find(a => a.id === app);
 
   return (
-    <div
-      ref={containerRef}
-      className="flutter-showcase"
-      aria-hidden="true"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-    >
-      {/* Ambient glow grounding the whole composition as one element */}
-      <div className="showcase-halo" />
+    <div className="flutter-showcase sc">
+      <div className="sc-stage">
+        <div className="sc-phone-col">
+          <motion.div
+            className="sc-tilt"
+            style={{ rotateX, rotateY }}
+            onPointerEnter={handlePointerEnter}
+            onPointerMove={handlePointerMove}
+            onPointerLeave={handlePointerLeave}
+          >
+            <div className={`ph${overlay ? " ph-rb" : ""}`}>
+              <div className="ph-island" />
+              <div className="ph-status">
+                <span>{time}</span>
+                <span className="ph-status-icons">
+                  <Signal size={10} />
+                  <Wifi size={10} />
+                  <Battery size={12} />
+                </span>
+              </div>
 
-      {/* Floating capability pills */}
-      {FLOATING_PILLS.map((pill, i) => (
-        <motion.div
-          key={pill.label}
-          className={`showcase-pill showcase-pill-${i}`}
-          style={{ "--pill-color": pill.color } as React.CSSProperties}
-          animate={
-            reduced
-              ? { opacity: 1, x: 0, y: 0 }
-              : {
-                  y: [0, -7 - i * 3, 0, 5 + i * 2, 0],
-                  x: [0, 3 - i, -2 + i * 2, 1, 0],
-                }
-          }
-          transition={{
-            duration: 5.5 + i * 1.3,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          {pill.label}
-        </motion.div>
-      ))}
+              <div className="ph-screen">
+                <AnimatePresence initial={false}>
+                  {AppComponent ? (
+                    <motion.div
+                      key={app}
+                      className="ph-layer"
+                      style={{ originX: origin.x, originY: origin.y }}
+                      initial={{ scale: 0.2, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.2, opacity: 0 }}
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    >
+                      <PhoneBackContext.Provider value={goHome}>
+                        <AppComponent />
+                      </PhoneBackContext.Provider>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="home"
+                      className="ph-layer"
+                      initial={{ scale: 1.08, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 1.08, opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <HomeScreen onOpen={openApp} hint={!touched} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
-      {/* Backend server card */}
-      <div ref={serverRef} className="showcase-server">
-        <div className="server-header">
-          <div className="server-icon-wrap">
-            <Server size={16} />
-          </div>
-          <span className="server-title">Backend</span>
-        </div>
-        <div className="server-tags">
-          {BACKEND_TAGS.map((tag) => (
-            <span key={tag} className="server-tag">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
+              </div>
 
-      {/* Animated connector line */}
-      {mounted && (
-        <svg className="showcase-line" aria-hidden="true">
-          <defs>
-            <linearGradient
-              id="showcaseLineGrad"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="0%"
-            >
-              <stop
-                offset="0%"
-                stopColor="rgb(var(--accent))"
-                stopOpacity="0.05"
-              />
-              <stop
-                offset="50%"
-                stopColor="rgb(var(--accent))"
-                stopOpacity="0.45"
-              />
-              <stop
-                offset="100%"
-                stopColor="rgb(var(--accent))"
-                stopOpacity="0.05"
-              />
-            </linearGradient>
-          </defs>
-          <path
-            d={`M ${coords.x1} ${coords.y1} C ${coords.x1 + 40} ${coords.y1}, ${
-              coords.x2 - 40
-            } ${coords.y2}, ${coords.x2} ${coords.y2}`}
-            fill="none"
-            stroke="url(#showcaseLineGrad)"
-            strokeWidth={1.5}
-            strokeDasharray="3 5"
-          />
-          {!reduced && particle !== "idle" && (
-            <motion.circle
-              key={particle}
-              r={3}
-              fill="rgb(var(--accent))"
-              initial={{
-                cx: particle === "to-server" ? coords.x1 : coords.x2,
-                cy: particle === "to-server" ? coords.y1 : coords.y2,
-              }}
-              animate={{
-                cx: particle === "to-server" ? coords.x2 : coords.x1,
-                cy: particle === "to-server" ? coords.y2 : coords.y1,
-              }}
-              transition={{ duration: 0.7, ease: "easeInOut" }}
-              style={{
-                filter: "drop-shadow(0 0 5px rgb(var(--accent) / 0.7))",
-              }}
-            />
-          )}
-        </svg>
-      )}
-
-      {/* Phone + progress dots + caption + arch layers, laid out in normal flow */}
-      <div className="showcase-stack">
-        <div ref={phoneRef} className="showcase-phone">
-          <div className="phone-camera" />
-          <div className="phone-statusbar">
-            <span className="phone-time">{time}</span>
-            <div className="phone-status-icons">
-              <Signal size={10} />
-              <Wifi size={10} />
-              <Battery size={12} />
+              <button className="ph-home-bar" onClick={goHome} aria-label="Go to home screen" disabled={app === "home"} />
             </div>
-          </div>
-          <div className="phone-screen">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentScreen}
-                initial={{ opacity: 0, x: 36 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -36 }}
-                transition={{
-                  duration: TRANSITION_MS / 1000,
-                  ease: "easeInOut",
-                }}
-                className="phone-screen-anim"
-              >
-                <ScreenComponent />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-          <div className="phone-home-indicator" />
-        </div>
+          </motion.div>
 
-        <div className="arch-layers" aria-hidden="true">
-          <div className="arch-layer">
-            <span className="arch-layer-dot" style={{ background: "rgb(var(--accent))" }} />
-            <span className="arch-layer-label">Presentation</span>
-            <span className="arch-layer-sub">Flutter UI</span>
-            <svg className="arch-layer-arrow-svg" width="8" height="10" viewBox="0 0 8 10" fill="none">
-              <path d="M4 0v7M1 4l3 3 3-3" stroke="rgb(var(--muted))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <div className="arch-layer">
-            <span className="arch-layer-dot" style={{ background: "rgb(var(--emerald))" }} />
-            <span className="arch-layer-label">Domain</span>
-            <span className="arch-layer-sub">Business Logic</span>
-            <svg className="arch-layer-arrow-svg" width="8" height="10" viewBox="0 0 8 10" fill="none">
-              <path d="M4 0v7M1 4l3 3 3-3" stroke="rgb(var(--muted))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <div className="arch-layer">
-            <span className="arch-layer-dot" style={{ background: "rgb(var(--amber))" }} />
-            <span className="arch-layer-label">Data</span>
-            <span className="arch-layer-sub">API / Backend</span>
+          <div className="sc-controls">
+            {overlay && <FrameGraph className="sc-perf" label={false} />}
+            <button
+              className={`sc-toggle${overlay ? " on" : ""}`}
+              onClick={() => setOverlay(o => !o)}
+              aria-pressed={overlay}
+            >
+              <Gauge size={11} />
+              Performance overlay
+            </button>
+            <span className="sc-crumb">{appMeta ? `${appMeta.name} · ${appMeta.tag}` : "Home"}</span>
           </div>
         </div>
 
-        <div className="showcase-dots">
-          {SCREEN_ORDER.map((_, i) => (
-            <motion.span
-              key={i}
-              className="showcase-dot"
-              animate={
-                i === screenIdx
-                  ? { scale: 1.3, opacity: 1 }
-                  : { scale: 1, opacity: 0.35 }
-              }
-              transition={{ duration: 0.2 }}
-            />
-          ))}
-        </div>
-
-        <div className="showcase-caption">
-          Mobile-to-backend — built for any stack
-        </div>
+        <div className="sc-panel">{lens === "flutter" ? <DevToolsPanel app={app} /> : <TracePanel />}</div>
       </div>
     </div>
   );

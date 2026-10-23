@@ -2,9 +2,11 @@
 
 import { motion } from "framer-motion";
 import SectionWrapper, { SectionLabel, SectionHeading } from "@/components/SectionWrapper";
-import { experiences } from "@/data/portfolio";
+import { useProfile } from "@/lib/roleLens";
 
 export default function Experience() {
+  const { experiences } = useProfile();
+
   return (
     <SectionWrapper id="experience">
       <div className="mb-12">

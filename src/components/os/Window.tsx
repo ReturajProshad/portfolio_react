@@ -1,12 +1,39 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
+import { motion, type TargetAndTransition, type Variants } from "framer-motion";
 import { useWindowManager, type WindowState } from "@/lib/windowManager";
 import { X, Minus, Square } from "lucide-react";
 
 const RESIZE_HANDLES = ["n", "s", "e", "w", "ne", "nw", "se", "sw"] as const;
 const MIN_W = 400;
 const MIN_H = 300;
+
+export type WindowExitReason = "close" | "minimize";
+
+const MINIMIZE_EASE: [number, number, number, number] = [0.55, 0, 0.75, 0.2];
+
+// Open grows out of the launcher icon; minimize shrinks back into it (macOS
+// "scale" effect); close is a quick fade in place.
+const windowVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.1 },
+  shown: {
+    opacity: 1,
+    scale: 1,
+    transition: { type: "spring", stiffness: 420, damping: 34, mass: 0.9 },
+  },
+  exit: (reason: WindowExitReason): TargetAndTransition =>
+    reason === "minimize"
+      ? { opacity: 0, scale: 0.06, transition: { duration: 0.34, ease: MINIMIZE_EASE } }
+      : { opacity: 0, scale: 0.94, transition: { duration: 0.16, ease: "easeIn" } },
+};
+
+function launcherCenter(id: string): { x: number; y: number } | null {
+  const el = document.querySelector<HTMLElement>(`[data-launcher="${id}"]`);
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+}
 
 export default function Window({
   windowState,
@@ -21,6 +48,9 @@ export default function Window({
 
   posRef.current = windowState.position;
   sizeRef.current = windowState.size;
+
+  // Docks don't move, so the launcher position is read once per mount
+  const [launcher] = useState(() => launcherCenter(windowState.id));
 
   const isFocused = focusedId === windowState.id;
 
@@ -113,10 +143,34 @@ export default function Window({
         zIndex: windowState.zIndex,
       };
 
+  // Scale toward the launcher icon. Framer's layout projection expects the
+  // origin as fractions of the box (they may fall outside 0–1).
+  let originX = 0.5;
+  let originY = 0.5;
+  if (launcher) {
+    let box = { x: windowState.position.x, y: windowState.position.y, w: windowState.size.width, h: windowState.size.height };
+    if (windowState.isMaximized) {
+      const linux = document.documentElement.dataset.os === "linux";
+      const x = linux ? 64 : 0;
+      const y = linux ? 32 : 0;
+      box = { x, y, w: window.innerWidth - x, h: window.innerHeight - y - (linux ? 0 : 56) };
+    }
+    originX = (launcher.x - box.x) / box.w;
+    originY = (launcher.y - box.y) / box.h;
+  }
+
   return (
-    <div
+    <motion.div
       className={`window${!isFocused ? " window-blurred" : ""}${windowState.isMaximized ? " window-maximized" : ""}`}
-      style={windowStyle}
+      style={{ ...windowStyle, originX, originY }}
+      variants={windowVariants}
+      initial="hidden"
+      animate="shown"
+      exit="exit"
+      // Animate maximize/restore only; dragging and resizing stay 1:1
+      layout
+      layoutDependency={windowState.isMaximized}
+      transition={{ layout: { type: "spring", stiffness: 380, damping: 36 } }}
       onClick={handleFocus}
       role="dialog"
       aria-label={windowState.title}
@@ -148,6 +202,6 @@ export default function Window({
           aria-hidden="true"
         />
       ))}
-    </div>
+    </motion.div>
   );
 }

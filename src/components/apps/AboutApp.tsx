@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { summary, focusAreas } from "@/data/portfolio";
+import { useProfile } from "@/lib/roleLens";
 
 export default function AboutApp() {
+  const { summary, focusAreas, aboutHeading, config } = useProfile();
+
   return (
     <div className="p-6 overflow-y-auto h-full">
       <div className="grid md:grid-cols-2 gap-8 items-start">
@@ -13,8 +15,8 @@ export default function AboutApp() {
             About
           </span>
           <h2 className="font-display font-bold text-2xl md:text-3xl text-text tracking-tight mb-4">
-            A generalist engineer,<br />
-            <span className="text-gradient-accent">not a one-stack specialist.</span>
+            {aboutHeading[0]}<br />
+            <span className="text-gradient-accent">{aboutHeading[1]}</span>
           </h2>
           <p className="text-subtle text-sm leading-relaxed mb-6">{summary}</p>
           <ul className="flex flex-col gap-3">
@@ -34,15 +36,27 @@ export default function AboutApp() {
             ))}
           </ul>
         </div>
-        <div className="relative">
+        <motion.div
+          className="relative"
+          initial={{ opacity: 0, y: 16, rotateX: 8 }}
+          animate={{ opacity: 1, y: 0, rotateX: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 22, delay: 0.15 }}
+        >
           <div className="glass rounded-2xl p-6 border-gradient">
             <p className="font-mono text-xs text-muted mb-4">// returaj.config.ts</p>
             <div className="space-y-2 font-mono text-sm">
               <div><span className="text-accent">const</span> <span className="text-text">engineer</span> <span className="text-subtle">= {"{"}</span></div>
               <div className="pl-4 space-y-1.5 text-subtle">
-                <div><span className="text-amber-400">role</span>: <span className="text-emerald-400">&quot;Software Engineer&quot;</span>,</div>
+                <div><span className="text-amber-400">role</span>: <span className="text-emerald-400">&quot;{config.role}&quot;</span>,</div>
+                <div>
+                  <span className="text-amber-400">stacks</span>: [
+                  {config.stacks.map((s, i) => (
+                    <span key={s}><span className="text-emerald-400">&quot;{s}&quot;</span>{i < config.stacks.length - 1 ? ", " : ""}</span>
+                  ))}
+                  ],
+                </div>
+                <div><span className="text-amber-400">focus</span>: <span className="text-emerald-400">&quot;{config.focus}&quot;</span>,</div>
                 <div><span className="text-amber-400">location</span>: <span className="text-emerald-400">&quot;Dhaka, BD&quot;</span>,</div>
-                <div><span className="text-amber-400">focus</span>: <span className="text-emerald-400">&quot;Systems &amp; Architecture&quot;</span>,</div>
                 <div><span className="text-amber-400">available</span>: <span className="text-accent">true</span>,</div>
               </div>
               <div className="text-subtle">{"}"}</div>
@@ -60,7 +74,7 @@ export default function AboutApp() {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

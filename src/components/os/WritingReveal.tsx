@@ -3,7 +3,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, animate, useMotionValue } from "framer-motion";
 import { Pen } from "lucide-react";
+import Image from "next/image";
 import { personal } from "@/data/portfolio";
+import { useProfile } from "@/lib/roleLens";
 import profilePic from "@/assets/Returaj_Proshad.png";
 
 enum Phase {
@@ -104,12 +106,39 @@ function lerpPoint(
 
 const PIC_SIZE = 100;
 const PIC_SIZE_CORNER = 70;
+const PIC_SIZE_AVATAR = 36;
+const MOBILE_BREAKPOINT = 768;
 
+function isMobileViewport() {
+  return window.innerWidth <= MOBILE_BREAKPOINT;
+}
+
+// The picture is scaled around its centre, so offset by half the shrink
+// to land the visible (scaled) image exactly where we want it.
 function getCornerPos() {
+  if (isMobileViewport()) {
+    const shrink = (PIC_SIZE - PIC_SIZE_AVATAR) / 2;
+    return { x: 12 - shrink, y: 8 - shrink, size: PIC_SIZE_AVATAR };
+  }
+  const shrink = (PIC_SIZE - PIC_SIZE_CORNER) / 2;
   return {
-    x: window.innerWidth - PIC_SIZE_CORNER - 24,
-    y: window.innerHeight - PIC_SIZE_CORNER - 76,
+    x: window.innerWidth - PIC_SIZE_CORNER - 24 - shrink,
+    y: window.innerHeight - PIC_SIZE_CORNER - 76 - shrink,
+    size: PIC_SIZE_CORNER,
   };
+}
+
+// The pen traces glyph outlines measured on a canvas, so the handwriting
+// font must be loaded first or the path follows the fallback font.
+async function waitForHandwritingFont(timeoutMs = 1500) {
+  if (typeof document === "undefined" || !("fonts" in document)) return;
+  await Promise.race([
+    Promise.all([
+      document.fonts.load("700 56px Caveat"),
+      document.fonts.load("600 32px Caveat"),
+    ]),
+    new Promise((resolve) => setTimeout(resolve, timeoutMs)),
+  ]).catch(() => undefined);
 }
 
 export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () => void; onDone?: () => void }) {
@@ -124,7 +153,11 @@ export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () 
   const started = useRef(false);
   const c1Ref = useRef<ContourData | null>(null);
   const c2Ref = useRef<ContourData | null>(null);
-  const cornerRef = useRef({ x: 0, y: 0 });
+  const { role } = useProfile();
+  // The pen traces whichever role is showing once the font has loaded
+  const roleRef = useRef(role);
+  roleRef.current = role;
+  const cornerRef = useRef({ x: 0, y: 0, size: PIC_SIZE_CORNER });
 
   const penX = useMotionValue(0);
   const penY = useMotionValue(2);
@@ -143,10 +176,7 @@ export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () 
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  useEffect(() => {
-    c1Ref.current = extractContour(personal.fullName, 56);
-    c2Ref.current = extractContour(personal.role, 32);
-  }, []);
+
 
   const getTransform = useCallback(
     (sizerRef: React.RefObject<HTMLSpanElement | null>, canvasW: number) => {
@@ -182,7 +212,13 @@ export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () 
   useEffect(() => {
     if (started.current) return;
     started.current = true;
-    setPhase(Phase.FadeIn);
+    // No cancel flag: the `started` guard already prevents a second run under
+    // StrictMode, and a cancel would leave the animation stuck in dev.
+    waitForHandwritingFont().then(() => {
+      c1Ref.current = extractContour(personal.fullName, 56);
+      c2Ref.current = extractContour(roleRef.current, 32);
+      setPhase(Phase.FadeIn);
+    });
   }, []);
 
   useEffect(() => {
@@ -306,7 +342,7 @@ export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () 
       const cp = cornerRef.current;
       animate(picLeft, cp.x, { duration: 0.7, ease: "easeInOut" });
       animate(picTop, cp.y, { duration: 0.7, ease: "easeInOut" });
-      animate(picScale, PIC_SIZE_CORNER / PIC_SIZE, { duration: 0.7, ease: "easeInOut" });
+      animate(picScale, cp.size / PIC_SIZE, { duration: 0.7, ease: "easeInOut" });
     }, 100);
     return () => clearTimeout(t);
   }, [phase, picLeft, picTop, picScale, picOpacity]);
@@ -339,7 +375,7 @@ export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () 
 
             <div className="reveal-line">
               <span ref={line2SizerRef} className="reveal-text-sizer reveal-text-sizer-sub" aria-hidden>
-                {personal.role}
+                {role}
               </span>
               <div
                 className="reveal-overlay"
@@ -350,7 +386,7 @@ export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () 
                 }}
               >
                 <span className="reveal-text-bright reveal-text-bright-sub">
-                  {personal.role}
+                  {role}
                 </span>
               </div>
             </div>
@@ -392,8 +428,24 @@ export default function WritingReveal({ onPicClick, onDone }: { onPicClick?: () 
             cursor: 'pointer',
           }}
           onClick={onPicClick}
+          role="button"
+          tabIndex={0}
+          aria-label={`Open photo of ${personal.fullName}`}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onPicClick?.();
+            }
+          }}
         >
-          <img src={profilePic.src} alt={personal.fullName} />
+          <Image
+            src={profilePic}
+            alt={personal.fullName}
+            width={PIC_SIZE * 2}
+            height={PIC_SIZE * 2}
+            sizes="100px"
+            priority
+          />
         </motion.div>
       )}
     </>

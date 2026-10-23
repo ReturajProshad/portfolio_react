@@ -1,43 +1,77 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import "@fontsource/syne/400.css";
+import "@fontsource/syne/500.css";
+import "@fontsource/syne/600.css";
+import "@fontsource/syne/700.css";
+import "@fontsource/syne/800.css";
+import "@fontsource/dm-sans/300.css";
+import "@fontsource/dm-sans/300-italic.css";
+import "@fontsource/dm-sans/400.css";
+import "@fontsource/dm-sans/500.css";
+import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/jetbrains-mono/500.css";
+import "@fontsource/caveat/400.css";
+import "@fontsource/caveat/600.css";
+import "@fontsource/caveat/700.css";
 import "./globals.css";
+import { personal } from "@/data/portfolio";
+import { siteUrl, seoTitle, seoDescription, seoKeywords } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Returaj Proshad — Software Engineer",
-  description:
-    "Software Engineer building full-stack, mobile, and systems-level products. Spring Boot, Node.js, Flutter, Next.js. Creator of rj form engine (pub.dev), 50K+ downloads shipped.",
-  keywords: [
-    "Software Engineer",
-    "Full-Stack Developer",
-    "Flutter Developer",
-    "Mobile Engineer",
-    "Spring Boot",
-    "Node.js",
-    "Next.js",
-    "Dart",
-    "Java",
-    "TypeScript",
-    "Bangladesh",
-    "rj form engine",
-    "Clean Architecture",
-    "Open Source",
-  ],
-  authors: [{ name: "Returaj Proshad Shornocar" }],
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: seoTitle,
+    template: `%s · ${personal.fullName}`,
+  },
+  description: seoDescription,
+  applicationName: `${personal.fullName} — Portfolio`,
+  keywords: seoKeywords,
+  authors: [{ name: personal.fullName, url: siteUrl }],
+  creator: personal.fullName,
+  publisher: personal.fullName,
+  category: "technology",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Returaj Proshad — Software Engineer",
-    description:
-      "Software Engineer building full-stack, mobile, and systems-level products. Spring Boot, Node.js, Flutter, Next.js.",
-    type: "website",
+    type: "profile",
+    url: "/",
+    siteName: `${personal.fullName} — Portfolio`,
+    title: seoTitle,
+    description: seoDescription,
     locale: "en_US",
+    firstName: "Returaj Proshad",
+    lastName: "Shornocar",
+    username: "ReturajProshad",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Returaj Proshad — Software Engineer",
-    description: "Full-stack & mobile engineer. Creator of rj form engine. 50K+ downloads shipped.",
+    title: seoTitle,
+    description: seoDescription,
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#080b10" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f8fc" },
+  ],
 };
 
 const themeInitScript = `
@@ -56,7 +90,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Runs before paint to avoid a flash of the wrong theme */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />

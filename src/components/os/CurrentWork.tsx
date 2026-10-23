@@ -1,15 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Heart, Sparkles, Bell, MessageCircle, Activity, BookOpen, Cpu, Network, Brain, Database, FileText, PenLine } from "lucide-react";
+import { WifiOff, CloudUpload, Gamepad2, Languages, Play, BookOpen, Cpu, Network, Brain, Database, FileText, PenLine, ListTodo } from "lucide-react";
+import { projects } from "@/data/portfolio";
 
-const techTags = ["Flutter", "Firestore", "Node.js", "Gemini API"];
+const shipped = projects.find((p) => p.id === "amar-babu")!;
+
+const techTags = ["Flutter", "Riverpod", "SQLite", "Firebase", "Flame"];
 
 const features = [
-  { icon: Heart, label: "Mood Tracking" },
-  { icon: Bell, label: "Reminders" },
-  { icon: MessageCircle, label: "Community Chat" },
-  { icon: Activity, label: "Health Tips" },
+  { icon: WifiOff, label: "Offline-First" },
+  { icon: CloudUpload, label: "Cloud Backup" },
+  { icon: Gamepad2, label: "6 Mini-Games" },
+  { icon: Languages, label: "Bangla / English" },
 ];
 
 const exploring = [
@@ -24,18 +27,19 @@ function WorkCard() {
   return (
     <div className="current-work-card">
       <div className="current-work-header">
-        <Sparkles size={14} />
-        <span>Currently Working On</span>
+        <span className="live-dot" aria-hidden="true" />
+        <span>Recently Shipped · Live</span>
       </div>
 
       <h3 className="current-work-title">
-        Bangladeshi Pregnant Mother&apos;s Emotional Support Application
+        {shipped.title} — Pregnancy Companion App
       </h3>
 
       <p className="current-work-desc">
-        An AI-assisted mobile app providing emotional well-being tracking,
-        personalized health tips, community support, and timely reminders for
-        expecting mothers — built with empathy and modern full-stack tooling.
+        A Bangla-first pregnancy companion for expecting mothers, built and
+        shipped solo: offline-first data with 12 safe schema migrations, cloud
+        backup, a talking-baby experience and physics-based mini-games, backed
+        by Crashlytics and 127 automated tests.
       </p>
 
       <div className="current-work-features">
@@ -52,6 +56,15 @@ function WorkCard() {
           <span key={tag} className="current-work-tag">{tag}</span>
         ))}
       </div>
+
+      <a
+        className="current-work-cta"
+        href={shipped.links.playstore}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Play size={12} /> Get it on Google Play
+      </a>
     </div>
   );
 }
@@ -71,7 +84,7 @@ function WritingCard() {
       <div className="writing-card-body">
         <div className="writing-card-header">
           <PenLine size={13} />
-          <span>Writing & Documenting</span>
+          <span>In Progress · Writing & Documenting</span>
         </div>
         <h4 className="writing-card-title">Mobile Architecture & Best Practices Guide</h4>
         <p className="writing-card-desc">
@@ -96,8 +109,8 @@ function ExploringCard() {
   return (
     <div className="exploring-card">
       <div className="exploring-header">
-        <BookOpen size={13} />
-        <span>Currently Exploring</span>
+        <ListTodo size={13} />
+        <span>Running Tasks · Exploring Next</span>
       </div>
 
       <div className="exploring-grid">

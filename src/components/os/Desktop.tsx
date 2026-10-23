@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import { AnimatePresence, MotionConfig } from "framer-motion";
 import { OsThemeProvider, useOsTheme } from "./OsThemeProvider";
 import { WindowManagerProvider, useWindowManager } from "@/lib/windowManager";
+import { RoleLensProvider, useRoleLens } from "@/lib/roleLens";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { appDefinitions } from "@/config/apps";
-import DesktopIcon from "./DesktopIcon";
-import Window from "./Window";
+import Window, { type WindowExitReason } from "./Window";
 import WindowsTaskbar from "./WindowsTaskbar";
 import LinuxTopBar from "./LinuxTopBar";
 import LinuxDock from "./LinuxDock";
@@ -47,6 +47,7 @@ const appComponentMap: Record<string, React.ComponentType> = {
 function DesktopInner() {
   const { windows, openApp, toggleMaximize } = useWindowManager();
   const { osTheme } = useOsTheme();
+  const lens = useRoleLens();
   const [showStart, setShowStart] = useState(false);
   const [showActivities, setShowActivities] = useState(false);
   const [mobileApp, setMobileApp] = useState<string | null>(null);
@@ -77,15 +78,45 @@ function DesktopInner() {
     setMobileApp(id);
   }, [openApp]);
 
+  // Mobile back button / back gesture closes the open section or drawer
+  // instead of leaving the site. One history entry covers whatever is open;
+  // switching between the drawer and a section reuses it.
+  const overlayOpen = isMobile && (mobileApp !== null || mobileDrawer);
+  const historyPushed = useRef(false);
+
+  useEffect(() => {
+    if (overlayOpen && !historyPushed.current) {
+      // Keep Next.js's router state on the entry, or its popstate handler
+      // treats it as foreign and reloads the page.
+      window.history.pushState({ ...window.history.state, portfolioOverlay: true }, "");
+      historyPushed.current = true;
+    } else if (!overlayOpen && historyPushed.current) {
+      // Closed from the UI: drop the entry we added so Back still works normally
+      historyPushed.current = false;
+      window.history.back();
+    }
+  }, [overlayOpen]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (!historyPushed.current) return;
+      historyPushed.current = false;
+      setMobileApp(null);
+      setMobileDrawer(false);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   if (isMobile) {
     return (
       <div className="desktop mobile-desktop">
         <div className="mobile-top-bar">
           <ThemeToggle />
         </div>
-        <div className="mobile-home">
+        <main className="mobile-home">
           <div className="mobile-profile">
-            <WritingReveal onPicClick={() => openApp("photo")} onDone={() => setRevealDone(true)} />
+            <WritingReveal onPicClick={() => handleMobileAppSelect("photo")} onDone={() => setRevealDone(true)} />
             {revealDone && <StatsCards />}
             <ProfessionalSummary show={revealDone} />
             {revealDone && <QuickInfo />}
@@ -97,14 +128,16 @@ function DesktopInner() {
             )}
             {revealDone && <CurrentWork />}
           </div>
-        </div>
+        </main>
         <MobileNav onAppSelect={handleMobileAppSelect} onDrawerToggle={handleDrawerToggle} drawerOpen={mobileDrawer} />
         {mobileDrawer && <MobileDrawer onSelect={handleDrawerSelect} onClose={() => setMobileDrawer(false)} />}
-        {mobileApp && (
-          <MobileAppView appId={mobileApp} onClose={() => setMobileApp(null)}>
-            {React.createElement(appComponentMap[mobileApp])}
-          </MobileAppView>
-        )}
+        <AnimatePresence>
+          {mobileApp && (
+            <MobileAppView key={mobileApp} appId={mobileApp} onClose={() => setMobileApp(null)}>
+              {React.createElement(appComponentMap[mobileApp], { key: lens })}
+            </MobileAppView>
+          )}
+        </AnimatePresence>
       </div>
     );
   }
@@ -134,30 +167,39 @@ function DesktopInner() {
       <div className="desktop-overlay" />
       {!isWindows && <LinuxTopBar onActivitiesClick={handleActivitiesClick} />}
       {!isWindows && <LinuxDock />}
-      <div className="desktop-area">
-        <div className="hero-left">
-          <WritingReveal onPicClick={() => openApp("photo")} onDone={() => setRevealDone(true)} />
-          {revealDone && <StatsCards />}
-          <ProfessionalSummary show={revealDone} />
-          {revealDone && <QuickInfo />}
-          {revealDone && (
-            <div className="education-line">
-              <GraduationCap size={14} />
-              <span><strong>B.Sc. in CSE</strong> — Islamic University &middot; <strong>CGPA 3.63/4.00</strong></span>
-            </div>
-          )}
+      <main className="desktop-area">
+        <div className="desktop-home">
+          <div className="hero-left">
+            <WritingReveal onPicClick={() => openApp("photo")} onDone={() => setRevealDone(true)} />
+            {revealDone && <StatsCards />}
+            <ProfessionalSummary show={revealDone} />
+            {revealDone && <QuickInfo />}
+            {revealDone && (
+              <div className="education-line">
+                <GraduationCap size={14} />
+                <span><strong>B.Sc. in CSE</strong> — Islamic University &middot; <strong>CGPA 3.63/4.00</strong></span>
+              </div>
+            )}
+          </div>
+          {revealDone && <CurrentWork />}
+          {revealDone && <FlutterShowcase />}
         </div>
-        {revealDone && <CurrentWork />}
-        {revealDone && <FlutterShowcase />}
-        {windows.filter(w => w.isOpen && !w.isMinimized).map(w => {
+        {windows.map(w => {
           const AppComponent = appComponentMap[w.id];
+          // Each window gets its own presence so it knows whether it is
+          // leaving because it was minimized (into the dock) or closed.
+          const exitReason: WindowExitReason = w.isOpen && w.isMinimized ? "minimize" : "close";
           return (
-            <Window key={w.id} windowState={w}>
-              <AppComponent />
-            </Window>
+            <AnimatePresence key={w.id} custom={exitReason}>
+              {w.isOpen && !w.isMinimized && (
+                <Window key={w.id} windowState={w}>
+                  <AppComponent key={lens} />
+                </Window>
+              )}
+            </AnimatePresence>
           );
         })}
-      </div>
+      </main>
       {isWindows && <WindowsTaskbar onStartClick={handleStartClick} />}
       {showStart && <StartMenu onClose={() => setShowStart(false)} />}
       {showActivities && <ActivitiesOverview onClose={() => setShowActivities(false)} />}
@@ -168,9 +210,14 @@ function DesktopInner() {
 export default function Desktop() {
   return (
     <OsThemeProvider>
-      <WindowManagerProvider>
-        <DesktopInner />
-      </WindowManagerProvider>
+      <RoleLensProvider>
+        <WindowManagerProvider>
+          {/* Honour the OS "reduce motion" setting for every framer animation */}
+          <MotionConfig reducedMotion="user">
+            <DesktopInner />
+          </MotionConfig>
+        </WindowManagerProvider>
+      </RoleLensProvider>
     </OsThemeProvider>
   );
 }

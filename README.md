@@ -1,132 +1,67 @@
-# Returaj Proshad — Portfolio
+# Returaj Proshad Shornocar — Portfolio
 
-A modern, minimal, dark-mode portfolio built with **Next.js 14**, **TypeScript**, **Tailwind CSS**, and **Framer Motion**.
+**Live:** [returaj.vercel.app](https://returaj.vercel.app)
+
+An interactive, desktop-style portfolio: a handwritten name drawn by an animated pen, then a "desktop" where every section (experience, projects, open source, achievements, contact) opens as a draggable, resizable window — with a native-feeling app layout on phones and a classic scrolling **List View** for quick reading.
+
+Built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS** and **Framer Motion**.
 
 ---
 
-## 🚀 Quick Start
+## Highlights
 
-### 1. Install dependencies
+- **Window manager** (`src/lib/windowManager.tsx`) — open, focus, minimise, maximise, drag and resize windows with z-order handling, behind a small React context API.
+- **Two desktop themes** — Windows-style taskbar or Linux/GNOME-style top bar + dock, remembered per visitor.
+- **Role-specific links** (`src/lib/roleLens.tsx`) — `/` shows the Software Engineer portfolio and `/?role=flutter` the Flutter Engineer one (role, summary, stats, skills, experience bullets and project order), so each CV links to its own version. There is no on-page toggle and nothing is remembered between visits.
+- **Interactive phone** (`components/os/FlutterShowcase.tsx`, `components/os/showcase/`) — a tappable device running small versions of real work: a live rj_form_engine form (async + cascading dropdowns, derived field, validation, its Dart schema), the FieldOps offline sync with a per-field three-way merge, and an Amar Babu preview. Beside it, Software Engineer links get a backend request trace (simulated timings) and Flutter links get a DevTools-style inspector with real widget re-render counts, a real frame-time graph and a repaint-rainbow overlay.
+- **macOS-style motion** — windows grow out of their dock/taskbar icon and minimise back into it, maximise/restore animates, dock icons magnify under the pointer and bounce on launch, stats count up.
+- **Mobile app shell** — bottom navigation, app drawer and full-screen app views instead of shrunken windows. The phone's back button/gesture closes the open section (it no longer leaves the site), and a swipe from the left edge goes back.
+- **Pen-drawn hero** (`WritingReveal.tsx`) — glyph outlines are sampled from a canvas so the pen follows the real letter shapes; waits for the handwriting font before measuring.
+- **Single source of truth** — all content lives in `src/data/portfolio.ts`; desktop windows, mobile views, List View, SEO markup and structured data all read from it.
+
+## SEO
+
+- Full metadata: canonical URL, Open Graph (`profile`), Twitter card, robots directives, theme colour.
+- Generated social preview image (`app/opengraph-image.tsx`), favicon and Apple touch icon.
+- `schema.org` JSON-LD graph (`Person`, `WebSite`, `ProfilePage`, `SoftwareSourceCode`, `MobileApplication`) in `src/lib/seo.ts`.
+- `sitemap.xml`, `robots.txt` and a web manifest.
+- A server-rendered, visually hidden text version of the portfolio (`components/SeoContent.tsx`) so crawlers and screen readers get the content that otherwise lives inside windows.
+- Self-hosted fonts via `@fontsource` (no render-blocking third-party CSS) and `next/image` for the profile photo.
+
+---
+
+## Quick start
 
 ```bash
 npm install
+npm run dev     # http://localhost:3000
+npm run build   # production build
 ```
 
-### 2. Run locally
+Deploys automatically on Vercel from `main`.
 
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000)
-
----
-
-## 📦 Deploy to Vercel (5 minutes)
-
-### Option A — Via Vercel CLI (Recommended)
-
-```bash
-# Install Vercel CLI globally
-npm install -g vercel
-
-# Inside the portfolio folder
-vercel
-
-# Follow the prompts:
-# Set up and deploy → Yes
-# Which scope → your account
-# Link to existing project → No
-# Project name → returaj-portfolio (or anything)
-# In which directory → ./  (press Enter)
-# Override settings → No
-
-# Done! Your URL will be printed.
-```
-
-### Option B — Via GitHub + Vercel Dashboard
-
-1. Push this project to a GitHub repository
-2. Go to [vercel.com](https://vercel.com) → New Project
-3. Import your GitHub repo
-4. Leave all settings as default
-5. Click **Deploy** — done in ~60 seconds
-
----
-
-## 🗂 Project Structure
+## Project structure
 
 ```
 src/
 ├── app/
-│   ├── layout.tsx        # Root layout + SEO metadata
-│   ├── page.tsx          # Home page (assembles sections)
-│   └── globals.css       # Global styles, CSS variables, utilities
+│   ├── layout.tsx            # Root layout, fonts, metadata
+│   ├── page.tsx              # JSON-LD + SEO content + desktop
+│   ├── opengraph-image.tsx   # Generated social preview
+│   ├── icon.tsx / apple-icon.tsx
+│   ├── sitemap.ts / robots.ts / manifest.ts
+│   └── globals.css
 ├── components/
-│   ├── Navbar.tsx        # Sticky nav with active section tracking
-│   ├── Footer.tsx        # Simple footer
-│   ├── SectionWrapper.tsx # Reusable animated section container
-│   └── sections/
-│       ├── Hero.tsx       # Hero with stats and CTAs
-│       ├── About.tsx      # About + code-style bio card
-│       ├── Skills.tsx     # Categorized skills with badges
-│       ├── Experience.tsx # Timeline with cards
-│       ├── Projects.tsx   # Featured + grid project cards
-│       ├── OpenSource.tsx # rj form engine deep dive
-│       ├── Achievements.tsx # Achievements + GitHub stats
-│       └── Contact.tsx    # Contact links
-└── data/
-    └── portfolio.ts       # ← ALL your content lives here
+│   ├── os/                   # Desktop shell: windows, taskbar, dock, hero, mobile shell
+│   ├── apps/                 # Content shown inside each window / mobile app view
+│   ├── sections/             # List View sections
+│   ├── OpenSourceContent.tsx # Shared rj_form_engine content (window + List View)
+│   └── SeoContent.tsx        # Crawlable text version of the portfolio
+├── config/apps.ts            # App ids, titles and icons
+├── data/portfolio.ts         # ← all content lives here
+└── lib/                      # Window manager, SEO helpers, utils
 ```
 
----
+## Updating content
 
-## ✏️ Customizing Content
-
-**All your data is in one file:** `src/data/portfolio.ts`
-
-To update your info:
-- Edit `personal` object for name, email, GitHub, LinkedIn
-- Edit `experiences` array for work history
-- Edit `projects` array for projects
-- Edit `achievements` array for achievements
-- Edit `skills` object for tech stack
-
----
-
-## 🎨 Design Tokens
-
-Defined in `tailwind.config.ts` and `globals.css`:
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| `bg` | `#080B10` | Page background |
-| `surface` | `#0D1117` | Card backgrounds |
-| `border` | `#1A2030` | Card borders |
-| `accent` | `#4F8EF7` | Primary accent (blue) |
-| `emerald` | `#34D399` | Success / current |
-| `text` | `#E8EDF5` | Primary text |
-| `subtle` | `#8A9BB8` | Secondary text |
-
----
-
-## 🔧 Tech Stack
-
-- **Next.js 14** (App Router)
-- **TypeScript**
-- **Tailwind CSS**
-- **Framer Motion** — scroll animations, staggered reveals
-- **Lucide React** — icons
-- **Google Fonts** — Syne (display), DM Sans (body), JetBrains Mono (code)
-
----
-
-## 📊 GitHub Stats
-
-In `src/components/sections/Achievements.tsx`, the GitHub stats images use your username `ReturajProshad`. These load from `github-readme-stats.vercel.app` automatically — no API key needed.
-
----
-
-## 📝 License
-
-Personal use. Feel free to adapt for your own portfolio.
+Edit `src/data/portfolio.ts` — `personal`, `experiences`, `projects`, `openSource`, `skills`, `achievements`. Everything else, including SEO tags and structured data, updates from there.
